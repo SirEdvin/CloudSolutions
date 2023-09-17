@@ -27,6 +27,7 @@ fabricShaking {
             "peripheralium" to "peripheralium",
         ),
     )
+    stablePlayer.set(true)
     shake()
 }
 
@@ -50,6 +51,8 @@ repositories {
 
 dependencies {
     implementation(libs.bundles.kotlin)
+    implementation(libs.bundles.db)
+    include(libs.bundles.db)
 
     modImplementation(libs.bundles.fabric.core)
     modImplementation(libs.bundles.fabric.cc) {

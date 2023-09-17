@@ -22,6 +22,7 @@ vanillaShaking {
 dependencies {
     implementation(libs.bundles.kotlin)
     implementation(libs.bundles.cccommon)
+    implementation(libs.bundles.db)
     api(libs.bundles.apicommon)
 }
 

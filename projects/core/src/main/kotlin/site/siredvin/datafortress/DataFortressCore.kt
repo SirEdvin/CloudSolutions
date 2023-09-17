@@ -5,10 +5,12 @@ import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 import site.siredvin.datafortress.common.setup.Items
 import site.siredvin.datafortress.data.ModText
+import site.siredvin.datafortress.subsystems.tsdb.TSDBManager
 import site.siredvin.datafortress.xplat.ModCommonHooks
 import site.siredvin.datafortress.xplat.ModPlatform
 import site.siredvin.datafortress.xplat.ModRecipeIngredients
 import site.siredvin.peripheralium.xplat.BaseInnerPlatform
+import site.siredvin.peripheralium.xplat.PeripheraliumPlatform
 
 object DataFortressCore {
     const val MOD_ID = "datafortress"
@@ -28,5 +30,7 @@ object DataFortressCore {
     fun configure(platform: BaseInnerPlatform, ingredients: ModRecipeIngredients) {
         ModPlatform.configure(platform)
         ModRecipeIngredients.configure(ingredients)
+        TSDBManager.init()
+        PeripheraliumPlatform.registerGenericPeripheralLookup()
     }
 }

@@ -4,6 +4,7 @@ import dan200.computercraft.api.upgrades.UpgradeData
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.CreativeModeTab
 import site.siredvin.datafortress.DataFortressCore
+import site.siredvin.datafortress.common.setup.BlockEntityTypes
 import site.siredvin.datafortress.common.setup.Blocks
 import site.siredvin.datafortress.common.setup.Items
 import site.siredvin.peripheralium.xplat.PeripheraliumPlatform
@@ -14,6 +15,7 @@ object ModCommonHooks {
     fun onRegister() {
         Items.doSomething()
         Blocks.doSomething()
+        BlockEntityTypes.doSomething()
         ModPlatform.registerCreativeTab(
             ResourceLocation(DataFortressCore.MOD_ID, "tab"),
             DataFortressCore.configureCreativeTab(PeripheraliumPlatform.createTabBuilder()).build(),
