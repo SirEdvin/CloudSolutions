@@ -1,0 +1,24 @@
+package site.siredvin.datafortress.data
+
+import net.minecraft.data.loot.LootTableProvider
+import net.minecraft.data.loot.LootTableSubProvider
+import net.minecraft.resources.ResourceLocation
+import net.minecraft.world.level.storage.loot.LootTable
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets
+import java.util.function.BiConsumer
+
+object ModLootTableProvider {
+    fun getTables(): List<LootTableProvider.SubProviderEntry> {
+        return listOf(
+            LootTableProvider.SubProviderEntry({
+                LootTableSubProvider {
+                    registerBlocks(it)
+                }
+            }, LootContextParamSets.BLOCK),
+        )
+    }
+
+    @Suppress("UNUSED_PARAMETER")
+    fun registerBlocks(consumer: BiConsumer<ResourceLocation, LootTable.Builder>) {
+    }
+}
