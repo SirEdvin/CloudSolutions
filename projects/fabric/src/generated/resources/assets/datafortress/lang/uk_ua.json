@@ -1,0 +1,9 @@
+{
+  "block.datafortress.data_storage": "Data storage",
+  "block.datafortress.data_storage.tooltip": "Something very useful",
+  "block.datafortress.tsdb_storage": "Timeseries database",
+  "block.datafortress.tsdb_storage.tooltip": "Something very useful",
+  "item.datafortress.template_item": "Шаблоний предмет",
+  "item.datafortress.template_item.tooltip": "Боже, у нього навіть нормальної текстури немає",
+  "text.datafortress.creative_tab": "А це треба перейменувати, друже"
+}

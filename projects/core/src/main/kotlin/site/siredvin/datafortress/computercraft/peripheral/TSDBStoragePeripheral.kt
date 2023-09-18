@@ -2,9 +2,11 @@ package site.siredvin.datafortress.computercraft.peripheral
 
 import dan200.computercraft.api.lua.LuaException
 import dan200.computercraft.api.lua.LuaFunction
+import site.siredvin.datafortress.DataFortressCore
 import site.siredvin.datafortress.subsystems.tsdb.TSDBManager
 import site.siredvin.peripheralium.api.peripheral.IPeripheralOwner
 import site.siredvin.peripheralium.computercraft.peripheral.OwnedPeripheral
+import java.time.Instant
 import java.util.*
 
 class TSDBStoragePeripheral(owner: IPeripheralOwner) : OwnedPeripheral<IPeripheralOwner>(TYPE, owner) {
@@ -17,41 +19,49 @@ class TSDBStoragePeripheral(owner: IPeripheralOwner) : OwnedPeripheral<IPeripher
         get() = true
 
     @LuaFunction
-    fun registerTimeseries(name: String, tags: Map<*, *>, retention: Optional<Int>): Int {
+    fun registerTimeseries(name: String, tags: Map<*, *>, retention: Optional<Int>): String {
         val player = peripheralOwner.owner ?: throw LuaException("Cannot find attached player to this peripheral")
-        return TSDBManager.registerTimeseriers(
+        return DataFortressCore.tsdbManager.registerTimeseriers(
             player.stringUUID,
             name,
             tags.entries.associate {
                 Pair(it.key.toString(), it.value.toString())
             },
             retention.orElse(TSDBManager.DEFAULT_RETENTION),
-        ).value
+        ).toString()
     }
 
     @LuaFunction
     fun queryTimeseries(namePattern: String, tagsQuery: Map<*, *>, fromTimestamp: Long, toTimestamp: Long): Map<String, Map<Long, Double>> {
         val player = peripheralOwner.owner ?: throw LuaException("Cannot find attached player to this peripheral")
-        return TSDBManager.queryTimeseries(
+        return DataFortressCore.tsdbManager.queryTimeseries(
             player.stringUUID,
             namePattern,
             tagsQuery.entries.associate {
                 Pair(it.key.toString(), it.value.toString())
             },
-            fromTimestamp,
-            toTimestamp,
+            Instant.ofEpochSecond(fromTimestamp),
+            Instant.ofEpochSecond(toTimestamp),
         )
     }
 
     @LuaFunction
     fun getTimeseries(): List<Map<String, Any>> {
         val player = peripheralOwner.owner ?: throw LuaException("Cannot find attached player to this peripheral")
-        return TSDBManager.getTimeseries(player.stringUUID)
+        return DataFortressCore.tsdbManager.getTimeseries(player.stringUUID)
     }
 
     @LuaFunction
-    fun postMeasurement(id: Int, value: Double) {
+    fun postMeasurement(id: String, value: Double) {
         val player = peripheralOwner.owner ?: throw LuaException("Cannot find attached player to this peripheral")
-        TSDBManager.addMeasurement(player.stringUUID, id, value)
+        DataFortressCore.tsdbManager.addMeasurement(player.stringUUID, UUID.fromString(id), value)
+    }
+
+    @LuaFunction
+    fun postMeasurement(values: Map<*, *>) {
+        val player = peripheralOwner.owner ?: throw LuaException("Cannot find attached player to this peripheral")
+        DataFortressCore.tsdbManager.addMeasurements(player.stringUUID, values.entries.associate {
+            UUID.fromString(it.key.toString()) to (it.value as Number).toDouble()
+        })
     }
 }

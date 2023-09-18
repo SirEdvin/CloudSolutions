@@ -47,6 +47,12 @@ repositories {
             includeGroup("com.terraformersmc")
         }
     }
+    maven {
+        url = uri("https://www.jitpack.io")
+        content {
+            includeGroup("com.github.artbits")
+        }
+    }
 }
 
 dependencies {

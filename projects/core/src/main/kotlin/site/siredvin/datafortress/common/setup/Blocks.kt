@@ -7,6 +7,20 @@ import site.siredvin.peripheralium.common.items.PeripheralBlockItem
 
 object Blocks {
 
+    val DATA_STORAGE = ModPlatform.registerBlock(
+        "data_storage",
+        { GenericBlockEntityBlock({ BlockEntityTypes.DATA_STORAGE.get() }, true)},
+        {
+            PeripheralBlockItem(
+                it,
+                Item.Properties(),
+                // TODO: update
+                { true },
+                // TODO: add something
+            )
+        }
+    )
+
     val TSDB_STORAGE = ModPlatform.registerBlock(
         "tsdb_storage",
         { GenericBlockEntityBlock({ BlockEntityTypes.TSDB_STORAGE.get() }, true) },

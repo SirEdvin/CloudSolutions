@@ -33,11 +33,18 @@ repositories {
             includeGroup("mezz.jei")
         }
     }
+    maven {
+        url = uri("https://www.jitpack.io")
+        content {
+            includeGroup("com.github.artbits")
+        }
+    }
 }
 
 dependencies {
     implementation(libs.bundles.kotlin)
     implementation(libs.bundles.forge.raw)
+    implementation(libs.bundles.db)
     libs.bundles.forge.cc.get().map { implementation(fg.deobf(it)) }
 
     libs.bundles.externalMods.forge.runtime.get().map { runtimeOnly(fg.deobf(it)) }
