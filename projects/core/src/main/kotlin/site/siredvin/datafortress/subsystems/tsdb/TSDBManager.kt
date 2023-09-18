@@ -17,6 +17,46 @@ object TSDBManager {
         }
     }
 
+    private fun buildTimeseriesName(timeseriesName: String, timeseriesTags: Map<String, String>): String {
+        val tags = timeseriesTags.entries.sortedBy { it.key }.joinToString { "${it.key}=${it.value}" }
+        return "$timeseriesName{$tags}"
+    }
+
+    fun queryTimeseries(
+        timeseriesOwnerUUID: String,
+        timeseriesNamePattern: String,
+        timeseriesTags: Map<String, String>,
+        fromTimestamp: Long,
+        toTimestamp: Long,
+    ): Map<String, Map<Long, Double>> {
+        if (fromTimestamp >= toTimestamp) {
+            throw LuaException("From timestamp should be lower then to timestamp")
+        }
+        // TODO: add name pattern transformation
+        return transaction {
+            val timeserieses = Timeseries.select {
+                Timeseries.ownerUUID eq timeseriesOwnerUUID
+                Timeseries.name like timeseriesNamePattern
+            }.filter {
+                val tags = it[Timeseries.tags]
+                return@filter timeseriesTags.entries.all { entry ->
+                    tags.getOrDefault(entry.key, entry.value + "HAHAHAHAHAHA") == entry.value
+                }
+            }.associateBy { it[Timeseries.id] }
+            val measurements = Measurements.select {
+                Measurements.timeseries inList timeserieses.keys
+                Measurements.timestamp greaterEq fromTimestamp
+                Measurements.timestamp lessEq toTimestamp
+            }.toList().groupBy { it[Measurements.timeseries] }
+            return@transaction measurements.entries.associate { entry ->
+                val timeseries = timeserieses[entry.key]!!
+                buildTimeseriesName(timeseries[Timeseries.name], timeseries[Timeseries.tags]) to entry.value.associate {
+                    it[Measurements.timestamp] to it[Measurements.v]
+                }
+            }
+        }
+    }
+
     fun registerTimeseriers(timeseriesOwnerUUID: String, timeseriesName: String, timeseriesTags: Map<String, String>, timeseriesRetention: Int = DEFAULT_RETENTION): EntityID<Int> {
         return transaction {
             return@transaction Timeseries.insert {

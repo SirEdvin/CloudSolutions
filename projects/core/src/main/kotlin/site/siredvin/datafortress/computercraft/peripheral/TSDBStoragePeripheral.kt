@@ -30,6 +30,20 @@ class TSDBStoragePeripheral(owner: IPeripheralOwner) : OwnedPeripheral<IPeripher
     }
 
     @LuaFunction
+    fun queryTimeseries(namePattern: String, tagsQuery: Map<*, *>, fromTimestamp: Long, toTimestamp: Long): Map<String, Map<Long, Double>> {
+        val player = peripheralOwner.owner ?: throw LuaException("Cannot find attached player to this peripheral")
+        return TSDBManager.queryTimeseries(
+            player.stringUUID,
+            namePattern,
+            tagsQuery.entries.associate {
+                Pair(it.key.toString(), it.value.toString())
+            },
+            fromTimestamp,
+            toTimestamp,
+        )
+    }
+
+    @LuaFunction
     fun getTimeseries(): List<Map<String, Any>> {
         val player = peripheralOwner.owner ?: throw LuaException("Cannot find attached player to this peripheral")
         return TSDBManager.getTimeseries(player.stringUUID)
