@@ -59,6 +59,8 @@ dependencies {
     implementation(libs.bundles.kotlin)
     implementation(libs.bundles.db)
     include(libs.bundles.db)
+    implementation(libs.bundles.webframework)
+    include(libs.bundles.webframework)
 
     modImplementation(libs.bundles.fabric.core)
     modImplementation(libs.bundles.fabric.cc) {

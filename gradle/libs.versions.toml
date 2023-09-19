@@ -16,6 +16,8 @@ mixin = "0.8.5"
 peripheralium = "0.6.13-pre.2"
 sqlite = "3.42.0.0"
 exposed = "0.43.0"
+javalin = "5.6.2"
+pebble = "2.4.0"
 
 # Fabric dependencies
 fabric-api = "0.87.0+1.20.1"
@@ -64,6 +66,10 @@ exposed-core = {module="org.jetbrains.exposed:exposed-core", version.ref="expose
 exposed-json = {module="org.jetbrains.exposed:exposed-json", version.ref="exposed"}
 exposed-jdbc = {module="org.jetbrains.exposed:exposed-jdbc", version.ref="exposed"}
 exposed-java-time = {module = "org.jetbrains.exposed:exposed-java-time", version.ref="exposed"}
+javalin = {module = "io.javalin:javalin", version.ref="javalin"}
+javalin-rendering = {module = "io.javalin:javalin-rendering", version.ref="javalin"}
+pebble = {module ="com.mitchellbosecke:pebble", version.ref="pebble"}
+
 
 # Fabric mod dependencies
 fabric-loader = {module = "net.fabricmc:fabric-loader", version.ref = "fabric-loader"}
@@ -96,6 +102,9 @@ apicommon = ["common-config"]
 db = [
     "sqlite", "exposed-core", "exposed-json", "exposed-jdbc",
     "exposed-java-time"
+]
+webframework = [
+    "javalin", "javalin-rendering", "pebble"
 ]
 fabric-cc = ["cc-tweaked-fabric", "cc-tweaked-core", "peripheralium-fabric"]
 fabric-core = ["fabric-api", "fabric-kotlin", "fabric-config", "fabric-loader"]

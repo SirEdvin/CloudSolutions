@@ -45,6 +45,7 @@ dependencies {
     implementation(libs.bundles.kotlin)
     implementation(libs.bundles.forge.raw)
     implementation(libs.bundles.db)
+    implementation(libs.bundles.webframework)
     libs.bundles.forge.cc.get().map { implementation(fg.deobf(it)) }
 
     libs.bundles.externalMods.forge.runtime.get().map { runtimeOnly(fg.deobf(it)) }

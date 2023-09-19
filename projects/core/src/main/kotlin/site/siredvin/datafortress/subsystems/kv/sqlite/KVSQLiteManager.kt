@@ -1,11 +1,11 @@
-package site.siredvin.datafortress.subsystems.tsdb.sqlite
+package site.siredvin.datafortress.subsystems.kv.sqlite
 
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
-import site.siredvin.datafortress.subsystems.tsdb.KeyValueManager
+import site.siredvin.datafortress.subsystems.kv.KeyValueManager
 import java.time.Instant
 
-object KVSQLiteManager: KeyValueManager {
+object KVSQLiteManager : KeyValueManager {
 
     override fun init() {
         Database.connect("jdbc:sqlite:./test_kv.db", "org.sqlite.JDBC")

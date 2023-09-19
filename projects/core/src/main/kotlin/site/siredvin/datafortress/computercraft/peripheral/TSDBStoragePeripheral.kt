@@ -60,8 +60,11 @@ class TSDBStoragePeripheral(owner: IPeripheralOwner) : OwnedPeripheral<IPeripher
     @LuaFunction
     fun postMeasurement(values: Map<*, *>) {
         val player = peripheralOwner.owner ?: throw LuaException("Cannot find attached player to this peripheral")
-        DataFortressCore.tsdbManager.addMeasurements(player.stringUUID, values.entries.associate {
-            UUID.fromString(it.key.toString()) to (it.value as Number).toDouble()
-        })
+        DataFortressCore.tsdbManager.addMeasurements(
+            player.stringUUID,
+            values.entries.associate {
+                UUID.fromString(it.key.toString()) to (it.value as Number).toDouble()
+            },
+        )
     }
 }

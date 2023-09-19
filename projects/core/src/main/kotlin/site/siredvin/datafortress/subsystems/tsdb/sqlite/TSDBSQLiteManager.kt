@@ -8,7 +8,7 @@ import site.siredvin.datafortress.subsystems.tsdb.TSDBManager.Companion.buildTim
 import java.time.Instant
 import java.util.*
 
-object TSDBSQLiteManager: TSDBManager {
+object TSDBSQLiteManager : TSDBManager {
 
     override fun init() {
         Database.connect("jdbc:sqlite:./test.db", "org.sqlite.JDBC")

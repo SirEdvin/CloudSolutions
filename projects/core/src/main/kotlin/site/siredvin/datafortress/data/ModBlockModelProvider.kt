@@ -9,7 +9,8 @@ object ModBlockModelProvider {
     @Suppress("UNUSED_PARAMETER")
     fun addModels(generators: BlockModelGenerators) {
         horizontalOrientatedBlock(
-            generators, Blocks.DATA_STORAGE.get(),
+            generators,
+            Blocks.DATA_STORAGE.get(),
         )
     }
 }

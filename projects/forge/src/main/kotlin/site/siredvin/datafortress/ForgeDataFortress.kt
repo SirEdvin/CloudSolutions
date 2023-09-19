@@ -56,6 +56,7 @@ object ForgeDataFortress {
         creativeTabRegistry.register(eventBus)
         turtleSerializers.register(eventBus)
         pocketSerializers.register(eventBus)
+        // TODO: figure out where to call onServerStarted
     }
 
     @Suppress("UNUSED_PARAMETER")

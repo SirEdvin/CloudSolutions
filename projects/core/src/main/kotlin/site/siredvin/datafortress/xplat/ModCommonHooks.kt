@@ -7,6 +7,7 @@ import site.siredvin.datafortress.DataFortressCore
 import site.siredvin.datafortress.common.setup.BlockEntityTypes
 import site.siredvin.datafortress.common.setup.Blocks
 import site.siredvin.datafortress.common.setup.Items
+import site.siredvin.datafortress.subsystems.webserver.WebserverMain
 import site.siredvin.peripheralium.xplat.PeripheraliumPlatform
 import site.siredvin.peripheralium.xplat.XplatRegistries
 
@@ -20,6 +21,12 @@ object ModCommonHooks {
             ResourceLocation(DataFortressCore.MOD_ID, "tab"),
             DataFortressCore.configureCreativeTab(PeripheraliumPlatform.createTabBuilder()).build(),
         )
+    }
+
+    fun onServerStarted() {
+        val webserverThread = Thread({ WebserverMain.main(7000) }, "dataFortress-webserver")
+        webserverThread.isDaemon = true
+        webserverThread.start()
     }
 
     fun registerUpgradesInCreativeTab(output: CreativeModeTab.Output) {

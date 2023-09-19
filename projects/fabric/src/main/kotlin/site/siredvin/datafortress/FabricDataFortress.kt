@@ -1,6 +1,7 @@
 package site.siredvin.datafortress
 import fuzs.forgeconfigapiport.api.config.v2.ForgeConfigRegistry
 import net.fabricmc.api.ModInitializer
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
 import net.minecraftforge.fml.config.ModConfig
 import site.siredvin.datafortress.common.configuration.ConfigHolder
 import site.siredvin.datafortress.fabric.FabricModPlatform
@@ -19,5 +20,9 @@ object FabricDataFortress : ModInitializer {
         ModCommonHooks.onRegister()
         // Pretty important to setup configuration after integration loading!
         ForgeConfigRegistry.INSTANCE.register(DataFortressCore.MOD_ID, ModConfig.Type.COMMON, ConfigHolder.COMMON_SPEC)
+
+        ServerLifecycleEvents.SERVER_STARTED.register {
+            ModCommonHooks.onServerStarted()
+        }
     }
 }

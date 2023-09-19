@@ -9,7 +9,7 @@ object Blocks {
 
     val DATA_STORAGE = ModPlatform.registerBlock(
         "data_storage",
-        { GenericBlockEntityBlock({ BlockEntityTypes.DATA_STORAGE.get() }, true)},
+        { GenericBlockEntityBlock({ BlockEntityTypes.DATA_STORAGE.get() }, true) },
         {
             PeripheralBlockItem(
                 it,
@@ -18,7 +18,7 @@ object Blocks {
                 { true },
                 // TODO: add something
             )
-        }
+        },
     )
 
     val TSDB_STORAGE = ModPlatform.registerBlock(

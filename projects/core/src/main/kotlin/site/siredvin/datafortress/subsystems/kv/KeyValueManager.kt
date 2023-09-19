@@ -1,7 +1,6 @@
-package site.siredvin.datafortress.subsystems.tsdb
+package site.siredvin.datafortress.subsystems.kv
 
 import java.time.Instant
-import java.util.UUID
 
 interface KeyValueManager {
     fun init()

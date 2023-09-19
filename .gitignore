@@ -34,3 +34,5 @@ run/
 
 .env
 UnlimitedPeripheralWorks-*
+
+logs/
