@@ -8,6 +8,31 @@ import java.time.Instant
 import java.util.*
 import kotlin.random.Random
 
+class MagicPolynom(private val fromEpoch: Long, private val toEpoch: Long) {
+    private val elements: List<Long>
+    private val polynoms: List<PolynomialFunction>
+
+    init {
+        // Determine breaking points
+        val elementsCount = ((toEpoch - fromEpoch) / 100).coerceAtMost(10).toInt()
+        val step = (toEpoch - fromEpoch) / elementsCount
+        val elements: MutableList<Long> = (0..elementsCount - 2).map {
+            fromEpoch + step * it
+        }.toMutableList()
+        elements.add(toEpoch)
+        this.elements = elements
+        this.polynoms = elements.map {
+            PolynomialFunction(doubleArrayOf(Random.nextDouble(-100.0, 100.0), Random.nextDouble(-100.0, 100.0)))
+        }
+    }
+
+    fun value(v: Long): Double {
+        val lastIndex = elements.indexOfLast { v > it }
+        if (lastIndex == -1) return polynoms[0].value(v.toDouble() - fromEpoch)
+        return polynoms[lastIndex].value(v.toDouble() - fromEpoch)
+    }
+}
+
 object TSDBDummyManager : TSDBManager {
     private const val POINT_COUNT = 300
     override fun init() {
@@ -34,15 +59,15 @@ object TSDBDummyManager : TSDBManager {
             listOf(namePattern)
         }
         return timeseriesNames.map { name ->
-            val polynom = PolynomialFunction(doubleArrayOf(Random.nextDouble(-100.0, 100.0), Random.nextDouble(-100.0, 100.0)))
+            val polynom = MagicPolynom(fromEpoch, toEpoch)
             val timeRange = LongProgression.fromClosedRange(fromEpoch, toEpoch, step).map {
-                it + Random.nextLong(-step / 2, step / 2)
+                (it + Random.nextLong(-step / 2, step / 2)).coerceAtMost(toEpoch)
             }
             return@map TimeseriesFrame(
                 name,
                 emptyMap(),
                 timeRange.map { Instant.ofEpochSecond(it) },
-                timeRange.map { polynom.value(it.toDouble() - fromEpoch) },
+                timeRange.map { polynom.value(it) },
             )
         }
     }
