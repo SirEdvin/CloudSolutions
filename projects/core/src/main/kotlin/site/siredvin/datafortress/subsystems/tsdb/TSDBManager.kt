@@ -17,6 +17,16 @@ data class TimeseriesFrame(val name: String, val tags: Map<String, String>, val 
             val tagsLine = tags.entries.sortedBy { it.key }.joinToString { "${it.key}=${it.value}" }
             return "$name{$tagsLine}"
         }
+
+    fun toJson(): Map<String, Any> {
+        return mapOf(
+            "fullName" to fullName,
+            "name" to name,
+            "tags" to tags,
+            "timestamps" to timestamps.map { it.toString() },
+            "values" to values,
+        )
+    }
 }
 
 class TSDBManagerException(message: String) : Exception(message)
