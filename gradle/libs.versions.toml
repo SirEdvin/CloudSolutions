@@ -18,6 +18,7 @@ sqlite = "3.42.0.0"
 exposed = "0.43.0"
 javalin = "5.6.2"
 pebble = "2.4.0"
+common-math = "3.6.1"
 
 # Fabric dependencies
 fabric-api = "0.87.0+1.20.1"
@@ -69,6 +70,7 @@ exposed-java-time = {module = "org.jetbrains.exposed:exposed-java-time", version
 javalin = {module = "io.javalin:javalin", version.ref="javalin"}
 javalin-rendering = {module = "io.javalin:javalin-rendering", version.ref="javalin"}
 pebble = {module ="com.mitchellbosecke:pebble", version.ref="pebble"}
+common-math = {module = "org.apache.commons:commons-math3", version.ref="common-math"}
 
 
 # Fabric mod dependencies
@@ -105,6 +107,9 @@ db = [
 ]
 webframework = [
     "javalin", "javalin-rendering", "pebble"
+]
+math = [
+    "common-math"
 ]
 fabric-cc = ["cc-tweaked-fabric", "cc-tweaked-core", "peripheralium-fabric"]
 fabric-core = ["fabric-api", "fabric-kotlin", "fabric-config", "fabric-loader"]

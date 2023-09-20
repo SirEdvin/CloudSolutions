@@ -1,9 +1,11 @@
 package site.siredvin.datafortress.subsystems.tsdb.sqlite
 
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.serializer
 import org.jetbrains.exposed.dao.id.UUIDTable
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.javatime.timestamp
+import org.jetbrains.exposed.sql.json.JsonColumnType
 import org.jetbrains.exposed.sql.json.json
 import java.time.Instant
 
@@ -25,6 +27,28 @@ object Measurements : Table() {
     val c_timeseries = reference("timeseries", Timeserieses)
     val c_timestamp = timestamp("timestamp").clientDefault { Instant.now() }
     val c_v = double("value")
+
+    val json_timestamps by lazy {
+        CustomFunction<List<String>>(
+            "json_group_array",
+            JsonColumnType(
+                { Json.encodeToString(serializer<List<String>>(), it) },
+                { Json.decodeFromString(serializer<List<String>>(), it) },
+            ),
+            c_timestamp,
+        )
+    }
+
+    val json_values by lazy {
+        CustomFunction<List<Double>>(
+            "json_group_array",
+            JsonColumnType(
+                { Json.encodeToString(serializer<List<Double>>(), it) },
+                { Json.decodeFromString(serializer<List<Double>>(), it) },
+            ),
+            c_v,
+        )
+    }
 
     init {
         index(false, c_timestamp)

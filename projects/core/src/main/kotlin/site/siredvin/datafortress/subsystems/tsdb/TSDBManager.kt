@@ -3,6 +3,24 @@ package site.siredvin.datafortress.subsystems.tsdb
 import java.time.Instant
 import java.util.UUID
 
+data class TimeseriesInformation(val name: String, val tags: Map<String, String>, val retention: Int) {
+    val fullName: String
+        get() {
+            val tagsLine = tags.entries.sortedBy { it.key }.joinToString { "${it.key}=${it.value}" }
+            return "$name{$tagsLine}"
+        }
+}
+
+data class TimeseriesFrame(val name: String, val tags: Map<String, String>, val timestamps: List<Instant>, val values: List<Double>) {
+    val fullName: String
+        get() {
+            val tagsLine = tags.entries.sortedBy { it.key }.joinToString { "${it.key}=${it.value}" }
+            return "$name{$tagsLine}"
+        }
+}
+
+class TSDBManagerException(message: String) : Exception(message)
+
 interface TSDBManager {
     companion object {
         const val DEFAULT_RETENTION = 60 * 24 * 7
@@ -18,16 +36,24 @@ interface TSDBManager {
 
     fun init()
 
-    fun queryTimeseries(
-        ownerUUID: String,
-        namePattern: String,
-        tags: Map<String, String>,
-        from: Instant,
-        to: Instant,
-    ): Map<String, Map<Long, Double>>
+    @Throws(TSDBManagerException::class)
+    fun query(ownerUUID: String, namePattern: String, tags: Map<String, String>, from: Instant, to: Instant): List<TimeseriesFrame>
 
-    fun registerTimeseriers(ownerUUID: String, name: String, tags: Map<String, String>, retention: Int = DEFAULT_RETENTION): UUID
-    fun getTimeseries(ownerUUID: String): List<Map<String, Any>>
-    fun addMeasurement(ownerUUID: String, timeseriesId: UUID, measurementValue: Double)
-    fun addMeasurements(ownerUUID: String, values: Map<UUID, Double>)
+    @Throws(TSDBManagerException::class)
+    fun getOrCreate(ownerUUID: String, name: String, tags: Map<String, String>, retention: Int = DEFAULT_RETENTION): UUID
+
+    @Throws(TSDBManagerException::class)
+    fun update(ownerUUID: String, timeseriesId: UUID, retention: Int = DEFAULT_RETENTION)
+
+    @Throws(TSDBManagerException::class)
+    fun delete(ownerUUID: String, timeseriesId: UUID)
+
+    @Throws(TSDBManagerException::class)
+    fun list(ownerUUID: String): List<TimeseriesInformation>
+
+    @Throws(TSDBManagerException::class)
+    fun put(ownerUUID: String, timeseriesId: UUID, measurementValue: Double)
+
+    @Throws(TSDBManagerException::class)
+    fun putMany(ownerUUID: String, values: Map<UUID, Double>)
 }

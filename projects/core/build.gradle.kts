@@ -33,6 +33,7 @@ dependencies {
     implementation(libs.bundles.cccommon)
     implementation(libs.bundles.db)
     implementation(libs.bundles.webframework)
+    implementation(libs.bundles.math)
     api(libs.bundles.apicommon)
 }
 

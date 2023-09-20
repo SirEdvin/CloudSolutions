@@ -61,6 +61,8 @@ dependencies {
     include(libs.bundles.db)
     implementation(libs.bundles.webframework)
     include(libs.bundles.webframework)
+    implementation(libs.bundles.math)
+    include(libs.bundles.math)
 
     modImplementation(libs.bundles.fabric.core)
     modImplementation(libs.bundles.fabric.cc) {
