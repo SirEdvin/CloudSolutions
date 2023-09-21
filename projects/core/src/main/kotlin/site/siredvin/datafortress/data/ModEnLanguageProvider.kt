@@ -2,7 +2,6 @@ package site.siredvin.datafortress.data
 
 import net.minecraft.data.PackOutput
 import site.siredvin.datafortress.common.setup.Blocks
-import site.siredvin.datafortress.common.setup.Items
 import java.util.function.Consumer
 
 class ModEnLanguageProvider(
@@ -18,10 +17,11 @@ class ModEnLanguageProvider(
     }
 
     override fun addTranslations() {
-        add(Items.TEMPLATE_ITEM.get(), "Template item", "Oh my god, where the texture go?")
-        add(ModText.CREATIVE_TAB, "Rename this, pal")
-        add(Blocks.DATA_STORAGE.get(), "Data storage", "Something very useful")
-        add(Blocks.TSDB_STORAGE.get(), "Timeseries database", "Something very useful")
+        add(ModText.CREATIVE_TAB, "Data fortress")
+        add(Blocks.DATA_STORAGE.get(), "Data storage", "Have no uses right now")
+        add(Blocks.TSDB_STORAGE.get(), "Timeseries database", "Have no uses right now")
+        add(Blocks.STATSD_BRIDGE.get(), "StatsD bridge", "Allows you to send metrics to preconfigured statsd server")
+        add(ModText.UNFINISHED_AND_DISABLED, "  §4This item is not ready and disabled for now. Just ignore it")
         hooks.forEach { it.accept(this) }
     }
 }

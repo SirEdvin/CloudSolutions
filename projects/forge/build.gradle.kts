@@ -47,6 +47,7 @@ dependencies {
     implementation(libs.bundles.db)
     implementation(libs.bundles.webframework)
     implementation(libs.bundles.math)
+    implementation(libs.bundles.metrics)
     libs.bundles.forge.cc.get().map { implementation(fg.deobf(it)) }
 
     libs.bundles.externalMods.forge.runtime.get().map { runtimeOnly(fg.deobf(it)) }

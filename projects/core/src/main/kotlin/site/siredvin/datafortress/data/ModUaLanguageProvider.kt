@@ -2,7 +2,6 @@ package site.siredvin.datafortress.data
 
 import net.minecraft.data.PackOutput
 import site.siredvin.datafortress.common.setup.Blocks
-import site.siredvin.datafortress.common.setup.Items
 import java.util.function.Consumer
 
 class ModUaLanguageProvider(
@@ -18,10 +17,11 @@ class ModUaLanguageProvider(
     }
 
     override fun addTranslations() {
-        add(Items.TEMPLATE_ITEM.get(), "Шаблоний предмет", "Боже, у нього навіть нормальної текстури немає")
-        add(ModText.CREATIVE_TAB, "А це треба перейменувати, друже")
-        add(Blocks.DATA_STORAGE.get(), "Data storage", "Something very useful")
-        add(Blocks.TSDB_STORAGE.get(), "Timeseries database", "Something very useful")
+        add(ModText.CREATIVE_TAB, "Цитадель даних")
+        add(Blocks.DATA_STORAGE.get(), "База даних", "Наразі не використовується")
+        add(Blocks.TSDB_STORAGE.get(), "База даних часових рядів", "Наразі не використовується")
+        add(Blocks.STATSD_BRIDGE.get(), "StatsD міст", "Дозволяє відправляти statsd метрики на якийсь statsd сервер вказаний в налаштуваннях")
+        add(ModText.UNFINISHED_AND_DISABLED, "  §4Цей предмет не готовий та був відключений. Просто ігноруйте його")
         hooks.forEach { it.accept(this) }
     }
 }

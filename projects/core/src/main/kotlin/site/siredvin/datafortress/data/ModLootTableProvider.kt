@@ -25,6 +25,7 @@ object ModLootTableProvider {
         val lootTable = LootTableHelper(ModPlatform.holder)
         lootTable.dropSelf(consumer, Blocks.DATA_STORAGE)
         lootTable.dropSelf(consumer, Blocks.TSDB_STORAGE)
+        lootTable.dropSelf(consumer, Blocks.STATSD_BRIDGE)
         lootTable.validate()
     }
 }

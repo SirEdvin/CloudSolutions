@@ -3,7 +3,7 @@ package site.siredvin.datafortress
 import net.minecraft.world.item.CreativeModeTab
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
-import site.siredvin.datafortress.common.setup.Items
+import site.siredvin.datafortress.common.setup.Blocks
 import site.siredvin.datafortress.data.ModText
 import site.siredvin.datafortress.subsystems.kv.KeyValueManager
 import site.siredvin.datafortress.subsystems.kv.sqlite.KVSQLiteManager
@@ -29,7 +29,7 @@ object DataFortressCore {
     }
 
     fun configureCreativeTab(builder: CreativeModeTab.Builder): CreativeModeTab.Builder {
-        return builder.icon { Items.TEMPLATE_ITEM.get().defaultInstance }
+        return builder.icon { Blocks.STATSD_BRIDGE.get().asItem().defaultInstance }
             .title(ModText.CREATIVE_TAB.text)
             .displayItems { _, output ->
                 ModPlatform.holder.blocks.forEach { output.accept(it.get()) }

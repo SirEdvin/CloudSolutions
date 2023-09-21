@@ -1,9 +1,10 @@
 {
-  "block.datafortress.data_storage": "Data storage",
-  "block.datafortress.data_storage.tooltip": "Something very useful",
-  "block.datafortress.tsdb_storage": "Timeseries database",
-  "block.datafortress.tsdb_storage.tooltip": "Something very useful",
-  "item.datafortress.template_item": "Шаблоний предмет",
-  "item.datafortress.template_item.tooltip": "Боже, у нього навіть нормальної текстури немає",
-  "text.datafortress.creative_tab": "А це треба перейменувати, друже"
+  "block.datafortress.data_storage": "База даних",
+  "block.datafortress.data_storage.tooltip": "Наразі не використовується",
+  "block.datafortress.statsd_bridge": "StatsD міст",
+  "block.datafortress.statsd_bridge.tooltip": "Дозволяє відправляти statsd метрики на якийсь statsd сервер вказаний в налаштуваннях",
+  "block.datafortress.tsdb_storage": "База даних часових рядів",
+  "block.datafortress.tsdb_storage.tooltip": "Наразі не використовується",
+  "text.datafortress.creative_tab": "Цитадель даних",
+  "text.datafortress.unfinished_and_disabled": "  §4Цей предмет не готовий та був відключений. Просто ігноруйте його"
 }

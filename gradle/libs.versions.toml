@@ -13,12 +13,13 @@ spotless = "6.19.0"
 # Core mod dependencies
 cc-tweaked = "1.108.1"
 mixin = "0.8.5"
-peripheralium = "0.6.13-pre.2"
+peripheralium = "0.6.13"
 sqlite = "3.42.0.0"
 exposed = "0.43.0"
 javalin = "5.6.2"
 pebble = "2.4.0"
 common-math = "3.6.1"
+statsd-client = "3.0.1"
 
 # Fabric dependencies
 fabric-api = "0.87.0+1.20.1"
@@ -71,6 +72,7 @@ javalin = {module = "io.javalin:javalin", version.ref="javalin"}
 javalin-rendering = {module = "io.javalin:javalin-rendering", version.ref="javalin"}
 pebble = {module ="com.mitchellbosecke:pebble", version.ref="pebble"}
 common-math = {module = "org.apache.commons:commons-math3", version.ref="common-math"}
+statsd-client = {module = "com.timgroup:java-statsd-client", version.ref="statsd-client"}
 
 
 # Fabric mod dependencies
@@ -110,6 +112,9 @@ webframework = [
 ]
 math = [
     "common-math"
+]
+metrics = [
+    "statsd-client"
 ]
 fabric-cc = ["cc-tweaked-fabric", "cc-tweaked-core", "peripheralium-fabric"]
 fabric-core = ["fabric-api", "fabric-kotlin", "fabric-config", "fabric-loader"]

@@ -3,6 +3,7 @@ package site.siredvin.datafortress.computercraft.peripheral
 import dan200.computercraft.api.lua.LuaException
 import dan200.computercraft.api.lua.LuaFunction
 import site.siredvin.datafortress.DataFortressCore
+import site.siredvin.datafortress.common.configuration.ModConfig
 import site.siredvin.datafortress.subsystems.tsdb.TSDBManager
 import site.siredvin.peripheralium.api.peripheral.IPeripheralOwner
 import site.siredvin.peripheralium.computercraft.peripheral.OwnedPeripheral
@@ -14,8 +15,7 @@ class TSDBStoragePeripheral(owner: IPeripheralOwner) : OwnedPeripheral<IPeripher
     }
 
     override val isEnabled: Boolean
-        // TOOD: update
-        get() = true
+        get() = ModConfig.enableTSDBStorage
 
     @LuaFunction
     fun registerTimeseries(name: String, tags: Map<*, *>, retention: Optional<Int>): String {

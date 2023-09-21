@@ -3,6 +3,7 @@ package site.siredvin.datafortress.computercraft.peripheral
 import dan200.computercraft.api.lua.LuaException
 import dan200.computercraft.api.lua.LuaFunction
 import site.siredvin.datafortress.DataFortressCore
+import site.siredvin.datafortress.common.configuration.ModConfig
 import site.siredvin.peripheralium.api.peripheral.IPeripheralOwner
 import site.siredvin.peripheralium.computercraft.peripheral.OwnedPeripheral
 import java.time.Instant
@@ -15,8 +16,7 @@ class DataStoragePeripheral(owner: IPeripheralOwner) : OwnedPeripheral<IPeripher
     }
 
     override val isEnabled: Boolean
-        // TODO: replace
-        get() = true
+        get() = ModConfig.enableDataStorage
 
     @LuaFunction
     fun put(key: String, value: String, expire: Optional<Long>) {

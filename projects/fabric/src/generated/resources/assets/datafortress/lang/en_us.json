@@ -1,9 +1,10 @@
 {
   "block.datafortress.data_storage": "Data storage",
-  "block.datafortress.data_storage.tooltip": "Something very useful",
+  "block.datafortress.data_storage.tooltip": "Have no uses right now",
+  "block.datafortress.statsd_bridge": "StatsD bridge",
+  "block.datafortress.statsd_bridge.tooltip": "Allows you to send metrics to preconfigured statsd server",
   "block.datafortress.tsdb_storage": "Timeseries database",
-  "block.datafortress.tsdb_storage.tooltip": "Something very useful",
-  "item.datafortress.template_item": "Template item",
-  "item.datafortress.template_item.tooltip": "Oh my god, where the texture go?",
-  "text.datafortress.creative_tab": "Rename this, pal"
+  "block.datafortress.tsdb_storage.tooltip": "Have no uses right now",
+  "text.datafortress.creative_tab": "Data fortress",
+  "text.datafortress.unfinished_and_disabled": "  §4This item is not ready and disabled for now. Just ignore it"
 }
