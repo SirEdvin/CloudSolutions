@@ -6,9 +6,9 @@ import site.siredvin.datafortress.DataFortressCore
 import site.siredvin.datafortress.common.configuration.ModConfig
 
 object StatsDClient {
-    var client: NonBlockingStatsDClient? = null
+    private var client: NonBlockingStatsDClient? = null
     fun init() {
-        if (ModConfig.enableStatsDBridge) {
+        if (ModConfig.enableStatsDConnection) {
             try {
                 this.client = NonBlockingStatsDClient(
                     ModConfig.statsdPrefix,
@@ -28,12 +28,8 @@ object StatsDClient {
         client?.count(aspect, delta)
     }
 
-    fun increment(aspect: String) {
-        client?.increment(aspect)
-    }
-
-    fun decrement(aspect: String) {
-        client?.decrement(aspect)
+    fun delta(aspect: String, value: Long) {
+        client?.recordGaugeDelta(aspect, value)
     }
 
     fun gauge(aspect: String, value: Long) {

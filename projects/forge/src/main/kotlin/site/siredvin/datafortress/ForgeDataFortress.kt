@@ -46,6 +46,7 @@ object ForgeDataFortress {
         // Configure configuration
         val context = ModLoadingContext.get()
         context.registerConfig(ModConfig.Type.COMMON, ConfigHolder.COMMON_SPEC, "${DataFortressCore.MOD_ID}.toml")
+        context.registerConfig(ModConfig.Type.SERVER, ConfigHolder.SERVER_SPEC, "${DataFortressCore.MOD_ID}_server.toml")
         DataFortressCore.configure(ForgeModPlatform, ForgeModRecipeIngredients)
         val eventBus = MOD_CONTEXT.getKEventBus()
         eventBus.addListener(this::commonSetup)
@@ -56,7 +57,7 @@ object ForgeDataFortress {
         creativeTabRegistry.register(eventBus)
         turtleSerializers.register(eventBus)
         pocketSerializers.register(eventBus)
-        // TODO: figure out where to call onServerStarted
+        // TODO: figure out where to call onServerStarted, onServerStopped
     }
 
     @Suppress("UNUSED_PARAMETER")

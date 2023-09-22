@@ -1,5 +1,6 @@
 package site.siredvin.datafortress.computercraft.peripheral
 
+import dan200.computercraft.api.lua.LuaException
 import dan200.computercraft.api.lua.LuaFunction
 import site.siredvin.datafortress.common.configuration.ModConfig
 import site.siredvin.datafortress.subsystems.statsq.StatsDClient
@@ -14,23 +15,38 @@ class StatsDBridgePeripheral(peripheralOwner: IPeripheralOwner) :
     override val isEnabled: Boolean
         get() = ModConfig.enableStatsDBridge
 
-    // TODO: add ownerUUID/Player name mixing
+    @LuaFunction
+    fun count(aspect: String, delta: Long) {
+        val player = peripheralOwner.owner ?: throw LuaException("Cannot find owner")
+        val playerSpecificAspect = "${player.name.string}.$aspect"
+        StatsDClient.count(playerSpecificAspect, delta)
+    }
 
     @LuaFunction
-    fun count(aspect: String, delta: Long) = StatsDClient.count(aspect, delta)
+    fun delta(aspect: String, value: Long) {
+        val player = peripheralOwner.owner ?: throw LuaException("Cannot find owner")
+        val playerSpecificAspect = "${player.name.string}.$aspect"
+        StatsDClient.delta(playerSpecificAspect, value)
+    }
 
     @LuaFunction
-    fun increment(aspect: String) = StatsDClient.increment(aspect)
+    fun gauge(aspect: String, value: Long) {
+        val player = peripheralOwner.owner ?: throw LuaException("Cannot find owner")
+        val playerSpecificAspect = "${player.name.string}.$aspect"
+        StatsDClient.gauge(playerSpecificAspect, value)
+    }
 
     @LuaFunction
-    fun decrement(aspect: String) = StatsDClient.decrement(aspect)
+    fun set(aspect: String, eventName: String) {
+        val player = peripheralOwner.owner ?: throw LuaException("Cannot find owner")
+        val playerSpecificAspect = "${player.name.string}.$aspect"
+        StatsDClient.set(playerSpecificAspect, eventName)
+    }
 
     @LuaFunction
-    fun gauge(aspect: String, value: Long) = StatsDClient.gauge(aspect, value)
-
-    @LuaFunction
-    fun set(aspect: String, eventName: String) = StatsDClient.set(aspect, eventName)
-
-    @LuaFunction
-    fun time(aspect: String, timeInMs: Long) = StatsDClient.time(aspect, timeInMs)
+    fun time(aspect: String, timeInMs: Long) {
+        val player = peripheralOwner.owner ?: throw LuaException("Cannot find owner")
+        val playerSpecificAspect = "${player.name.string}.$aspect"
+        StatsDClient.time(playerSpecificAspect, timeInMs)
+    }
 }
