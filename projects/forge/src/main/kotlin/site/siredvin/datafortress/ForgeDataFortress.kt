@@ -8,6 +8,9 @@ import net.minecraft.world.item.CreativeModeTab
 import net.minecraft.world.item.Item
 import net.minecraft.world.level.block.Block
 import net.minecraftforge.common.util.LazyOptional
+import net.minecraftforge.event.server.ServerStartedEvent
+import net.minecraftforge.event.server.ServerStoppingEvent
+import net.minecraftforge.eventbus.api.SubscribeEvent
 import net.minecraftforge.fml.ModLoadingContext
 import net.minecraftforge.fml.common.Mod
 import net.minecraftforge.fml.config.ModConfig
@@ -57,7 +60,16 @@ object ForgeDataFortress {
         creativeTabRegistry.register(eventBus)
         turtleSerializers.register(eventBus)
         pocketSerializers.register(eventBus)
-        // TODO: figure out where to call onServerStarted, onServerStopped
+    }
+
+    @SubscribeEvent
+    fun onServerStarted(event: ServerStartedEvent) {
+        ModCommonHooks.onServerStarted(event.server)
+    }
+
+    @SubscribeEvent
+    fun onServerStopping(event: ServerStoppingEvent) {
+        ModCommonHooks.onServerStopping(event.server)
     }
 
     @Suppress("UNUSED_PARAMETER")

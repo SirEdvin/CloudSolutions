@@ -20,10 +20,13 @@ object FabricDataFortress : ModInitializer {
         ModCommonHooks.onRegister()
         // Pretty important to setup configuration after integration loading!
         ForgeConfigRegistry.INSTANCE.register(DataFortressCore.MOD_ID, ModConfig.Type.COMMON, ConfigHolder.COMMON_SPEC)
-        ForgeConfigRegistry.INSTANCE.register(DataFortressCore.MOD_ID, ModConfig.Type.SERVER, ConfigHolder.SERVER_SPEC)
+        ForgeConfigRegistry.INSTANCE.register(DataFortressCore.MOD_ID, ModConfig.Type.SERVER, ConfigHolder.SERVER_SPEC, "${DataFortressCore.MOD_ID}_server.toml")
 
         ServerLifecycleEvents.SERVER_STARTED.register {
-            ModCommonHooks.onServerStarted()
+            ModCommonHooks.onServerStarted(it)
+        }
+        ServerLifecycleEvents.SERVER_STOPPING.register {
+            ModCommonHooks.onServerStopping(it)
         }
     }
 }

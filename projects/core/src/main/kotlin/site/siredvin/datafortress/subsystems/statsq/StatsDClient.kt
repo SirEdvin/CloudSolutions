@@ -24,6 +24,10 @@ object StatsDClient {
         }
     }
 
+    fun stop() {
+        client?.stop()
+    }
+
     fun count(aspect: String, delta: Long) {
         client?.count(aspect, delta)
     }

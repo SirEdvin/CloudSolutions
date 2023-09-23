@@ -24,6 +24,10 @@ forgeShaking {
     shake()
 }
 
+configurations {
+    minecraftLibrary { extendsFrom(minecraftEmbed.get()) }
+}
+
 repositories {
     // location of the maven that hosts JEI files since January 2023
     maven {
@@ -44,10 +48,23 @@ repositories {
 dependencies {
     implementation(libs.bundles.kotlin)
     implementation(libs.bundles.forge.raw)
-    implementation(libs.bundles.db)
+    // So, this is here because it isn't suppose to be used right now
+    // but this should be changed in future!
     implementation(libs.bundles.webframework)
-    implementation(libs.bundles.math)
-    implementation(libs.bundles.metrics)
+
+    minecraftEmbed(libs.bundles.db) {
+        jarJar(this)
+        isTransitive = false
+    }
+    minecraftEmbed(libs.bundles.math) {
+        jarJar(this)
+        isTransitive = false
+    }
+    minecraftEmbed(libs.bundles.metrics) {
+        jarJar(this)
+        isTransitive = false
+    }
+
     libs.bundles.forge.cc.get().map { implementation(fg.deobf(it)) }
 
     libs.bundles.externalMods.forge.runtime.get().map { runtimeOnly(fg.deobf(it)) }

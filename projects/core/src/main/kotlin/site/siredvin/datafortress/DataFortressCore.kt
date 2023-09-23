@@ -23,11 +23,6 @@ object DataFortressCore {
         // TODO: some logic for TSDBManager calculation from settings
         TSDBSQLiteManager
     }
-    val kvManager: KeyValueManager by lazy {
-        // TODO: some logic for KVManager calculation from settings
-        KVSQLiteManager
-    }
-
     fun configureCreativeTab(builder: CreativeModeTab.Builder): CreativeModeTab.Builder {
         return builder.icon { Blocks.STATSD_BRIDGE.get().asItem().defaultInstance }
             .title(ModText.CREATIVE_TAB.text)
@@ -43,6 +38,5 @@ object DataFortressCore {
         ModRecipeIngredients.configure(ingredients)
         PeripheraliumPlatform.registerGenericPeripheralLookup()
         tsdbManager.init()
-        kvManager.init()
     }
 }

@@ -1,6 +1,7 @@
 package site.siredvin.datafortress.common.configuration
 
 import net.minecraftforge.common.ForgeConfigSpec
+import site.siredvin.datafortress.subsystems.KVStorageMode
 import site.siredvin.peripheralium.api.config.IConfigHandler
 
 object ModConfig {
@@ -29,6 +30,12 @@ object ModConfig {
     val statsdPrefix: String
         get() = ConfigHolder.SERVER_CONFIG.STATSD_PREFIX.get()
 
+    val kvStorageMode: KVStorageMode
+        get() = ConfigHolder.SERVER_CONFIG.KV_STORAGE_MODE.get()
+
+    val kvStorageKeyLimit: Int
+        get() = ConfigHolder.SERVER_CONFIG.KV_STORAGE_KEY_LIMIT.get()
+
     class CommonConfig internal constructor(builder: ForgeConfigSpec.Builder) {
 
         // Generic plugins
@@ -50,11 +57,14 @@ object ModConfig {
 
     class ServerConfig internal constructor(builder: ForgeConfigSpec.Builder) {
 
-        // Generic plugins
+        // StatsD
         val ENABLE_STATSD_CONNECTION: ForgeConfigSpec.BooleanValue
         val STATSD_PORT: ForgeConfigSpec.IntValue
         val STATSD_HOSTNAME: ForgeConfigSpec.ConfigValue<String>
         val STATSD_PREFIX: ForgeConfigSpec.ConfigValue<String>
+        // Data storage
+        val KV_STORAGE_MODE: ForgeConfigSpec.ConfigValue<KVStorageMode>
+        val KV_STORAGE_KEY_LIMIT: ForgeConfigSpec.IntValue
 
         init {
             builder.push("statsd")
@@ -66,6 +76,12 @@ object ModConfig {
                 .define("statsdHostname", "127.0.0.1")
             STATSD_PREFIX = builder.comment("StatsD prefix")
                 .define("statsdPrefix", "")
+            builder.pop()
+            builder.push("kv")
+            KV_STORAGE_MODE = builder.comment("Mode of KV storage")
+                .define("kvStorageMode", KVStorageMode.DISABLED)
+            KV_STORAGE_KEY_LIMIT = builder.comment("Limit for active keys in storage per player")
+                .defineInRange("kvStorageKeyLimit", 1000, 1, Int.MAX_VALUE)
             builder.pop()
         }
 
