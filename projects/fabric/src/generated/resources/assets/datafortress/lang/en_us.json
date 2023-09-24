@@ -1,6 +1,6 @@
 {
-  "block.datafortress.data_storage": "Data storage",
-  "block.datafortress.data_storage.tooltip": "Have no uses right now",
+  "block.datafortress.kv_storage": "KV storage",
+  "block.datafortress.kv_storage.tooltip": "Have no uses right now",
   "block.datafortress.statsd_bridge": "StatsD bridge",
   "block.datafortress.statsd_bridge.tooltip": "Allows you to send metrics to preconfigured statsd server",
   "block.datafortress.tsdb_storage": "Timeseries database",

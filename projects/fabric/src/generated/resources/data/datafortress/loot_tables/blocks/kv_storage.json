@@ -11,7 +11,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "datafortress:data_storage"
+          "name": "datafortress:kv_storage"
         }
       ],
       "rolls": 1.0

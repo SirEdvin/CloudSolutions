@@ -90,6 +90,7 @@ object ModConfig {
             builder.push("kv")
             KV_STORAGE_MODE = builder.comment("Mode of KV storage")
                 .define("kvStorageMode", KVStorageMode.DISABLED.name) {
+                    if (it == null) return@define false
                     return@define try {
                         KVStorageMode.valueOf(it.toString().uppercase())
                         true

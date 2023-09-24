@@ -56,7 +56,8 @@ object KVSQLiteManager : KeyValueManager {
         getExQuery = db?.prepareStatement("select expire from kv_records_1 where ownerUUID = ? and key = ?")
         putExQuery = db?.prepareStatement("update kv_records_1 set expire = ? where ownerUUID = ? and key = ?")
         listQuery = db?.prepareStatement("select key from kv_records_1 where ownerUUID = ?")
-        cleanupFuture = executor.scheduleWithFixedDelay({ cleanup() }, 1, 1, TimeUnit.MINUTES)
+        cleanupFuture = executor.scheduleWithFixedDelay({ cleanup() }, 0, 1, TimeUnit.MINUTES)
+        DataFortressCore.LOGGER.info("Result of cleanup future: {}, {}", cleanupFuture?.isDone, cleanupFuture?.isCancelled)
     }
 
     override fun stop(server: MinecraftServer, executor: ScheduledExecutorService) {
@@ -64,11 +65,15 @@ object KVSQLiteManager : KeyValueManager {
     }
 
     private fun cleanup() {
-        queryPrepareLock.withLock {
-            DataFortressCore.LOGGER.info("Run KV cleanup")
-            val now = Instant.now().epochSecond
-            cleanupQuery?.setInt(1, now.toInt())
-            cleanupQuery?.execute()
+        try {
+            queryPrepareLock.withLock {
+                DataFortressCore.LOGGER.info("Run KV cleanup")
+                val now = Instant.now().epochSecond
+                cleanupQuery?.setInt(1, now.toInt())
+                cleanupQuery?.execute()
+            }
+        } catch (ex: Exception) {
+            DataFortressCore.LOGGER.catching(ex)
         }
     }
 
