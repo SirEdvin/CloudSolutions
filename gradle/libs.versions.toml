@@ -14,8 +14,7 @@ spotless = "6.19.0"
 cc-tweaked = "1.108.1"
 mixin = "0.8.5"
 peripheralium = "0.6.13"
-sqlite = "3.42.0.0"
-exposed = "0.43.0"
+sqlite = "3.43.0.0"
 javalin = "5.6.2"
 pebble = "2.4.0"
 common-math = "3.6.1"
@@ -64,10 +63,6 @@ common-config = {module = "fuzs.forgeconfigapiport:forgeconfigapiport-common", v
 mixin = { module = "org.spongepowered:mixin", version.ref = "mixin" }
 peripheralium-core = {module = "site.siredvin:peripheralium-common-1.20.1", version.ref = "peripheralium"}
 sqlite = {module="org.xerial:sqlite-jdbc", version.ref="sqlite"}
-exposed-core = {module="org.jetbrains.exposed:exposed-core", version.ref="exposed"}
-exposed-json = {module="org.jetbrains.exposed:exposed-json", version.ref="exposed"}
-exposed-jdbc = {module="org.jetbrains.exposed:exposed-jdbc", version.ref="exposed"}
-exposed-java-time = {module = "org.jetbrains.exposed:exposed-java-time", version.ref="exposed"}
 javalin = {module = "io.javalin:javalin", version.ref="javalin"}
 javalin-rendering = {module = "io.javalin:javalin-rendering", version.ref="javalin"}
 pebble = {module ="com.mitchellbosecke:pebble", version.ref="pebble"}
@@ -103,10 +98,7 @@ spotless = {id = "com.diffplug.spotless", version.ref="spotless"}
 kotlin = ["kotlin-stdlib", "kotlin-coroutines", "kotlin-atomicfu"]
 cccommon = ["cc-tweaked-common", "cc-tweaked-core", "peripheralium-core"]
 apicommon = ["common-config"]
-db = [
-    "sqlite", "exposed-core", "exposed-json", "exposed-jdbc",
-    "exposed-java-time"
-]
+db = ["sqlite"]
 webframework = [
     "javalin", "javalin-rendering", "pebble"
 ]

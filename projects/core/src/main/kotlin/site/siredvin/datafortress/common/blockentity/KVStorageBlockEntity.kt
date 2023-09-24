@@ -8,8 +8,8 @@ import site.siredvin.datafortress.computercraft.peripheral.KVStoragePeripheral
 import site.siredvin.peripheralium.common.blockentities.PeripheralBlockEntity
 import site.siredvin.peripheralium.computercraft.peripheral.owner.BlockEntityPeripheralOwner
 
-class DataStorageBlockEntity(blockPos: BlockPos, blockState: BlockState) :
-    PeripheralBlockEntity<KVStoragePeripheral>(BlockEntityTypes.DATA_STORAGE.get(), blockPos, blockState) {
+class KVStorageBlockEntity(blockPos: BlockPos, blockState: BlockState) :
+    PeripheralBlockEntity<KVStoragePeripheral>(BlockEntityTypes.KV_STORAGE.get(), blockPos, blockState) {
 
     override fun createPeripheral(side: Direction): KVStoragePeripheral {
         return KVStoragePeripheral(BlockEntityPeripheralOwner(this))

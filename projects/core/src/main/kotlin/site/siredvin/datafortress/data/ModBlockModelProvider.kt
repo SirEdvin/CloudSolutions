@@ -12,7 +12,7 @@ object ModBlockModelProvider {
         val peripheralCasingTexture = ResourceLocation(DataFortressCore.MOD_ID, "block/peripheral_casing")
         horizontalOrientatedBlock(
             generators,
-            Blocks.DATA_STORAGE.get(),
+            Blocks.KV_STORAGE.get(),
         )
         horizontalOrientatedBlock(
             generators,

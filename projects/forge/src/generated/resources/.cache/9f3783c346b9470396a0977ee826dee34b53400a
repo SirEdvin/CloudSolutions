@@ -1,2 +1,9 @@
-// 1.20	2023-06-14T22:32:49.129885296	vanilla/Block State Definitions
-42b1c58247c353802f636b36409b6ac8664028b9 assets/template/models/item/template_item.json
+// 1.20.1	2023-09-24T20:30:19.168952429	vanilla/Block State Definitions
+c3ac06924adfb4ce2a259f90cf356911197eb5fb assets/datafortress/blockstates/kv_storage.json
+cb91b4900ce5230a8fe849734e5e3d04398074e9 assets/datafortress/blockstates/statsd_bridge.json
+d8b93a22bf648db34a45742616185433b66ce674 assets/datafortress/blockstates/tsdb_storage.json
+d8eb949458353007a7f7388e92c280adb6861a49 assets/datafortress/models/block/statsd_bridge.json
+28057d002ba6bb5ff71e7c00af18ee0dc4324b97 assets/datafortress/models/block/tsdb_storage.json
+25243bbe28a6efb8822b78eda0ebcb8b529137ad assets/datafortress/models/item/kv_storage.json
+3cf6ec7d80f0c60d7fcc963e275e3dc2d60d34d0 assets/datafortress/models/item/statsd_bridge.json
+983e863e06ba222faa8f8c45efe6a4ed7b57cf64 assets/datafortress/models/item/tsdb_storage.json

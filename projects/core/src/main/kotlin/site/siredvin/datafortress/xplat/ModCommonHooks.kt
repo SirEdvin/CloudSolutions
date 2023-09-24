@@ -5,13 +5,10 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.MinecraftServer
 import net.minecraft.world.item.CreativeModeTab
 import site.siredvin.datafortress.DataFortressCore
-import site.siredvin.datafortress.common.configuration.ModConfig
 import site.siredvin.datafortress.common.setup.BlockEntityTypes
 import site.siredvin.datafortress.common.setup.Blocks
 import site.siredvin.datafortress.common.setup.Items
 import site.siredvin.datafortress.subsystems.SubsystemManager
-import site.siredvin.datafortress.subsystems.statsq.StatsDClient
-import site.siredvin.datafortress.subsystems.webserver.WebserverMain
 import site.siredvin.peripheralium.xplat.PeripheraliumPlatform
 import site.siredvin.peripheralium.xplat.XplatRegistries
 

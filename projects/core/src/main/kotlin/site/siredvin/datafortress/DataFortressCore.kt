@@ -5,8 +5,6 @@ import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 import site.siredvin.datafortress.common.setup.Blocks
 import site.siredvin.datafortress.data.ModText
-import site.siredvin.datafortress.subsystems.kv.KeyValueManager
-import site.siredvin.datafortress.subsystems.kv.sqlite.KVSQLiteManager
 import site.siredvin.datafortress.subsystems.tsdb.TSDBManager
 import site.siredvin.datafortress.subsystems.tsdb.sqlite.TSDBSQLiteManager
 import site.siredvin.datafortress.xplat.ModCommonHooks

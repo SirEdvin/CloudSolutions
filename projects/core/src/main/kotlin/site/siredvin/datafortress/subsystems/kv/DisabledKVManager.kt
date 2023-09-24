@@ -3,7 +3,7 @@ package site.siredvin.datafortress.subsystems.kv
 import dan200.computercraft.api.lua.LuaException
 import java.time.Instant
 
-object DisabledKVManager: KeyValueManager {
+object DisabledKVManager : KeyValueManager {
     override fun put(ownerUUID: String, key: String, value: String, expire: Instant?) {
         throw LuaException("KV storage is disabled in server configuration")
     }

@@ -3,7 +3,7 @@ package site.siredvin.datafortress.common.setup
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.level.block.entity.BlockEntityType
 import site.siredvin.datafortress.DataFortressCore
-import site.siredvin.datafortress.common.blockentity.DataStorageBlockEntity
+import site.siredvin.datafortress.common.blockentity.KVStorageBlockEntity
 import site.siredvin.datafortress.common.blockentity.StatsDBridgeBlockEntity
 import site.siredvin.datafortress.common.blockentity.TSDBStorageBlockEntity
 import site.siredvin.datafortress.xplat.ModPlatform
@@ -11,12 +11,12 @@ import site.siredvin.peripheralium.xplat.PeripheraliumPlatform
 import java.util.function.Supplier
 
 object BlockEntityTypes {
-    val DATA_STORAGE: Supplier<BlockEntityType<DataStorageBlockEntity>> = ModPlatform.registerBlockEntity(
-        ResourceLocation(DataFortressCore.MOD_ID, "data_storage"),
+    val KV_STORAGE: Supplier<BlockEntityType<KVStorageBlockEntity>> = ModPlatform.registerBlockEntity(
+        ResourceLocation(DataFortressCore.MOD_ID, "kv_storage"),
     ) {
         PeripheraliumPlatform.createBlockEntityType(
-            ::DataStorageBlockEntity,
-            Blocks.DATA_STORAGE.get(),
+            ::KVStorageBlockEntity,
+            Blocks.KV_STORAGE.get(),
         )
     }
 

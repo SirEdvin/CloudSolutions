@@ -16,7 +16,7 @@ class KVStoragePeripheral(owner: IPeripheralOwner) : OwnedPeripheral<IPeripheral
     }
 
     override val isEnabled: Boolean
-        get() = ModConfig.enableDataStorage
+        get() = ModConfig.enableKVStorage
 
     @LuaFunction
     fun put(key: String, value: String, expire: Optional<Long>) {

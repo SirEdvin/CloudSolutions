@@ -54,15 +54,27 @@ dependencies {
 
     minecraftEmbed(libs.bundles.db) {
         jarJar(this)
-        isTransitive = false
+        exclude("org.jetbrains", "annotations")
+        exclude("org.slf4j", "slf4j-api")
+        exclude("org.jetbrains.kotlin")
+        exclude("org.jetbrains.kotlinx")
+//        isTransitive = false
     }
     minecraftEmbed(libs.bundles.math) {
         jarJar(this)
-        isTransitive = false
+        exclude("org.jetbrains", "annotations")
+        exclude("org.slf4j", "slf4j-api")
+        exclude("org.jetbrains.kotlin")
+        exclude("org.jetbrains.kotlinx")
+//        isTransitive = false
     }
     minecraftEmbed(libs.bundles.metrics) {
         jarJar(this)
-        isTransitive = false
+        exclude("org.jetbrains", "annotations")
+        exclude("org.slf4j", "slf4j-api")
+        exclude("org.jetbrains.kotlin")
+        exclude("org.jetbrains.kotlinx")
+//        isTransitive = false
     }
 
     libs.bundles.forge.cc.get().map { implementation(fg.deobf(it)) }

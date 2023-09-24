@@ -13,8 +13,8 @@ object ModConfig {
     val enableTSDBStorage: Boolean
         get() = false
 
-    val enableDataStorage: Boolean
-        get() = false
+    val enableKVStorage: Boolean
+        get() = ConfigHolder.COMMON_CONFIG.ENABLE_KV_STORAGE.get()
 
     val enableStatsDBridge: Boolean
         get() = ConfigHolder.COMMON_CONFIG.ENABLE_STATSD_BRIDGE.get()
@@ -31,7 +31,13 @@ object ModConfig {
         get() = ConfigHolder.SERVER_CONFIG.STATSD_PREFIX.get()
 
     val kvStorageMode: KVStorageMode
-        get() = ConfigHolder.SERVER_CONFIG.KV_STORAGE_MODE.get()
+        get() {
+            return try {
+                KVStorageMode.valueOf(ConfigHolder.SERVER_CONFIG.KV_STORAGE_MODE.get().uppercase())
+            } catch (e: IllegalArgumentException) {
+                KVStorageMode.DISABLED
+            }
+        }
 
     val kvStorageKeyLimit: Int
         get() = ConfigHolder.SERVER_CONFIG.KV_STORAGE_KEY_LIMIT.get()
@@ -40,11 +46,14 @@ object ModConfig {
 
         // Generic plugins
         val ENABLE_STATSD_BRIDGE: ForgeConfigSpec.BooleanValue
+        val ENABLE_KV_STORAGE: ForgeConfigSpec.BooleanValue
 
         init {
             builder.push("statsd")
             ENABLE_STATSD_BRIDGE = builder.comment("Enables statsd bridge")
                 .define("enableStatsDBridge", false)
+            ENABLE_KV_STORAGE = builder.comment("Enables KV storage")
+                .define("enableKVStorage", false)
             builder.pop()
         }
 
@@ -62,8 +71,9 @@ object ModConfig {
         val STATSD_PORT: ForgeConfigSpec.IntValue
         val STATSD_HOSTNAME: ForgeConfigSpec.ConfigValue<String>
         val STATSD_PREFIX: ForgeConfigSpec.ConfigValue<String>
+
         // Data storage
-        val KV_STORAGE_MODE: ForgeConfigSpec.ConfigValue<KVStorageMode>
+        val KV_STORAGE_MODE: ForgeConfigSpec.ConfigValue<String>
         val KV_STORAGE_KEY_LIMIT: ForgeConfigSpec.IntValue
 
         init {
@@ -79,7 +89,14 @@ object ModConfig {
             builder.pop()
             builder.push("kv")
             KV_STORAGE_MODE = builder.comment("Mode of KV storage")
-                .define("kvStorageMode", KVStorageMode.DISABLED)
+                .define("kvStorageMode", KVStorageMode.DISABLED.name) {
+                    return@define try {
+                        KVStorageMode.valueOf(it.toString().uppercase())
+                        true
+                    } catch (e: IllegalArgumentException) {
+                        false
+                    }
+                }
             KV_STORAGE_KEY_LIMIT = builder.comment("Limit for active keys in storage per player")
                 .defineInRange("kvStorageKeyLimit", 1000, 1, Int.MAX_VALUE)
             builder.pop()

@@ -18,7 +18,7 @@ class ModUaLanguageProvider(
 
     override fun addTranslations() {
         add(ModText.CREATIVE_TAB, "Цитадель даних")
-        add(Blocks.DATA_STORAGE.get(), "База даних", "Наразі не використовується")
+        add(Blocks.KV_STORAGE.get(), "База даних «ключ—значення»", "Наразі не використовується")
         add(Blocks.TSDB_STORAGE.get(), "База даних часових рядів", "Наразі не використовується")
         add(Blocks.STATSD_BRIDGE.get(), "StatsD міст", "Дозволяє відправляти statsd метрики на якийсь statsd сервер вказаний в налаштуваннях")
         add(ModText.UNFINISHED_AND_DISABLED, "  §4Цей предмет не готовий та був відключений. Просто ігноруйте його")

@@ -2,9 +2,9 @@
 	"credit": "Made with Blockbench",
 	"parent": "minecraft:block/cube_all",
 	"textures": {
-		"1": "datafortress:block/data_storage",
-		"all": "datafortress:block/data_storage_side",
-		"particle": "datafortress:block/data_storage"
+		"1": "datafortress:block/kv_storage",
+		"all": "datafortress:block/kv_storage_side",
+		"particle": "datafortress:block/kv_storage"
 	},
 	"elements": [
 		{

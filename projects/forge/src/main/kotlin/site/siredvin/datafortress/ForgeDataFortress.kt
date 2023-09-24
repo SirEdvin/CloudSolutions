@@ -8,9 +8,6 @@ import net.minecraft.world.item.CreativeModeTab
 import net.minecraft.world.item.Item
 import net.minecraft.world.level.block.Block
 import net.minecraftforge.common.util.LazyOptional
-import net.minecraftforge.event.server.ServerStartedEvent
-import net.minecraftforge.event.server.ServerStoppingEvent
-import net.minecraftforge.eventbus.api.SubscribeEvent
 import net.minecraftforge.fml.ModLoadingContext
 import net.minecraftforge.fml.common.Mod
 import net.minecraftforge.fml.config.ModConfig
@@ -33,6 +30,7 @@ object ForgeDataFortress {
         DeferredRegister.create(ForgeRegistries.BLOCKS, DataFortressCore.MOD_ID)
     val itemsRegistry: DeferredRegister<Item> =
         DeferredRegister.create(ForgeRegistries.ITEMS, DataFortressCore.MOD_ID)
+    val blockEntityTypesRegistry = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, DataFortressCore.MOD_ID)
     val creativeTabRegistry: DeferredRegister<CreativeModeTab> =
         DeferredRegister.create(BuiltInRegistries.CREATIVE_MODE_TAB.key(), DataFortressCore.MOD_ID)
     val turtleSerializers = DeferredRegister.create(
@@ -57,19 +55,10 @@ object ForgeDataFortress {
         ModCommonHooks.onRegister()
         blocksRegistry.register(eventBus)
         itemsRegistry.register(eventBus)
+        blockEntityTypesRegistry.register(eventBus)
         creativeTabRegistry.register(eventBus)
         turtleSerializers.register(eventBus)
         pocketSerializers.register(eventBus)
-    }
-
-    @SubscribeEvent
-    fun onServerStarted(event: ServerStartedEvent) {
-        ModCommonHooks.onServerStarted(event.server)
-    }
-
-    @SubscribeEvent
-    fun onServerStopping(event: ServerStoppingEvent) {
-        ModCommonHooks.onServerStopping(event.server)
     }
 
     @Suppress("UNUSED_PARAMETER")

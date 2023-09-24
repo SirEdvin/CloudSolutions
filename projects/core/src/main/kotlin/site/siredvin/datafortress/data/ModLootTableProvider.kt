@@ -23,7 +23,7 @@ object ModLootTableProvider {
 
     fun registerBlocks(consumer: BiConsumer<ResourceLocation, LootTable.Builder>) {
         val lootTable = LootTableHelper(ModPlatform.holder)
-        lootTable.dropSelf(consumer, Blocks.DATA_STORAGE)
+        lootTable.dropSelf(consumer, Blocks.KV_STORAGE)
         lootTable.dropSelf(consumer, Blocks.TSDB_STORAGE)
         lootTable.dropSelf(consumer, Blocks.STATSD_BRIDGE)
         lootTable.validate()

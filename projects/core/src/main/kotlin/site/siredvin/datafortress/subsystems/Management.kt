@@ -18,7 +18,7 @@ object SubsystemManager {
     var kvManager: KeyValueManager? = null
 
     fun onServerStart(server: MinecraftServer) {
-        kvManager = when(ModConfig.kvStorageMode) {
+        kvManager = when (ModConfig.kvStorageMode) {
             KVStorageMode.DISABLED -> DisabledKVManager
             KVStorageMode.SQLITE -> KVSQLiteManager
         }

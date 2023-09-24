@@ -9,16 +9,15 @@ import site.siredvin.peripheralium.common.items.PeripheralBlockItem
 
 object Blocks {
 
-    val DATA_STORAGE = ModPlatform.registerBlock(
-        "data_storage",
-        { GenericBlockEntityBlock({ BlockEntityTypes.DATA_STORAGE.get() }, true) },
+    val KV_STORAGE = ModPlatform.registerBlock(
+        "kv_storage",
+        { GenericBlockEntityBlock({ BlockEntityTypes.KV_STORAGE.get() }, true) },
         {
             PeripheralBlockItem(
                 it,
                 Item.Properties(),
-                ModConfig::enableTSDBStorage,
+                ModConfig::enableKVStorage,
                 alwaysShow = true,
-                TooltipCollection::unfinishedAndDisabled,
             )
         },
     )
