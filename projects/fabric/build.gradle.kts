@@ -19,7 +19,7 @@ baseShaking {
 
 fabricShaking {
     commonProjectName.set("core")
-    accessWidener.set(project(":core").file("src/main/resources/datafortress.accesswidener"))
+    accessWidener.set(project(":core").file("src/main/resources/cloudsolutions.accesswidener"))
     extraVersionMappings.set(
         mapOf(
             "computercraft" to "cc-tweaked",

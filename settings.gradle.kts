@@ -29,7 +29,7 @@ pluginManagement {
 }
 
 val minecraftVersion: String by settings
-rootProject.name = "DataFortress $minecraftVersion"
+rootProject.name = "CloudSolutions $minecraftVersion"
 
 include(":core")
 include(":forge")

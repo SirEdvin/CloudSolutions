@@ -1,4 +1,4 @@
-// 1.20.1	2023-09-24T20:30:19.168515257	vanilla/Loot Tables
-7d2efe67442904d0c8d5182b4250f30ce19bfa6c data/datafortress/loot_tables/blocks/kv_storage.json
-8f5c3135b41b1b9d82923a74bb4f99df546a9517 data/datafortress/loot_tables/blocks/statsd_bridge.json
-22fb28a8a2b8b0a5b99772378409cc8154d0ad27 data/datafortress/loot_tables/blocks/tsdb_storage.json
+// 1.20.1	2023-09-25T12:04:32.05909099	vanilla/Loot Tables
+d418bb92ff0bba556f0ed01b5834269dff4f2688 data/cloudsolutions/loot_tables/blocks/kv_storage.json
+7272d01bb07663dbbd6f43bf4ad7d4a011f6c099 data/cloudsolutions/loot_tables/blocks/statsd_bridge.json
+cd85155bb2e2ac6d5f43f41a23904a9e4e5c3cf4 data/cloudsolutions/loot_tables/blocks/tsdb_storage.json

@@ -1,0 +1,20 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "cloudsolutions:block/statsd_bridge",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "cloudsolutions:block/statsd_bridge",
+      "y": 0
+    },
+    "facing=south": {
+      "model": "cloudsolutions:block/statsd_bridge",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "cloudsolutions:block/statsd_bridge",
+      "y": 270
+    }
+  }
+}

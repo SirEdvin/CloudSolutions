@@ -14,8 +14,8 @@ baseShaking {
 }
 
 vanillaShaking {
-    accessWideners.add("src/main/resources/datafortress-common.accesswidener")
-    accessWideners.add("src/main/resources/datafortress.accesswidener")
+    accessWideners.add("src/main/resources/cloudsolutions-common.accesswidener")
+    accessWideners.add("src/main/resources/cloudsolutions.accesswidener")
     shake()
 }
 

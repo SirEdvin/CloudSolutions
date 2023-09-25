@@ -1,0 +1,4 @@
+// 1.20.1	2023-09-25T12:04:25.159785898	Cloud Solutions/minecraft:block Loot Table
+ec8f8a822ca17b414b717654190fefd801fb7340 data/cloudsolutions/loot_tables/blocks/kv_storage.json
+be7ca84746f07db351641b42d6b0476cebde3991 data/cloudsolutions/loot_tables/blocks/statsd_bridge.json
+68c211ce419a68ebce88796e03643e36fae11038 data/cloudsolutions/loot_tables/blocks/tsdb_storage.json

@@ -1,0 +1,10 @@
+{
+  "block.cloudsolutions.kv_storage": "KV storage",
+  "block.cloudsolutions.kv_storage.tooltip": "Have no uses right now",
+  "block.cloudsolutions.statsd_bridge": "StatsD bridge",
+  "block.cloudsolutions.statsd_bridge.tooltip": "Allows you to send metrics to preconfigured statsd server",
+  "block.cloudsolutions.tsdb_storage": "Timeseries database",
+  "block.cloudsolutions.tsdb_storage.tooltip": "Have no uses right now",
+  "text.cloudsolutions.creative_tab": "Data fortress",
+  "text.cloudsolutions.unfinished_and_disabled": "  §4This item is not ready and disabled for now. Just ignore it"
+}

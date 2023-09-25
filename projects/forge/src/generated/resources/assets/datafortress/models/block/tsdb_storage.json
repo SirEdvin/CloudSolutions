@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/orientable",
-  "textures": {
-    "front": "datafortress:block/peripheral_casing",
-    "side": "datafortress:block/peripheral_casing",
-    "top": "datafortress:block/peripheral_casing"
-  }
-}

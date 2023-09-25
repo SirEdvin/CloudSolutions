@@ -1,0 +1,10 @@
+{
+  "block.cloudsolutions.kv_storage": "База даних «ключ—значення»",
+  "block.cloudsolutions.kv_storage.tooltip": "Наразі не використовується",
+  "block.cloudsolutions.statsd_bridge": "StatsD міст",
+  "block.cloudsolutions.statsd_bridge.tooltip": "Дозволяє відправляти statsd метрики на якийсь statsd сервер вказаний в налаштуваннях",
+  "block.cloudsolutions.tsdb_storage": "База даних часових рядів",
+  "block.cloudsolutions.tsdb_storage.tooltip": "Наразі не використовується",
+  "text.cloudsolutions.creative_tab": "Цитадель даних",
+  "text.cloudsolutions.unfinished_and_disabled": "  §4Цей предмет не готовий та був відключений. Просто ігноруйте його"
+}

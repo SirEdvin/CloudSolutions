@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/orientable",
-  "textures": {
-    "front": "datafortress:block/statsd_bridge",
-    "side": "datafortress:block/peripheral_casing",
-    "top": "datafortress:block/peripheral_casing"
-  }
-}

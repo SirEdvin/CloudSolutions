@@ -1,17 +1,17 @@
 {
   "schemaVersion": 1,
-  "id": "datafortress",
+  "id": "cloudsolutions",
   "version": "${version}",
-  "name": "Data Fortress",
+  "name": "Cloud Solutions",
   "description": "A little crazy CC:T addon that stores different data and, well, share it via internal http server!",
   "authors": [
     "SirEdvin"
   ],
-  "accessWidener": "datafortress.accesswidener",
+  "accessWidener": "cloudsolutions.accesswidener",
   "contact": {
     "homepage": "https://docs.siredvin.site/",
-    "issues": "https://github.com/SirEdvin/DataFortress/issues",
-    "sources": "https://github.com/SirEdvin/DataFortress"
+    "issues": "https://github.com/SirEdvin/CloudSolutions/issues",
+    "sources": "https://github.com/SirEdvin/CloudSolutions"
   },
   "license": "MIT",
   "icon": "pack.png",
@@ -20,19 +20,19 @@
     "main": [
       {
         "adapter": "kotlin",
-        "value": "site.siredvin.datafortress.FabricDataFortress"
+        "value": "site.siredvin.cloudsolutions.FabricCloudSolutions"
       }
     ],
     "client": [
       {
         "adapter": "kotlin",
-        "value": "site.siredvin.datafortress.FabricDataFortressClient"
+        "value": "site.siredvin.cloudsolutions.FabricCloudSolutionsClient"
       }
     ],
     "fabric-datagen": [
       {
         "adapter": "kotlin",
-        "value": "site.siredvin.datafortress.data.FabricDataGenerators"
+        "value": "site.siredvin.cloudsolutions.data.FabricDataGenerators"
       }
     ]
   },

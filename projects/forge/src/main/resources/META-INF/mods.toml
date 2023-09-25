@@ -1,16 +1,16 @@
 modLoader="kotlinforforge"
 loaderVersion="[4,)"
 
-issueTrackerURL="https://github.com/SirEdvin/DataFortress/issues"
+issueTrackerURL="https://github.com/SirEdvin/CloudSolutions/issues"
 logoFile="pack.png"
 
 license="MIT"
 
 [[mods]]
-modId="datafortress"
+modId="cloudsolutions"
 version="${file.jarVersion}"
-displayName="Data Fortress"
-displayURL="https://github.com/SirEdvin/DataFortress"
+displayName="Cloud Solutions"
+displayURL="https://github.com/SirEdvin/CloudSolutions"
 
 credits=""
 authors="SirEdvin"
@@ -18,21 +18,21 @@ description='''
 A little crazy CC:T addon that stores different data and, well, share it via internal http server!
 '''
 
-[[dependencies.datafortress]]
+[[dependencies.cloudsolutions]]
 modId="forge"
 mandatory=true
 versionRange="[${forgeVersion},48)"
 ordering="NONE"
 side="BOTH"
 
-[[dependencies.datafortress]]
+[[dependencies.cloudsolutions]]
 modId="computercraft"
 mandatory=true
 versionRange="[${computercraftVersion},)"
 ordering="NONE"
 side="BOTH"
 
-[[dependencies.datafortress]]
+[[dependencies.cloudsolutions]]
 modId="peripheralium"
 mandatory=true
 versionRange="[${peripheraliumVersion},)"

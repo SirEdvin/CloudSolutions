@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/orientable",
+  "textures": {
+    "front": "cloudsolutions:block/peripheral_casing",
+    "side": "cloudsolutions:block/peripheral_casing",
+    "top": "cloudsolutions:block/peripheral_casing"
+  }
+}
