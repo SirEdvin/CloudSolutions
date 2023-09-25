@@ -8,6 +8,10 @@ object DisabledKVManager : KeyValueManager {
         throw LuaException("KV storage is disabled in server configuration")
     }
 
+    override fun delete(ownerUUID: String, key: String) {
+        throw LuaException("KV storage is disabled in server configuration")
+    }
+
     override fun get(ownerUUID: String, key: String): String? {
         throw LuaException("KV storage is disabled in server configuration")
     }

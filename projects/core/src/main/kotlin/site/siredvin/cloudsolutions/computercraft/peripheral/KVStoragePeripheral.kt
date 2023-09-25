@@ -25,6 +25,12 @@ class KVStoragePeripheral(owner: IPeripheralOwner) : OwnedPeripheral<IPeripheral
     }
 
     @LuaFunction
+    fun delete(key: String) {
+        val player = peripheralOwner.owner ?: throw LuaException("Cannot find attached player to this peripheral")
+        SubsystemManager.kvManager?.delete(player.stringUUID, key)
+    }
+
+    @LuaFunction
     fun get(key: String): String? {
         val player = peripheralOwner.owner ?: throw LuaException("Cannot find attached player to this peripheral")
         return SubsystemManager.kvManager?.get(player.stringUUID, key)

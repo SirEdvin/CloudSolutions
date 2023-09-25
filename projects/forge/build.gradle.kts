@@ -15,6 +15,7 @@ baseShaking {
 forgeShaking {
     commonProjectName.set("core")
     useAT.set(true)
+    useJarJar.set(true)
     extraVersionMappings.set(
         mapOf(
             "computercraft" to "cc-tweaked",

@@ -25,6 +25,7 @@ object KVSQLiteManager : KeyValueManager {
     private var cleanupQuery: PreparedStatement? = null
     private var countQuery: PreparedStatement? = null
     private var insertQuery: PreparedStatement? = null
+    private var deleteQuery: PreparedStatement? = null
     private var getQuery: PreparedStatement? = null
     private var getExQuery: PreparedStatement? = null
     private var putExQuery: PreparedStatement? = null
@@ -49,9 +50,10 @@ object KVSQLiteManager : KeyValueManager {
         insertQuery = db?.prepareStatement(
             """
             insert into kv_records_1 (ownerUUID, key, value, expire)
-            values (?, ?, ?, ?)
+            values (?, ?, ?, ?) on conflict(ownerUUID, key) DO UPDATE SET value = ?, expire = ?
             """.trimIndent(),
         )
+        deleteQuery = db?.prepareStatement("delete from kv_records_1 where ownerUUID = ? and key = ?")
         getQuery = db?.prepareStatement("select value from kv_records_1 where ownerUUID = ? and key = ?")
         getExQuery = db?.prepareStatement("select expire from kv_records_1 where ownerUUID = ? and key = ?")
         putExQuery = db?.prepareStatement("update kv_records_1 set expire = ? where ownerUUID = ? and key = ?")
@@ -86,12 +88,23 @@ object KVSQLiteManager : KeyValueManager {
             insertQuery?.setString(1, ownerUUID)
             insertQuery?.setString(2, key)
             insertQuery?.setString(3, value)
+            insertQuery?.setString(5, value)
             if (expire != null) {
                 insertQuery?.setInt(4, expire.epochSecond.toInt())
+                insertQuery?.setInt(6, expire.epochSecond.toInt())
             } else {
                 insertQuery?.setNull(4, 0)
+                insertQuery?.setNull(6, 0)
             }
             insertQuery?.execute()
+        }
+    }
+
+    override fun delete(ownerUUID: String, key: String) {
+        queryPrepareLock.withLock {
+            deleteQuery?.setString(1, ownerUUID)
+            deleteQuery?.setString(2, key)
+            deleteQuery?.execute()
         }
     }
 
