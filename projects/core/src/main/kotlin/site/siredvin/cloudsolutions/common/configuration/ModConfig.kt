@@ -51,9 +51,9 @@ object ModConfig {
         init {
             builder.push("statsd")
             ENABLE_STATSD_BRIDGE = builder.comment("Enables statsd bridge")
-                .define("enableStatsDBridge", false)
+                .define("enableStatsDBridge", true)
             ENABLE_KV_STORAGE = builder.comment("Enables KV storage")
-                .define("enableKVStorage", false)
+                .define("enableKVStorage", true)
             builder.pop()
         }
 
@@ -89,7 +89,7 @@ object ModConfig {
             builder.pop()
             builder.push("kv")
             KV_STORAGE_MODE = builder.comment("Mode of KV storage")
-                .define("kvStorageMode", KVStorageMode.DISABLED.name) {
+                .define("kvStorageMode", KVStorageMode.SQLITE.name) {
                     if (it == null) return@define false
                     return@define try {
                         KVStorageMode.valueOf(it.toString().uppercase())

@@ -45,7 +45,6 @@ object Blocks {
                 Item.Properties(),
                 ModConfig::enableTSDBStorage,
                 alwaysShow = true,
-                TooltipCollection::unfinishedAndDisabled,
             )
         },
     )
