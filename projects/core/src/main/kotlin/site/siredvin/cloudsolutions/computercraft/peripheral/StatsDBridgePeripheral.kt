@@ -15,6 +15,14 @@ class StatsDBridgePeripheral(peripheralOwner: IPeripheralOwner) :
     override val isEnabled: Boolean
         get() = ModConfig.enableStatsDBridge
 
+    override val peripheralConfiguration: MutableMap<String, Any>
+        get() {
+            val data = super.peripheralConfiguration
+            data["playerRateLimit"] = ModConfig.statsdPlayerRateLimit
+            data["globalRateLimit"] = ModConfig.statsdGlobalRateLimit
+            return data
+        }
+
     @LuaFunction
     fun count(aspect: String, delta: Long) {
         val player = peripheralOwner.owner ?: throw LuaException("Cannot find owner")

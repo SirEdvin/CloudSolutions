@@ -18,8 +18,17 @@ class KVStoragePeripheral(owner: IPeripheralOwner) : OwnedPeripheral<IPeripheral
     override val isEnabled: Boolean
         get() = ModConfig.enableKVStorage
 
+    override val peripheralConfiguration: MutableMap<String, Any>
+        get() {
+            val data = super.peripheralConfiguration
+            data["keyLimit"] = ModConfig.kvStorageKeyLimit
+            data["valueLimit"] = ModConfig.kvStorageValueLimit
+            return data
+        }
+
     @LuaFunction
     fun put(key: String, value: String, expire: Optional<Long>) {
+        if (value.length > ModConfig.kvStorageValueLimit) throw LuaException("Value is too long")
         val player = peripheralOwner.owner ?: throw LuaException("Cannot find attached player to this peripheral")
         SubsystemManager.kvManager?.put(player.stringUUID, key, value, expire.map { Instant.ofEpochSecond(it) }.getOrNull())
     }
