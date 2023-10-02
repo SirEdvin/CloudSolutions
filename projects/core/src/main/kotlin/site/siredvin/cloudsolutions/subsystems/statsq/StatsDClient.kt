@@ -1,13 +1,22 @@
 package site.siredvin.cloudsolutions.subsystems.statsq
 
+import com.google.common.cache.CacheBuilder
+import com.google.common.cache.CacheLoader
+import com.google.common.util.concurrent.RateLimiter
 import com.timgroup.statsd.NonBlockingStatsDClient
 import com.timgroup.statsd.StatsDClientException
 import dan200.computercraft.api.lua.LuaException
 import site.siredvin.cloudsolutions.CloudSolutionsCore
 import site.siredvin.cloudsolutions.common.configuration.ModConfig
+import java.util.concurrent.TimeUnit
 
 object StatsDClient {
     private var client: NonBlockingStatsDClient? = null
+    private val globalRateLimiter by lazy {
+        RateLimiter.create(ModConfig.statsdGlobalRateLimit.toDouble() / 60)
+    }
+    private val playerRateLimiters = CacheBuilder.newBuilder().expireAfterAccess(10, TimeUnit.MINUTES)
+        .build(CacheLoader.from { _: String -> RateLimiter.create(ModConfig.statsdPlayerRateLimit.toDouble() / 60) })
     fun init() {
         if (ModConfig.enableStatsDConnection) {
             try {
@@ -29,28 +38,34 @@ object StatsDClient {
         client?.stop()
     }
 
-    fun count(aspect: String, delta: Long) {
+    private fun validate(playerUUID: String) {
+        if (!globalRateLimiter.tryAcquire()) throw LuaException("Too many requests to server, please wait a little")
+        if (!playerRateLimiters.get(playerUUID).tryAcquire()) throw LuaException("Too many request from you, please wait a little")
         if (!ModConfig.enableStatsDConnection) throw LuaException("Statsd Bridge is disabled in server configuration")
+    }
+
+    fun count(playerUUID: String, aspect: String, delta: Long) {
+        validate(playerUUID)
         client?.count(aspect, delta)
     }
 
-    fun delta(aspect: String, value: Long) {
-        if (!ModConfig.enableStatsDConnection) throw LuaException("Statsd Bridge is disabled in server configuration")
+    fun delta(playerUUID: String, aspect: String, value: Long) {
+        validate(playerUUID)
         client?.recordGaugeDelta(aspect, value)
     }
 
-    fun gauge(aspect: String, value: Long) {
-        if (!ModConfig.enableStatsDConnection) throw LuaException("Statsd Bridge is disabled in server configuration")
+    fun gauge(playerUUID: String, aspect: String, value: Long) {
+        validate(playerUUID)
         client?.gauge(aspect, value)
     }
 
-    fun set(aspect: String, eventName: String) {
-        if (!ModConfig.enableStatsDConnection) throw LuaException("Statsd Bridge is disabled in server configuration")
+    fun set(playerUUID: String, aspect: String, eventName: String) {
+        validate(playerUUID)
         client?.set(aspect, eventName)
     }
 
-    fun time(aspect: String, timeInMs: Long) {
-        if (!ModConfig.enableStatsDConnection) throw LuaException("Statsd Bridge is disabled in server configuration")
+    fun time(playerUUID: String, aspect: String, timeInMs: Long) {
+        validate(playerUUID)
         client?.time(aspect, timeInMs)
     }
 }

@@ -19,34 +19,34 @@ class StatsDBridgePeripheral(peripheralOwner: IPeripheralOwner) :
     fun count(aspect: String, delta: Long) {
         val player = peripheralOwner.owner ?: throw LuaException("Cannot find owner")
         val playerSpecificAspect = "${player.name.string}.$aspect"
-        StatsDClient.count(playerSpecificAspect, delta)
+        StatsDClient.count(player.stringUUID, playerSpecificAspect, delta)
     }
 
     @LuaFunction
     fun delta(aspect: String, value: Long) {
         val player = peripheralOwner.owner ?: throw LuaException("Cannot find owner")
         val playerSpecificAspect = "${player.name.string}.$aspect"
-        StatsDClient.delta(playerSpecificAspect, value)
+        StatsDClient.delta(player.stringUUID, playerSpecificAspect, value)
     }
 
     @LuaFunction
     fun gauge(aspect: String, value: Long) {
         val player = peripheralOwner.owner ?: throw LuaException("Cannot find owner")
         val playerSpecificAspect = "${player.name.string}.$aspect"
-        StatsDClient.gauge(playerSpecificAspect, value)
+        StatsDClient.gauge(player.stringUUID, playerSpecificAspect, value)
     }
 
     @LuaFunction
     fun set(aspect: String, eventName: String) {
         val player = peripheralOwner.owner ?: throw LuaException("Cannot find owner")
         val playerSpecificAspect = "${player.name.string}.$aspect"
-        StatsDClient.set(playerSpecificAspect, eventName)
+        StatsDClient.set(player.stringUUID, playerSpecificAspect, eventName)
     }
 
     @LuaFunction
     fun time(aspect: String, timeInMs: Long) {
         val player = peripheralOwner.owner ?: throw LuaException("Cannot find owner")
         val playerSpecificAspect = "${player.name.string}.$aspect"
-        StatsDClient.time(playerSpecificAspect, timeInMs)
+        StatsDClient.time(player.stringUUID, playerSpecificAspect, timeInMs)
     }
 }

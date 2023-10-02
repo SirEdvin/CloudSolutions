@@ -30,6 +30,12 @@ object ModConfig {
     val statsdPrefix: String
         get() = ConfigHolder.SERVER_CONFIG.STATSD_PREFIX.get()
 
+    val statsdPlayerRateLimit: Int
+        get() = ConfigHolder.SERVER_CONFIG.STATSD_PLAYER_RATE_LIMIT.get()
+
+    val statsdGlobalRateLimit: Int
+        get() = ConfigHolder.SERVER_CONFIG.STATSD_GLOBAL_RATE_LIMIT.get()
+
     val kvStorageMode: KVStorageMode
         get() {
             return try {
@@ -71,6 +77,8 @@ object ModConfig {
         val STATSD_PORT: ForgeConfigSpec.IntValue
         val STATSD_HOSTNAME: ForgeConfigSpec.ConfigValue<String>
         val STATSD_PREFIX: ForgeConfigSpec.ConfigValue<String>
+        val STATSD_PLAYER_RATE_LIMIT: ForgeConfigSpec.IntValue
+        val STATSD_GLOBAL_RATE_LIMIT: ForgeConfigSpec.IntValue
 
         // Data storage
         val KV_STORAGE_MODE: ForgeConfigSpec.ConfigValue<String>
@@ -86,6 +94,10 @@ object ModConfig {
                 .define("statsdHostname", "127.0.0.1")
             STATSD_PREFIX = builder.comment("StatsD prefix")
                 .define("statsdPrefix", "")
+            STATSD_PLAYER_RATE_LIMIT = builder.comment("StatsD rate limit per player in event per minute")
+                .defineInRange("statsdPlayerRateLimit", 1000, 1, Int.MAX_VALUE)
+            STATSD_GLOBAL_RATE_LIMIT = builder.comment("StatsD global rate limit in event per minute")
+                .defineInRange("statsdGlobalRateLimit", 1000, 1, Int.MAX_VALUE)
             builder.pop()
             builder.push("kv")
             KV_STORAGE_MODE = builder.comment("Mode of KV storage")
@@ -99,7 +111,7 @@ object ModConfig {
                     }
                 }
             KV_STORAGE_KEY_LIMIT = builder.comment("Limit for active keys in storage per player")
-                .defineInRange("kvStorageKeyLimit", 1000, 1, Int.MAX_VALUE)
+                .defineInRange("kvStorageKeyLimit", 21_000, 1, Int.MAX_VALUE)
             builder.pop()
         }
 
