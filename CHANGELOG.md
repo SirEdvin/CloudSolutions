@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Rate limiting for StatsD bridge
+- Limit for values inside KV storage
+- Expire check for all KV storage methods
 
 ## [0.1.0] - 2023-09-27
 

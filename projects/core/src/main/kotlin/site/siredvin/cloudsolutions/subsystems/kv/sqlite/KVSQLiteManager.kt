@@ -46,7 +46,7 @@ object KVSQLiteManager : KeyValueManager {
         statement?.execute("create index if not exists kv_owner on kv_records_1 (ownerUUID)")
         statement?.execute("create unique index if not exists kv_owner_key on kv_records_1 (ownerUUID, key)")
         cleanupQuery = db?.prepareStatement("delete from kv_records_1 where expire < ?")
-        countQuery = db?.prepareStatement("select count(*) from kv_records_1 where ownerUUID = ?")
+        countQuery = db?.prepareStatement("select count(*) from kv_records_1 where ownerUUID = ? and (expire is null or expire <= ?)")
         insertQuery = db?.prepareStatement(
             """
             insert into kv_records_1 (ownerUUID, key, value, expire)
@@ -54,10 +54,10 @@ object KVSQLiteManager : KeyValueManager {
             """.trimIndent(),
         )
         deleteQuery = db?.prepareStatement("delete from kv_records_1 where ownerUUID = ? and key = ?")
-        getQuery = db?.prepareStatement("select value from kv_records_1 where ownerUUID = ? and key = ?")
-        getExQuery = db?.prepareStatement("select expire from kv_records_1 where ownerUUID = ? and key = ?")
-        putExQuery = db?.prepareStatement("update kv_records_1 set expire = ? where ownerUUID = ? and key = ?")
-        listQuery = db?.prepareStatement("select key from kv_records_1 where ownerUUID = ?")
+        getQuery = db?.prepareStatement("select value from kv_records_1 where ownerUUID = ? and key = ? and (expire is null or expire <= ?)")
+        getExQuery = db?.prepareStatement("select expire from kv_records_1 where ownerUUID = ? and key = ? and (expire is null or expire <= ?)")
+        putExQuery = db?.prepareStatement("update kv_records_1 set expire = ? where ownerUUID = ? and key = ? and (expire is null or expire <= ?)")
+        listQuery = db?.prepareStatement("select key from kv_records_1 where ownerUUID = ? and(expire is null or expire <= ?)")
         cleanupFuture = executor.scheduleWithFixedDelay({ cleanup() }, 0, 1, TimeUnit.MINUTES)
         CloudSolutionsCore.LOGGER.info("Result of cleanup future: {}, {}", cleanupFuture?.isDone, cleanupFuture?.isCancelled)
     }
@@ -82,6 +82,7 @@ object KVSQLiteManager : KeyValueManager {
     override fun put(ownerUUID: String, key: String, value: String, expire: Instant?) {
         queryPrepareLock.withLock {
             countQuery?.setString(1, ownerUUID)
+            countQuery?.setLong(2, Instant.now().epochSecond)
             val result = countQuery?.executeQuery()
             val count = result?.getInt(1) ?: 0
             if (count >= ModConfig.kvStorageKeyLimit) throw LuaException("You have exceeded key limit per player")
@@ -112,6 +113,7 @@ object KVSQLiteManager : KeyValueManager {
         return queryPrepareLock.withLock {
             getQuery?.setString(1, ownerUUID)
             getQuery?.setString(2, key)
+            getQuery?.setLong(3, Instant.now().epochSecond)
             val result = getQuery?.executeQuery()
             return@withLock result?.getString(1)
         }
@@ -121,6 +123,7 @@ object KVSQLiteManager : KeyValueManager {
         return queryPrepareLock.withLock {
             getExQuery?.setString(1, ownerUUID)
             getExQuery?.setString(2, key)
+            getExQuery?.setLong(3, Instant.now().epochSecond)
             val result = getExQuery?.executeQuery()
             return@withLock Instant.ofEpochSecond(result?.getInt(1)?.toLong() ?: 0)
         }
@@ -135,6 +138,7 @@ object KVSQLiteManager : KeyValueManager {
             }
             putExQuery?.setString(2, ownerUUID)
             putExQuery?.setString(3, key)
+            putExQuery?.setLong(4, Instant.now().epochSecond)
             putExQuery?.execute()
         }
     }
@@ -142,6 +146,7 @@ object KVSQLiteManager : KeyValueManager {
     override fun list(ownerUUID: String): List<String> {
         return queryPrepareLock.withLock {
             listQuery?.setString(1, ownerUUID)
+            listQuery?.setLong(2, Instant.now().epochSecond)
             val result = listQuery?.executeQuery()
             val values = mutableListOf<String>()
             if (result != null) {
