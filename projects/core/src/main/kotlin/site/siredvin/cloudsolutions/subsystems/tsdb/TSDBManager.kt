@@ -18,15 +18,13 @@ data class TimeseriesFrame(val name: String, val tags: Map<String, String>, val 
             return "$name{$tagsLine}"
         }
 
-    fun toJson(): Map<String, Any> {
-        return mapOf(
-            "fullName" to fullName,
-            "name" to name,
-            "tags" to tags,
-            "timestamps" to timestamps.map { it.toString() },
-            "values" to values,
-        )
-    }
+    fun toJson(): Map<String, Any> = mapOf(
+        "fullName" to fullName,
+        "name" to name,
+        "tags" to tags,
+        "timestamps" to timestamps.map { it.toString() },
+        "values" to values,
+    )
 }
 
 class TSDBManagerException(message: String) : Exception(message)
@@ -34,9 +32,7 @@ class TSDBManagerException(message: String) : Exception(message)
 interface TSDBManager {
     companion object {
         const val DEFAULT_RETENTION = 60 * 24 * 7
-        fun buildTagsString(tags: Map<String, String>): String {
-            return tags.entries.sortedBy { it.key }.joinToString { "${it.key}=${it.value}" }
-        }
+        fun buildTagsString(tags: Map<String, String>): String = tags.entries.sortedBy { it.key }.joinToString { "${it.key}=${it.value}" }
 
         fun buildTimeseriesName(name: String, tags: Map<String, String>): String {
             val tagsLine = buildTagsString(tags)

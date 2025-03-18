@@ -59,7 +59,7 @@ object KVSQLiteManager : KeyValueManager {
         putExQuery = db?.prepareStatement("update kv_records_1 set expire = ? where ownerUUID = ? and key = ? and (expire is null or expire <= ?)")
         listQuery = db?.prepareStatement("select key from kv_records_1 where ownerUUID = ? and(expire is null or expire <= ?)")
         cleanupFuture = executor.scheduleWithFixedDelay({ cleanup() }, 0, 1, TimeUnit.MINUTES)
-        CloudSolutionsCore.LOGGER.info("Result of cleanup future: {}, {}", cleanupFuture?.isDone, cleanupFuture?.isCancelled)
+        CloudSolutionsCore.logger.info("Result of cleanup future: {}, {}", cleanupFuture?.isDone, cleanupFuture?.isCancelled)
     }
 
     override fun stop(server: MinecraftServer, executor: ScheduledExecutorService) {
@@ -69,13 +69,13 @@ object KVSQLiteManager : KeyValueManager {
     private fun cleanup() {
         try {
             queryPrepareLock.withLock {
-                CloudSolutionsCore.LOGGER.info("Run KV cleanup")
+                CloudSolutionsCore.logger.info("Run KV cleanup")
                 val now = Instant.now().epochSecond
                 cleanupQuery?.setInt(1, now.toInt())
                 cleanupQuery?.execute()
             }
         } catch (ex: Exception) {
-            CloudSolutionsCore.LOGGER.catching(ex)
+            CloudSolutionsCore.logger.catching(ex)
         }
     }
 

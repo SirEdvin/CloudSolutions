@@ -1,11 +1,11 @@
 package site.siredvin.cloudsolutions.common.setup
 
 import net.minecraft.world.item.Item
+import site.siredvin.broccolium.modules.base.block.GenericBlockEntityBlock
+import site.siredvin.broccolium.modules.base.item.HiddenDescriptiveBlockItem
 import site.siredvin.cloudsolutions.common.configuration.ModConfig
 import site.siredvin.cloudsolutions.util.TooltipCollection
 import site.siredvin.cloudsolutions.xplat.ModPlatform
-import site.siredvin.peripheralium.common.blocks.GenericBlockEntityBlock
-import site.siredvin.peripheralium.common.items.PeripheralBlockItem
 
 object Blocks {
 
@@ -13,7 +13,7 @@ object Blocks {
         "kv_storage",
         { GenericBlockEntityBlock({ BlockEntityTypes.KV_STORAGE.get() }, true) },
         {
-            PeripheralBlockItem(
+            HiddenDescriptiveBlockItem(
                 it,
                 Item.Properties(),
                 ModConfig::enableKVStorage,
@@ -26,7 +26,7 @@ object Blocks {
         "tsdb_storage",
         { GenericBlockEntityBlock({ BlockEntityTypes.TSDB_STORAGE.get() }, true) },
         {
-            PeripheralBlockItem(
+            HiddenDescriptiveBlockItem(
                 it,
                 Item.Properties(),
                 ModConfig::enableTSDBStorage,
@@ -40,7 +40,7 @@ object Blocks {
         "statsd_bridge",
         { GenericBlockEntityBlock({ BlockEntityTypes.STATSD_BRIDGE.get() }, true) },
         {
-            PeripheralBlockItem(
+            HiddenDescriptiveBlockItem(
                 it,
                 Item.Properties(),
                 ModConfig::enableTSDBStorage,

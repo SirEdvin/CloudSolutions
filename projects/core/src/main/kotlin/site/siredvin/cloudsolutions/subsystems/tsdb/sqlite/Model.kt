@@ -1,5 +1,8 @@
 package site.siredvin.cloudsolutions.subsystems.tsdb.sqlite
 
+object SlightlyDummyObject
+object SlightlyDummyObject2
+
 // object Timeserieses : UUIDTable() {
 //
 //    val c_name = varchar("name", 255)

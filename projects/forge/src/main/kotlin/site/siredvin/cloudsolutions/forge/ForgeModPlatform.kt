@@ -9,9 +9,9 @@ import net.minecraft.world.level.block.entity.BlockEntityType
 import net.minecraftforge.registries.DeferredRegister
 import site.siredvin.cloudsolutions.CloudSolutionsCore
 import site.siredvin.cloudsolutions.ForgeCloudSolutions
-import site.siredvin.peripheralium.forge.ForgeBaseInnerPlatform
+import site.siredvin.tweakium.modules.platform.ForgeInnerComputerBasePlatform
 
-object ForgeModPlatform : ForgeBaseInnerPlatform() {
+object ForgeModPlatform : ForgeInnerComputerBasePlatform() {
     override val itemsRegistry: DeferredRegister<Item>
         get() = ForgeCloudSolutions.itemsRegistry
     override val modID: String

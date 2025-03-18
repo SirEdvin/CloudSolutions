@@ -10,31 +10,29 @@ import site.siredvin.cloudsolutions.subsystems.tsdb.sqlite.TSDBSQLiteManager
 import site.siredvin.cloudsolutions.xplat.ModCommonHooks
 import site.siredvin.cloudsolutions.xplat.ModPlatform
 import site.siredvin.cloudsolutions.xplat.ModRecipeIngredients
-import site.siredvin.peripheralium.xplat.BaseInnerPlatform
-import site.siredvin.peripheralium.xplat.PeripheraliumPlatform
+import site.siredvin.tweakium.modules.platform.ComputerPlatformToolkit
+import site.siredvin.tweakium.modules.platform.api.InnerComputerBasePlatform
 
 object CloudSolutionsCore {
     const val MOD_ID = "cloudsolutions"
 
-    var LOGGER: Logger = LogManager.getLogger(MOD_ID)
+    var logger: Logger = LogManager.getLogger(MOD_ID)
     val tsdbManager: TSDBManager by lazy {
         // TODO: some logic for TSDBManager calculation from settings
         TSDBSQLiteManager
     }
-    fun configureCreativeTab(builder: CreativeModeTab.Builder): CreativeModeTab.Builder {
-        return builder.icon { Blocks.STATSD_BRIDGE.get().asItem().defaultInstance }
-            .title(ModText.CREATIVE_TAB.text)
-            .displayItems { _, output ->
-                ModPlatform.holder.blocks.forEach { output.accept(it.get()) }
-                ModPlatform.holder.items.forEach { output.accept(it.get()) }
-                ModCommonHooks.registerUpgradesInCreativeTab(output)
-            }
-    }
+    fun configureCreativeTab(builder: CreativeModeTab.Builder): CreativeModeTab.Builder = builder.icon { Blocks.STATSD_BRIDGE.get().asItem().defaultInstance }
+        .title(ModText.CREATIVE_TAB.text)
+        .displayItems { _, output ->
+            ModPlatform.holder.blocks.forEach { output.accept(it.get()) }
+            ModPlatform.holder.items.forEach { output.accept(it.get()) }
+            ModCommonHooks.registerUpgradesInCreativeTab(output)
+        }
 
-    fun configure(platform: BaseInnerPlatform, ingredients: ModRecipeIngredients) {
+    fun configure(platform: InnerComputerBasePlatform, ingredients: ModRecipeIngredients) {
         ModPlatform.configure(platform)
         ModRecipeIngredients.configure(ingredients)
-        PeripheraliumPlatform.registerGenericPeripheralLookup()
+        ComputerPlatformToolkit.get().registerGenericPeripheralLookup()
         tsdbManager.init()
     }
 }

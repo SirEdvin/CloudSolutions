@@ -4,8 +4,8 @@ import dan200.computercraft.api.lua.LuaException
 import dan200.computercraft.api.lua.LuaFunction
 import site.siredvin.cloudsolutions.common.configuration.ModConfig
 import site.siredvin.cloudsolutions.subsystems.SubsystemManager
-import site.siredvin.peripheralium.api.peripheral.IPeripheralOwner
-import site.siredvin.peripheralium.computercraft.peripheral.OwnedPeripheral
+import site.siredvin.tweakium.modules.peripheral.OwnedPeripheral
+import site.siredvin.tweakium.modules.peripheral.api.IPeripheralOwner
 import java.time.Instant
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull

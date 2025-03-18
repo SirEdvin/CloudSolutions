@@ -2,10 +2,10 @@ package site.siredvin.cloudsolutions.data
 
 import net.minecraft.data.models.BlockModelGenerators
 import net.minecraft.resources.ResourceLocation
+import site.siredvin.broccolium.modules.data.model.horizontalOrientatedBlock
+import site.siredvin.broccolium.modules.data.model.horizontalOrientedModel
 import site.siredvin.cloudsolutions.CloudSolutionsCore
 import site.siredvin.cloudsolutions.common.setup.Blocks
-import site.siredvin.peripheralium.data.blocks.horizontalOrientatedBlock
-import site.siredvin.peripheralium.data.blocks.horizontalOrientedModel
 
 object ModBlockModelProvider {
     fun addModels(generators: BlockModelGenerators) {

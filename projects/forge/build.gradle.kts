@@ -15,11 +15,13 @@ baseShaking {
 forgeShaking {
     commonProjectName.set("core")
     useAT.set(true)
+    useMixins.set(true)
     useJarJar.set(true)
     extraVersionMappings.set(
         mapOf(
             "computercraft" to "cc-tweaked",
-            "peripheralium" to "peripheralium",
+            "broccolium" to "broccolium",
+            "tweakium" to "tweakium",
         ),
     )
     shake()
@@ -79,6 +81,8 @@ dependencies {
     }
 
     libs.bundles.forge.cc.get().map { implementation(fg.deobf(it)) }
+    libs.bundles.forge.include.get().map { implementation(fg.deobf(it)) }
+    libs.bundles.forge.jjar.get().map { jarJar(it) }
 
     libs.bundles.externalMods.forge.runtime.get().map { runtimeOnly(fg.deobf(it)) }
 }

@@ -18,11 +18,9 @@ object WebserverMain {
 
         val gsonMapper = object : JsonMapper {
 
-            override fun <T : Any> fromJsonString(json: String, targetType: Type): T =
-                gson.fromJson(json, targetType)
+            override fun <T : Any> fromJsonString(json: String, targetType: Type): T = gson.fromJson(json, targetType)
 
-            override fun toJsonString(obj: Any, type: Type) =
-                gson.toJson(obj)
+            override fun toJsonString(obj: Any, type: Type) = gson.toJson(obj)
         }
 
         val app = Javalin.create { it.jsonMapper(gsonMapper) }.start(port)

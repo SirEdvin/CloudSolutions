@@ -4,11 +4,10 @@ import dan200.computercraft.api.lua.LuaException
 import dan200.computercraft.api.lua.LuaFunction
 import site.siredvin.cloudsolutions.common.configuration.ModConfig
 import site.siredvin.cloudsolutions.subsystems.statsq.StatsDClient
-import site.siredvin.peripheralium.api.peripheral.IPeripheralOwner
-import site.siredvin.peripheralium.computercraft.peripheral.OwnedPeripheral
+import site.siredvin.tweakium.modules.peripheral.OwnedPeripheral
+import site.siredvin.tweakium.modules.peripheral.api.IPeripheralOwner
 
-class StatsDBridgePeripheral(peripheralOwner: IPeripheralOwner) :
-    OwnedPeripheral<IPeripheralOwner>(TYPE, peripheralOwner) {
+class StatsDBridgePeripheral(peripheralOwner: IPeripheralOwner) : OwnedPeripheral<IPeripheralOwner>(TYPE, peripheralOwner) {
     companion object {
         const val TYPE = "statsd_bridge"
     }

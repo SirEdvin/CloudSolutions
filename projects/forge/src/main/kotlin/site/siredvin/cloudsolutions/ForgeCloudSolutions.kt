@@ -18,8 +18,8 @@ import site.siredvin.cloudsolutions.common.configuration.ConfigHolder
 import site.siredvin.cloudsolutions.forge.ForgeModPlatform
 import site.siredvin.cloudsolutions.forge.ForgeModRecipeIngredients
 import site.siredvin.cloudsolutions.xplat.ModCommonHooks
-import site.siredvin.peripheralium.ForgePeripheralium
-import site.siredvin.peripheralium.api.peripheral.IPeripheralProvider
+import site.siredvin.tweakium.ForgeTweakium
+import site.siredvin.tweakium.modules.peripheral.api.IPeripheralProvider
 import thedarkcolour.kotlinforforge.forge.MOD_CONTEXT
 
 @Mod(CloudSolutionsCore.MOD_ID)
@@ -43,11 +43,11 @@ object ForgeCloudSolutions {
     )
 
     init {
-        ForgePeripheralium.sayHi()
+        ForgeTweakium.sayHi()
         // Configure configuration
         val context = ModLoadingContext.get()
-        context.registerConfig(ModConfig.Type.COMMON, ConfigHolder.COMMON_SPEC, "${CloudSolutionsCore.MOD_ID}.toml")
-        context.registerConfig(ModConfig.Type.SERVER, ConfigHolder.SERVER_SPEC, "${CloudSolutionsCore.MOD_ID}_server.toml")
+        context.registerConfig(ModConfig.Type.COMMON, ConfigHolder.commonSpec, "${CloudSolutionsCore.MOD_ID}.toml")
+        context.registerConfig(ModConfig.Type.SERVER, ConfigHolder.serverSpec, "${CloudSolutionsCore.MOD_ID}_server.toml")
         CloudSolutionsCore.configure(ForgeModPlatform, ForgeModRecipeIngredients)
         val eventBus = MOD_CONTEXT.getKEventBus()
         eventBus.addListener(this::commonSetup)

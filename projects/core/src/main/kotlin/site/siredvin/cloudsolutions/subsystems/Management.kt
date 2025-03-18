@@ -10,7 +10,8 @@ import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 
 enum class KVStorageMode {
-    DISABLED, SQLITE
+    DISABLED,
+    SQLITE,
 }
 
 object SubsystemManager {

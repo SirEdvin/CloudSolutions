@@ -24,13 +24,13 @@ object StatsDClient {
                     ModConfig.statsdPrefix,
                     ModConfig.statsdHostname,
                     ModConfig.statsdPort,
-                ) { exception -> CloudSolutionsCore.LOGGER.warn("Exception inside statsd client: $exception") }
-                CloudSolutionsCore.LOGGER.info("Statsd server started")
+                ) { exception -> CloudSolutionsCore.logger.warn("Exception inside statsd client: $exception") }
+                CloudSolutionsCore.logger.info("Statsd server started")
             } catch (exc: StatsDClientException) {
-                CloudSolutionsCore.LOGGER.warn("Cannot start statsd server, because of $exc")
+                CloudSolutionsCore.logger.warn("Cannot start statsd server, because of $exc")
             }
         } else {
-            CloudSolutionsCore.LOGGER.info("Ignoring statsd, because bridge are not enabled")
+            CloudSolutionsCore.logger.info("Ignoring statsd, because bridge are not enabled")
         }
     }
 
