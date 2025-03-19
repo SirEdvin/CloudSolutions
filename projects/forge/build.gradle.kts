@@ -93,7 +93,6 @@ modPublishing {
         listOf(
             "cc-tweaked",
             "kotlin-for-forge",
-            "peripheralium",
         ),
     )
     shake()
