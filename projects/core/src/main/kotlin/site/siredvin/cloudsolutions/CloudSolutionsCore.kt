@@ -3,7 +3,7 @@ package site.siredvin.cloudsolutions
 import net.minecraft.world.item.CreativeModeTab
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
-import site.siredvin.cloudsolutions.common.setup.Blocks
+import site.siredvin.cloudsolutions.common.setup.ModBlocks
 import site.siredvin.cloudsolutions.data.ModText
 import site.siredvin.cloudsolutions.subsystems.tsdb.TSDBManager
 import site.siredvin.cloudsolutions.subsystems.tsdb.sqlite.TSDBSQLiteManager
@@ -21,7 +21,7 @@ object CloudSolutionsCore {
         // TODO: some logic for TSDBManager calculation from settings
         TSDBSQLiteManager
     }
-    fun configureCreativeTab(builder: CreativeModeTab.Builder): CreativeModeTab.Builder = builder.icon { Blocks.STATSD_BRIDGE.get().asItem().defaultInstance }
+    fun configureCreativeTab(builder: CreativeModeTab.Builder): CreativeModeTab.Builder = builder.icon { ModBlocks.STATSD_BRIDGE.get().asItem().defaultInstance }
         .title(ModText.CREATIVE_TAB.text)
         .displayItems { _, output ->
             ModPlatform.holder.blocks.forEach { output.accept(it.get()) }

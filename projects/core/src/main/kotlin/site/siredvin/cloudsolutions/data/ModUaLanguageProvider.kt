@@ -1,7 +1,9 @@
 package site.siredvin.cloudsolutions.data
 
 import net.minecraft.data.PackOutput
-import site.siredvin.cloudsolutions.common.setup.Blocks
+import site.siredvin.cloudsolutions.common.setup.ModBlocks
+import site.siredvin.cloudsolutions.computercraft.peripheral.KVStoragePeripheral
+import site.siredvin.cloudsolutions.computercraft.peripheral.StatsDBridgePeripheral
 import java.util.function.Consumer
 
 class ModUaLanguageProvider(
@@ -18,10 +20,15 @@ class ModUaLanguageProvider(
 
     override fun addTranslations() {
         add(ModText.CREATIVE_TAB, "Цитадель даних")
-        add(Blocks.KV_STORAGE.get(), "База даних «ключ—значення»", "Наразі не використовується")
-        add(Blocks.TSDB_STORAGE.get(), "База даних часових рядів", "Наразі не використовується")
-        add(Blocks.STATSD_BRIDGE.get(), "StatsD міст", "Дозволяє відправляти statsd метрики на якийсь statsd сервер вказаний в налаштуваннях")
+        add(ModBlocks.KV_STORAGE.get(), "База даних «ключ—значення»", "Наразі не використовується")
+        add(ModBlocks.TSDB_STORAGE.get(), "База даних часових рядів", "Наразі не використовується")
+        add(ModBlocks.STATSD_BRIDGE.get(), "StatsD міст", "Дозволяє відправляти statsd метрики на якийсь statsd сервер вказаний в налаштуваннях")
         add(ModText.UNFINISHED_AND_DISABLED, "  §4Цей предмет не готовий та був відключений. Просто ігноруйте його")
+
+        addTurtle(KVStoragePeripheral.ID, "Ключ-значення зберігаюча")
+        addTurtle(StatsDBridgePeripheral.ID, "StatsD прокидуюча")
+        addPocket(KVStoragePeripheral.ID, "Ключ-значення зберігаючий")
+        addPocket(StatsDBridgePeripheral.ID, "StatsD прокидуючий")
         hooks.forEach { it.accept(this) }
     }
 }

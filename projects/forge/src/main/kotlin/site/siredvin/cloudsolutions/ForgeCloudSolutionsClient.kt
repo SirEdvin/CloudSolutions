@@ -1,5 +1,8 @@
 package site.siredvin.cloudsolutions
 
+import dan200.computercraft.api.client.turtle.RegisterTurtleModellersEvent
+import dan200.computercraft.api.turtle.ITurtleUpgrade
+import dan200.computercraft.api.turtle.TurtleUpgradeSerialiser
 import net.minecraft.resources.ResourceLocation
 import net.minecraftforge.api.distmarker.Dist
 import net.minecraftforge.client.event.ModelEvent.RegisterAdditional
@@ -20,6 +23,14 @@ object ForgeCloudSolutionsClient {
     fun registerModels(event: RegisterAdditional) {
         CloudSolutionsClientCore.registerExtraModels { model: ResourceLocation ->
             event.register(model)
+        }
+    }
+
+    @SubscribeEvent
+    fun registerTurtleModels(event: RegisterTurtleModellersEvent) {
+        CloudSolutionsClientCore.onModelRegister { serializer, model ->
+            @Suppress("UNCHECKED_CAST")
+            event.register(serializer as TurtleUpgradeSerialiser<ITurtleUpgrade>, model)
         }
     }
 }

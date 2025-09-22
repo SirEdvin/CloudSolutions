@@ -5,6 +5,10 @@
   "block.cloudsolutions.statsd_bridge.tooltip": "Дозволяє відправляти statsd метрики на якийсь statsd сервер вказаний в налаштуваннях",
   "block.cloudsolutions.tsdb_storage": "База даних часових рядів",
   "block.cloudsolutions.tsdb_storage.tooltip": "Наразі не використовується",
+  "pocket.cloudsolutions.kv_storage": "Ключ-значення зберігаючий",
+  "pocket.cloudsolutions.statsd_bridge": "StatsD прокидуючий",
   "text.cloudsolutions.creative_tab": "Цитадель даних",
-  "text.cloudsolutions.unfinished_and_disabled": "  §4Цей предмет не готовий та був відключений. Просто ігноруйте його"
+  "text.cloudsolutions.unfinished_and_disabled": "  §4Цей предмет не готовий та був відключений. Просто ігноруйте його",
+  "turtle.cloudsolutions.kv_storage": "Ключ-значення зберігаюча",
+  "turtle.cloudsolutions.statsd_bridge": "StatsD прокидуюча"
 }

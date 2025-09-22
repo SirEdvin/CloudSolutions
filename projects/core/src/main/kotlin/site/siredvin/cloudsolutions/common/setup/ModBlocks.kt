@@ -7,11 +7,11 @@ import site.siredvin.cloudsolutions.common.configuration.ModConfig
 import site.siredvin.cloudsolutions.util.TooltipCollection
 import site.siredvin.cloudsolutions.xplat.ModPlatform
 
-object Blocks {
+object ModBlocks {
 
     val KV_STORAGE = ModPlatform.registerBlock(
         "kv_storage",
-        { GenericBlockEntityBlock({ BlockEntityTypes.KV_STORAGE.get() }, true) },
+        { GenericBlockEntityBlock({ ModBlockEntityTypes.KV_STORAGE.get() }, true) },
         {
             HiddenDescriptiveBlockItem(
                 it,
@@ -24,7 +24,7 @@ object Blocks {
 
     val TSDB_STORAGE = ModPlatform.registerBlock(
         "tsdb_storage",
-        { GenericBlockEntityBlock({ BlockEntityTypes.TSDB_STORAGE.get() }, true) },
+        { GenericBlockEntityBlock({ ModBlockEntityTypes.TSDB_STORAGE.get() }, true) },
         {
             HiddenDescriptiveBlockItem(
                 it,
@@ -38,7 +38,7 @@ object Blocks {
 
     val STATSD_BRIDGE = ModPlatform.registerBlock(
         "statsd_bridge",
-        { GenericBlockEntityBlock({ BlockEntityTypes.STATSD_BRIDGE.get() }, true) },
+        { GenericBlockEntityBlock({ ModBlockEntityTypes.STATSD_BRIDGE.get() }, true) },
         {
             HiddenDescriptiveBlockItem(
                 it,

@@ -1,5 +1,7 @@
 package site.siredvin.cloudsolutions.subsystems.kv.sqlite
 
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import dan200.computercraft.api.lua.LuaException
 import kotlinx.atomicfu.locks.withLock
 import net.minecraft.server.MinecraftServer
@@ -11,6 +13,7 @@ import java.nio.file.Files
 import java.nio.file.Paths
 import java.sql.Connection
 import java.sql.PreparedStatement
+import java.sql.SQLException
 import java.time.Instant
 import java.util.*
 import java.util.concurrent.ScheduledExecutorService
@@ -30,6 +33,14 @@ object KVSQLiteManager : KeyValueManager {
     private var getExQuery: PreparedStatement? = null
     private var putExQuery: PreparedStatement? = null
     private var listQuery: PreparedStatement? = null
+    private var globListQuery: PreparedStatement? = null
+    private val gson = Gson()
+    private val mapType = TypeToken.getParameterized(Map::class.java, String::class.java, String::class.java)
+
+    private val rawInsertQuery = """
+        insert into kv_records_1 (ownerUUID, key, value, expire)
+        values (?, ?, ?, ?) on conflict(ownerUUID, key) DO UPDATE SET value = ?, expire = ?
+    """.trimIndent()
 
     override fun init(server: MinecraftServer, executor: ScheduledExecutorService) {
         val dirPath = Paths.get(server.getWorldPath(LevelResource.ROOT).toString(), CloudSolutionsCore.MOD_ID)
@@ -47,17 +58,13 @@ object KVSQLiteManager : KeyValueManager {
         statement?.execute("create unique index if not exists kv_owner_key on kv_records_1 (ownerUUID, key)")
         cleanupQuery = db?.prepareStatement("delete from kv_records_1 where expire < ?")
         countQuery = db?.prepareStatement("select count(*) from kv_records_1 where ownerUUID = ? and (expire is null or expire <= ?)")
-        insertQuery = db?.prepareStatement(
-            """
-            insert into kv_records_1 (ownerUUID, key, value, expire)
-            values (?, ?, ?, ?) on conflict(ownerUUID, key) DO UPDATE SET value = ?, expire = ?
-            """.trimIndent(),
-        )
+        insertQuery = db?.prepareStatement(rawInsertQuery)
         deleteQuery = db?.prepareStatement("delete from kv_records_1 where ownerUUID = ? and key = ?")
         getQuery = db?.prepareStatement("select value from kv_records_1 where ownerUUID = ? and key = ? and (expire is null or expire <= ?)")
         getExQuery = db?.prepareStatement("select expire from kv_records_1 where ownerUUID = ? and key = ? and (expire is null or expire <= ?)")
         putExQuery = db?.prepareStatement("update kv_records_1 set expire = ? where ownerUUID = ? and key = ? and (expire is null or expire <= ?)")
         listQuery = db?.prepareStatement("select key from kv_records_1 where ownerUUID = ? and(expire is null or expire <= ?)")
+        globListQuery = db?.prepareStatement("select key from kv_records_1 where ownerUUID = ? and(expire is null or expire <= ?) and key GLOB ?")
         cleanupFuture = executor.scheduleWithFixedDelay({ cleanup() }, 0, 1, TimeUnit.MINUTES)
         CloudSolutionsCore.logger.info("Result of cleanup future: {}, {}", cleanupFuture?.isDone, cleanupFuture?.isCancelled)
     }
@@ -101,6 +108,35 @@ object KVSQLiteManager : KeyValueManager {
         }
     }
 
+    override fun mput(
+        ownerUUID: String,
+        values: Map<String, String>,
+    ) {
+        if (values.isEmpty()) {
+            return
+        }
+        queryPrepareLock.withLock {
+            val query = db?.prepareStatement(rawInsertQuery) ?: return
+            db?.autoCommit = false
+            try {
+                values.entries.forEach {
+                    query.setString(1, ownerUUID)
+                    query.setString(2, it.key)
+                    query.setString(3, it.value)
+                    query.setNull(4, 0)
+                    query.addBatch()
+                }
+                query.executeBatch()
+                db?.commit()
+            } catch (e: SQLException) {
+                db?.rollback()
+                throw e
+            } finally {
+                db?.autoCommit = true
+            }
+        }
+    }
+
     override fun delete(ownerUUID: String, key: String) {
         queryPrepareLock.withLock {
             deleteQuery?.setString(1, ownerUUID)
@@ -116,6 +152,30 @@ object KVSQLiteManager : KeyValueManager {
             getQuery?.setLong(3, Instant.now().epochSecond)
             val result = getQuery?.executeQuery()
             return@withLock result?.getString(1)
+        }
+    }
+
+    override fun mget(
+        ownerUUID: String,
+        keys: List<String>,
+    ): Map<String, String> {
+        if (keys.isEmpty()) {
+            return emptyMap()
+        }
+        return queryPrepareLock.withLock {
+            val placeholders = java.lang.String.join(",", Collections.nCopies(keys.size, "?"))
+            val rawQuery = """SELECT json_group_object(key, value) as result from kv_records_1
+        where ownerUUID = ? and(expire is null or expire <= ?) and key in ($placeholders)
+            """.trimIndent()
+            val query = db?.prepareStatement(rawQuery) ?: return emptyMap()
+            query.setString(1, ownerUUID)
+            query.setLong(2, Instant.now().epochSecond)
+            for (i in 0..<keys.size) {
+                query.setString(i + 3, keys.get(i))
+            }
+            val result = query.executeQuery()
+            @Suppress("UNCHECKED_CAST")
+            return@withLock gson.fromJson(result.getString("result"), mapType) as Map<String, String>
         }
     }
 
@@ -143,11 +203,19 @@ object KVSQLiteManager : KeyValueManager {
         }
     }
 
-    override fun list(ownerUUID: String): List<String> {
+    override fun list(ownerUUID: String, glob: Optional<String>): List<String> {
+        val query = if (glob.isPresent) {
+            globListQuery!!
+        } else {
+            listQuery!!
+        }
         return queryPrepareLock.withLock {
-            listQuery?.setString(1, ownerUUID)
-            listQuery?.setLong(2, Instant.now().epochSecond)
-            val result = listQuery?.executeQuery()
+            query.setString(1, ownerUUID)
+            query.setLong(2, Instant.now().epochSecond)
+            if (glob.isPresent) {
+                query.setString(3, glob.get())
+            }
+            val result = query.executeQuery()
             val values = mutableListOf<String>()
             if (result != null) {
                 while (result.next()) {

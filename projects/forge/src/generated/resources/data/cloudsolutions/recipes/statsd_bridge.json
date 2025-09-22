@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "B": {
+      "tag": "forge:bookshelves"
+    },
+    "C": {
+      "tag": "minecraft:coals"
+    },
+    "I": {
+      "tag": "forge:storage_blocks/iron"
+    },
+    "M": {
+      "item": "computercraft:wireless_modem_normal"
+    }
+  },
+  "pattern": [
+    "CMC",
+    "BIB",
+    "CBC"
+  ],
+  "result": {
+    "item": "cloudsolutions:statsd_bridge"
+  }
+}

@@ -2,6 +2,8 @@ package site.siredvin.cloudsolutions.computercraft.peripheral
 
 import dan200.computercraft.api.lua.LuaException
 import dan200.computercraft.api.lua.LuaFunction
+import net.minecraft.resources.ResourceLocation
+import site.siredvin.cloudsolutions.CloudSolutionsCore
 import site.siredvin.cloudsolutions.common.configuration.ModConfig
 import site.siredvin.cloudsolutions.subsystems.SubsystemManager
 import site.siredvin.tweakium.modules.peripheral.OwnedPeripheral
@@ -13,6 +15,7 @@ import kotlin.jvm.optionals.getOrNull
 class KVStoragePeripheral(owner: IPeripheralOwner) : OwnedPeripheral<IPeripheralOwner>(TYPE, owner) {
     companion object {
         const val TYPE = "kv_storage"
+        val ID = ResourceLocation(CloudSolutionsCore.MOD_ID, TYPE)
     }
 
     override val isEnabled: Boolean
@@ -45,6 +48,19 @@ class KVStoragePeripheral(owner: IPeripheralOwner) : OwnedPeripheral<IPeripheral
         return SubsystemManager.kvManager?.get(player.stringUUID, key)
     }
 
+    @LuaFunction
+    fun mget(keys: Map<*, *>): Map<String, String> {
+        val player = peripheralOwner.owner ?: throw LuaException("Cannot find attached player to this peripheral")
+        return SubsystemManager.kvManager?.mget(player.stringUUID, keys.values.map { it.toString() }.toList()) ?: emptyMap()
+    }
+
+    @LuaFunction
+    fun mput(values: Map<*, *>) {
+        val player = peripheralOwner.owner ?: throw LuaException("Cannot find attached player to this peripheral")
+        val transformedMap = values.mapValues { it.value.toString() }.mapKeys { it.key.toString() }
+        SubsystemManager.kvManager?.mput(player.stringUUID, transformedMap)
+    }
+
     @LuaFunction("get_ex")
     fun getEx(key: String): Long? {
         val player = peripheralOwner.owner ?: throw LuaException("Cannot find attached player to this peripheral")
@@ -58,8 +74,8 @@ class KVStoragePeripheral(owner: IPeripheralOwner) : OwnedPeripheral<IPeripheral
     }
 
     @LuaFunction
-    fun list(): List<String> {
+    fun list(glob: Optional<String>): List<String> {
         val player = peripheralOwner.owner ?: throw LuaException("Cannot find attached player to this peripheral")
-        return SubsystemManager.kvManager?.list(player.stringUUID) ?: emptyList()
+        return SubsystemManager.kvManager?.list(player.stringUUID, glob) ?: emptyList()
     }
 }

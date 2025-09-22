@@ -2,6 +2,8 @@ package site.siredvin.cloudsolutions.computercraft.peripheral
 
 import dan200.computercraft.api.lua.LuaException
 import dan200.computercraft.api.lua.LuaFunction
+import net.minecraft.resources.ResourceLocation
+import site.siredvin.cloudsolutions.CloudSolutionsCore
 import site.siredvin.cloudsolutions.common.configuration.ModConfig
 import site.siredvin.cloudsolutions.subsystems.statsq.StatsDClient
 import site.siredvin.tweakium.modules.peripheral.OwnedPeripheral
@@ -10,6 +12,7 @@ import site.siredvin.tweakium.modules.peripheral.api.IPeripheralOwner
 class StatsDBridgePeripheral(peripheralOwner: IPeripheralOwner) : OwnedPeripheral<IPeripheralOwner>(TYPE, peripheralOwner) {
     companion object {
         const val TYPE = "statsd_bridge"
+        val ID = ResourceLocation(CloudSolutionsCore.MOD_ID, TYPE)
     }
     override val isEnabled: Boolean
         get() = ModConfig.enableStatsDBridge

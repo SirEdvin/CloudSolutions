@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "B": {
+      "tag": "forge:bookshelves"
+    },
+    "C": {
+      "tag": "minecraft:coals"
+    },
+    "I": {
+      "tag": "forge:storage_blocks/iron"
+    }
+  },
+  "pattern": [
+    "CBC",
+    "BIB",
+    "CBC"
+  ],
+  "result": {
+    "item": "cloudsolutions:kv_storage"
+  }
+}

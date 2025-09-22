@@ -2,6 +2,7 @@ package site.siredvin.cloudsolutions.computercraft.peripheral
 
 import dan200.computercraft.api.lua.LuaException
 import dan200.computercraft.api.lua.LuaFunction
+import net.minecraft.resources.ResourceLocation
 import site.siredvin.cloudsolutions.CloudSolutionsCore
 import site.siredvin.cloudsolutions.common.configuration.ModConfig
 import site.siredvin.cloudsolutions.subsystems.tsdb.TSDBManager
@@ -12,6 +13,7 @@ import java.util.*
 class TSDBStoragePeripheral(owner: IPeripheralOwner) : OwnedPeripheral<IPeripheralOwner>(TYPE, owner) {
     companion object {
         const val TYPE = "tsdb_storage"
+        val ID = ResourceLocation(CloudSolutionsCore.MOD_ID, TYPE)
     }
 
     override val isEnabled: Boolean

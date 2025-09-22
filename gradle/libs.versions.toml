@@ -11,12 +11,12 @@ forgegradle = "6.+"
 spotless = "6.19.0"
 
 # Core mod dependencies
-cc-tweaked = "1.108.1"
+cc-tweaked = "1.113.0"
 mixin = "0.8.5"
-broccolium = "1.0.0"
-tweakium = "1.0.0"
-broccolium-jjar = "[1.0.0, 2.0.0)"
-tweakium-jjar = "[1.0.0, 2.0.0)"
+broccolium = "1.1.5"
+tweakium = "1.1.5"
+broccolium-jjar = "[1.1.5, 1.2.0)"
+tweakium-jjar = "[1.1.5, 1.2.0)"
 sqlite = "[3.43.0.0, 3.44.0.0)"
 javalin = "[5.6.2, 5.7.0)"
 pebble = "[2.4.0, 2.5.0)"
@@ -116,7 +116,7 @@ math = [
 metrics = [
     "statsd-client"
 ]
-fabric-cc = ["cc-tweaked-fabric", "cc-tweaked-core"]
+fabric-cc = ["cc-tweaked-fabric", "cc-tweaked-core", "cc-tweaked-fabric-api"]
 fabric-include = ["broccolium-fabric", "tweakium-fabric"]
 fabric-core = ["fabric-api", "fabric-kotlin", "fabric-config", "fabric-loader"]
 forge-raw = ["forge-kotlin"]

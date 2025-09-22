@@ -1,6 +1,6 @@
 package site.siredvin.cloudsolutions.common.setup
 
-object Items {
+object ModItems {
 
     fun doSomething() {
     }

@@ -10,13 +10,13 @@ import site.siredvin.cloudsolutions.common.blockentity.TSDBStorageBlockEntity
 import site.siredvin.cloudsolutions.xplat.ModPlatform
 import java.util.function.Supplier
 
-object BlockEntityTypes {
+object ModBlockEntityTypes {
     val KV_STORAGE: Supplier<BlockEntityType<KVStorageBlockEntity>> = ModPlatform.registerBlockEntity(
         ResourceLocation(CloudSolutionsCore.MOD_ID, "kv_storage"),
     ) {
         PlatformToolkit.get().createBlockEntityType(
             ::KVStorageBlockEntity,
-            Blocks.KV_STORAGE.get(),
+            ModBlocks.KV_STORAGE.get(),
         )
     }
 
@@ -25,7 +25,7 @@ object BlockEntityTypes {
     ) {
         PlatformToolkit.get().createBlockEntityType(
             ::TSDBStorageBlockEntity,
-            Blocks.TSDB_STORAGE.get(),
+            ModBlocks.TSDB_STORAGE.get(),
         )
     }
 
@@ -34,7 +34,7 @@ object BlockEntityTypes {
     ) {
         PlatformToolkit.get().createBlockEntityType(
             ::StatsDBridgeBlockEntity,
-            Blocks.STATSD_BRIDGE.get(),
+            ModBlocks.STATSD_BRIDGE.get(),
         )
     }
 

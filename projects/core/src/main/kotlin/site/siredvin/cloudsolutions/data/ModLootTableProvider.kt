@@ -6,7 +6,7 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.level.storage.loot.LootTable
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets
 import site.siredvin.broccolium.modules.data.loot.LootTableHelper
-import site.siredvin.cloudsolutions.common.setup.Blocks
+import site.siredvin.cloudsolutions.common.setup.ModBlocks
 import site.siredvin.cloudsolutions.xplat.ModPlatform
 import java.util.function.BiConsumer
 
@@ -21,9 +21,9 @@ object ModLootTableProvider {
 
     fun registerBlocks(consumer: BiConsumer<ResourceLocation, LootTable.Builder>) {
         val lootTable = LootTableHelper(ModPlatform.holder)
-        lootTable.dropSelf(consumer, Blocks.KV_STORAGE)
-        lootTable.dropSelf(consumer, Blocks.TSDB_STORAGE)
-        lootTable.dropSelf(consumer, Blocks.STATSD_BRIDGE)
+        lootTable.dropSelf(consumer, ModBlocks.KV_STORAGE)
+        lootTable.dropSelf(consumer, ModBlocks.TSDB_STORAGE)
+        lootTable.dropSelf(consumer, ModBlocks.STATSD_BRIDGE)
         lootTable.validate()
     }
 }

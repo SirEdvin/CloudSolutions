@@ -6,9 +6,11 @@ import net.minecraft.server.MinecraftServer
 import net.minecraft.world.item.CreativeModeTab
 import site.siredvin.broccolium.modules.platform.PlatformToolkit
 import site.siredvin.cloudsolutions.CloudSolutionsCore
-import site.siredvin.cloudsolutions.common.setup.BlockEntityTypes
-import site.siredvin.cloudsolutions.common.setup.Blocks
-import site.siredvin.cloudsolutions.common.setup.Items
+import site.siredvin.cloudsolutions.common.setup.ModBlockEntityTypes
+import site.siredvin.cloudsolutions.common.setup.ModBlocks
+import site.siredvin.cloudsolutions.common.setup.ModItems
+import site.siredvin.cloudsolutions.common.setup.PocketUpgradeSerializers
+import site.siredvin.cloudsolutions.common.setup.TurtleUpgradeSerializers
 import site.siredvin.cloudsolutions.subsystems.SubsystemManager
 import site.siredvin.tweakium.modules.platform.ComputerPlatformRegistries
 import site.siredvin.tweakium.modules.platform.ComputerPlatformToolkit
@@ -16,9 +18,11 @@ import site.siredvin.tweakium.modules.platform.ComputerPlatformToolkit
 object ModCommonHooks {
 
     fun onRegister() {
-        Items.doSomething()
-        Blocks.doSomething()
-        BlockEntityTypes.doSomething()
+        ModItems.doSomething()
+        ModBlocks.doSomething()
+        ModBlockEntityTypes.doSomething()
+        PocketUpgradeSerializers.doSomething()
+        TurtleUpgradeSerializers.doSomething()
         ModPlatform.registerCreativeTab(
             ResourceLocation(CloudSolutionsCore.MOD_ID, "tab"),
             CloudSolutionsCore.configureCreativeTab(PlatformToolkit.get().createTabBuilder()).build(),

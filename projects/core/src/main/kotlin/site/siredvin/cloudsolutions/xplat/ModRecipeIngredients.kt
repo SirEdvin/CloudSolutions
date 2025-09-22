@@ -1,5 +1,7 @@
 package site.siredvin.cloudsolutions.xplat
 
+import net.minecraft.world.item.crafting.Ingredient
+
 interface ModRecipeIngredients {
 
     companion object {
@@ -16,4 +18,8 @@ interface ModRecipeIngredients {
             return impl!!
         }
     }
+
+    val wirelessModem: Ingredient
+    val bookshelf: Ingredient
+    val ironBlock: Ingredient
 }
