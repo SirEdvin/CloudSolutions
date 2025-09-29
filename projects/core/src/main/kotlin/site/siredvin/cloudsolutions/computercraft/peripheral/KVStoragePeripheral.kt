@@ -78,4 +78,16 @@ class KVStoragePeripheral(owner: IPeripheralOwner) : OwnedPeripheral<IPeripheral
         val player = peripheralOwner.owner ?: throw LuaException("Cannot find attached player to this peripheral")
         return SubsystemManager.kvManager?.list(player.stringUUID, glob) ?: emptyList()
     }
+
+    @LuaFunction
+    fun incr(key: String, value: Optional<Double>): Double {
+        val player = peripheralOwner.owner ?: throw LuaException("Cannot find attached player to this peripheral")
+        return SubsystemManager.kvManager?.incr(player.stringUUID, key, value.orElse(1.0)) ?: 0.0
+    }
+
+    @LuaFunction
+    fun decr(key: String, value: Optional<Double>): Double {
+        val player = peripheralOwner.owner ?: throw LuaException("Cannot find attached player to this peripheral")
+        return SubsystemManager.kvManager?.incr(player.stringUUID, key, -value.orElse(1.0)) ?: 0.0
+    }
 }

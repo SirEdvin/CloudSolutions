@@ -225,4 +225,27 @@ object KVSQLiteManager : KeyValueManager {
             return@withLock values
         }
     }
+
+    override fun incr(ownerUUID: String, key: String, value: Double): Double {
+        val preparedQuery = db?.prepareStatement(
+            """
+            INSERT INTO kv_records_1 (key, value, ownerUUID)
+            VALUES (?, ?, ?)
+            ON CONFLICT(ownerUUID, key) DO UPDATE SET value = CAST(value AS REAL) + ?
+            RETURNING value as REAL;
+            """.trimIndent(),
+        ) ?: return 0.0
+        preparedQuery.setString(1, key)
+        preparedQuery.setString(2, value.toString())
+        preparedQuery.setString(3, ownerUUID)
+        preparedQuery.setDouble(4, value)
+        return queryPrepareLock.withLock {
+            val result = preparedQuery.executeQuery()
+            if (result != null) {
+                result.next()
+                return@withLock result.getDouble(1)
+            }
+            return 0.0
+        }
+    }
 }
