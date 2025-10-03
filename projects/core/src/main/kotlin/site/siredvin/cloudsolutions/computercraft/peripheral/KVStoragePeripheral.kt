@@ -32,62 +32,62 @@ class KVStoragePeripheral(owner: IPeripheralOwner) : OwnedPeripheral<IPeripheral
     @LuaFunction
     fun put(key: String, value: String, expire: Optional<Long>) {
         if (value.length > ModConfig.kvStorageValueLimit) throw LuaException("Value is too long")
-        val player = peripheralOwner.owner ?: throw LuaException("Cannot find attached player to this peripheral")
-        SubsystemManager.kvManager?.put(player.stringUUID, key, value, expire.map { Instant.ofEpochSecond(it) }.getOrNull())
+        val player = peripheralOwner.ownerUUID ?: throw LuaException("Cannot find attached player to this peripheral")
+        SubsystemManager.kvManager?.put(player.toString(), key, value, expire.map { Instant.ofEpochSecond(it) }.getOrNull())
     }
 
     @LuaFunction
     fun delete(key: String) {
-        val player = peripheralOwner.owner ?: throw LuaException("Cannot find attached player to this peripheral")
-        SubsystemManager.kvManager?.delete(player.stringUUID, key)
+        val player = peripheralOwner.ownerUUID ?: throw LuaException("Cannot find attached player to this peripheral")
+        SubsystemManager.kvManager?.delete(player.toString(), key)
     }
 
     @LuaFunction
     fun get(key: String): String? {
-        val player = peripheralOwner.owner ?: throw LuaException("Cannot find attached player to this peripheral")
-        return SubsystemManager.kvManager?.get(player.stringUUID, key)
+        val player = peripheralOwner.ownerUUID ?: throw LuaException("Cannot find attached player to this peripheral")
+        return SubsystemManager.kvManager?.get(player.toString(), key)
     }
 
     @LuaFunction
     fun mget(keys: Map<*, *>): Map<String, String> {
-        val player = peripheralOwner.owner ?: throw LuaException("Cannot find attached player to this peripheral")
-        return SubsystemManager.kvManager?.mget(player.stringUUID, keys.values.map { it.toString() }.toList()) ?: emptyMap()
+        val player = peripheralOwner.ownerUUID ?: throw LuaException("Cannot find attached player to this peripheral")
+        return SubsystemManager.kvManager?.mget(player.toString(), keys.values.map { it.toString() }.toList()) ?: emptyMap()
     }
 
     @LuaFunction
     fun mput(values: Map<*, *>) {
-        val player = peripheralOwner.owner ?: throw LuaException("Cannot find attached player to this peripheral")
+        val player = peripheralOwner.ownerUUID ?: throw LuaException("Cannot find attached player to this peripheral")
         val transformedMap = values.mapValues { it.value.toString() }.mapKeys { it.key.toString() }
-        SubsystemManager.kvManager?.mput(player.stringUUID, transformedMap)
+        SubsystemManager.kvManager?.mput(player.toString(), transformedMap)
     }
 
     @LuaFunction("get_ex")
     fun getEx(key: String): Long? {
-        val player = peripheralOwner.owner ?: throw LuaException("Cannot find attached player to this peripheral")
-        return SubsystemManager.kvManager?.getExpire(player.stringUUID, key)?.epochSecond
+        val player = peripheralOwner.ownerUUID ?: throw LuaException("Cannot find attached player to this peripheral")
+        return SubsystemManager.kvManager?.getExpire(player.toString(), key)?.epochSecond
     }
 
     @LuaFunction("put_ex")
     fun putEx(key: String, expire: Optional<Long>) {
-        val player = peripheralOwner.owner ?: throw LuaException("Cannot find attached player to this peripheral")
-        SubsystemManager.kvManager?.putExpire(player.stringUUID, key, expire.map { Instant.ofEpochSecond(it) }.getOrNull())
+        val player = peripheralOwner.ownerUUID ?: throw LuaException("Cannot find attached player to this peripheral")
+        SubsystemManager.kvManager?.putExpire(player.toString(), key, expire.map { Instant.ofEpochSecond(it) }.getOrNull())
     }
 
     @LuaFunction
     fun list(glob: Optional<String>): List<String> {
-        val player = peripheralOwner.owner ?: throw LuaException("Cannot find attached player to this peripheral")
-        return SubsystemManager.kvManager?.list(player.stringUUID, glob) ?: emptyList()
+        val player = peripheralOwner.ownerUUID ?: throw LuaException("Cannot find attached player to this peripheral")
+        return SubsystemManager.kvManager?.list(player.toString(), glob) ?: emptyList()
     }
 
     @LuaFunction
     fun incr(key: String, value: Optional<Double>): Double {
-        val player = peripheralOwner.owner ?: throw LuaException("Cannot find attached player to this peripheral")
-        return SubsystemManager.kvManager?.incr(player.stringUUID, key, value.orElse(1.0)) ?: 0.0
+        val player = peripheralOwner.ownerUUID ?: throw LuaException("Cannot find attached player to this peripheral")
+        return SubsystemManager.kvManager?.incr(player.toString(), key, value.orElse(1.0)) ?: 0.0
     }
 
     @LuaFunction
     fun decr(key: String, value: Optional<Double>): Double {
-        val player = peripheralOwner.owner ?: throw LuaException("Cannot find attached player to this peripheral")
-        return SubsystemManager.kvManager?.incr(player.stringUUID, key, -value.orElse(1.0)) ?: 0.0
+        val player = peripheralOwner.ownerUUID ?: throw LuaException("Cannot find attached player to this peripheral")
+        return SubsystemManager.kvManager?.incr(player.toString(), key, -value.orElse(1.0)) ?: 0.0
     }
 }
