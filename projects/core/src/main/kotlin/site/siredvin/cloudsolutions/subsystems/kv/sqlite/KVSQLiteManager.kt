@@ -185,7 +185,8 @@ object KVSQLiteManager : KeyValueManager {
             getExQuery?.setString(2, key)
             getExQuery?.setLong(3, Instant.now().epochSecond)
             val result = getExQuery?.executeQuery()
-            return@withLock Instant.ofEpochSecond(result?.getInt(1)?.toLong() ?: 0)
+            val epoch = result?.getInt(1)?.toLong() ?: return null
+            return@withLock Instant.ofEpochSecond(epoch)
         }
     }
 
@@ -229,8 +230,8 @@ object KVSQLiteManager : KeyValueManager {
     override fun incr(ownerUUID: String, key: String, value: Double): Double {
         val preparedQuery = db?.prepareStatement(
             """
-            INSERT INTO kv_records_1 (key, value, ownerUUID)
-            VALUES (?, ?, ?)
+            INSERT INTO kv_records_1 (key, value, ownerUUID, expire)
+            VALUES (?, ?, ?, ?)
             ON CONFLICT(ownerUUID, key) DO UPDATE SET value = CAST(value AS REAL) + ?
             RETURNING value as REAL;
             """.trimIndent(),
@@ -238,7 +239,8 @@ object KVSQLiteManager : KeyValueManager {
         preparedQuery.setString(1, key)
         preparedQuery.setString(2, value.toString())
         preparedQuery.setString(3, ownerUUID)
-        preparedQuery.setDouble(4, value)
+        preparedQuery.setNull(4, 0)
+        preparedQuery.setDouble(5, value)
         return queryPrepareLock.withLock {
             val result = preparedQuery.executeQuery()
             if (result != null) {
