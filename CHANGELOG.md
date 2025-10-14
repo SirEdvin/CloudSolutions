@@ -4,7 +4,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+### Added
+
+- `kv_storage` subscriptions to key change and key delete events
+
+### Fixed
+
+- A lot of sqlite interaction
+- Incorrect expire handling
+
 ## [0.2.3] - 2025-10-04
+
+### Fixed
 
 - `incr` now produces non-expirable keys by default
 

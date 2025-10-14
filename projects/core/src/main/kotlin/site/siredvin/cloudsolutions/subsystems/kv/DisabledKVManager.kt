@@ -26,4 +26,9 @@ object DisabledKVManager : KeyValueManager {
     override fun list(ownerUUID: String, glob: Optional<String>): List<String> = throw LuaException("KV storage is disabled in server configuration")
 
     override fun incr(ownerUUID: String, key: String, value: Double): Double = throw LuaException("KV storage is disabled in server configuration")
+    override fun setOnKeyDeletedHook(hook: KVKeyDeletedHook) {
+    }
+
+    override fun setOnKeyChangedHook(hook: KVKeyChangedHook) {
+    }
 }

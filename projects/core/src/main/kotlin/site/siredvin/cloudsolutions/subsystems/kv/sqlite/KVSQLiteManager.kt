@@ -5,14 +5,14 @@ import com.google.gson.reflect.TypeToken
 import dan200.computercraft.api.lua.LuaException
 import net.minecraft.server.MinecraftServer
 import net.minecraft.world.level.storage.LevelResource
-import org.sqlite.SQLiteException
 import site.siredvin.cloudsolutions.CloudSolutionsCore
 import site.siredvin.cloudsolutions.common.configuration.ModConfig
+import site.siredvin.cloudsolutions.subsystems.kv.KVKeyChangedHook
+import site.siredvin.cloudsolutions.subsystems.kv.KVKeyDeletedHook
 import site.siredvin.cloudsolutions.subsystems.kv.KeyValueManager
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.sql.Connection
-import java.sql.SQLException
 import java.time.Instant
 import java.util.*
 import java.util.concurrent.ScheduledExecutorService
@@ -24,6 +24,8 @@ object KVSQLiteManager : KeyValueManager {
     private var cleanupFuture: ScheduledFuture<*>? = null
     private val gson = Gson()
     private val mapType = TypeToken.getParameterized(Map::class.java, String::class.java, String::class.java)
+    private var keyDeletedHook: KVKeyDeletedHook = KVKeyDeletedHook { it1, it2 -> }
+    private var keyChangedHook: KVKeyChangedHook = KVKeyChangedHook {it1, it2, it3 -> }
 
     private val rawInsertQuery = """
         insert into kv_records_1 (ownerUUID, key, value, expire)
@@ -55,7 +57,7 @@ object KVSQLiteManager : KeyValueManager {
             it.execute("create index if not exists kv_owner on kv_records_1 (ownerUUID)")
             it.execute("create unique index if not exists kv_owner_key on kv_records_1 (ownerUUID, key)")
         }
-        cleanupFuture = executor.scheduleWithFixedDelay({ cleanup() }, 0, 5, TimeUnit.MINUTES)
+        cleanupFuture = executor.scheduleWithFixedDelay({ cleanup() }, 0, 1, TimeUnit.MINUTES)
     }
 
     override fun stop(server: MinecraftServer, executor: ScheduledExecutorService) {
@@ -66,9 +68,12 @@ object KVSQLiteManager : KeyValueManager {
         try {
             CloudSolutionsCore.logger.info("Run KV cleanup")
             val now = Instant.now().epochSecond
-            connection!!.prepareStatement("delete from kv_records_1 where expire < ?").use {
+            connection!!.prepareStatement("delete from kv_records_1 where expire < ? returning ownerUUID, key").use {
                 it.setInt(1, now.toInt())
-                it.execute()
+                val result = it.executeQuery()
+                while (result.next()) {
+                    this.keyDeletedHook.handle(result.getString("ownerUUID"), result.getString("key"))
+                }
             }
         } catch (ex: Exception) {
             CloudSolutionsCore.logger.catching(ex)
@@ -100,6 +105,7 @@ object KVSQLiteManager : KeyValueManager {
                 it.setNull(6, 0)
             }
             it.execute()
+            this.keyChangedHook.handle(ownerUUID, key, value)
         }
     }
 
@@ -122,6 +128,9 @@ object KVSQLiteManager : KeyValueManager {
                 query.addBatch()
             }
             query.executeBatch()
+            values.entries.forEach {
+                this.keyChangedHook.handle(ownerUUID, it.key, it.value)
+            }
         }
     }
 
@@ -131,6 +140,7 @@ object KVSQLiteManager : KeyValueManager {
             it.setString(2, key)
             it.execute()
         }
+        this.keyDeletedHook.handle(ownerUUID, key)
     }
 
     override fun get(ownerUUID: String, key: String): String? {
@@ -224,10 +234,20 @@ object KVSQLiteManager : KeyValueManager {
             val result = it.executeQuery()
             if (result != null) {
                 result.next()
-                return result.getDouble(1)
+                val resultValue = result.getDouble(1)
+                this.keyChangedHook.handle(ownerUUID, key, resultValue.toString())
+                return resultValue
             }
-            connection!!.commit()
-            return@use 0.0
+            this.keyChangedHook.handle(ownerUUID, key, value.toString())
+            return@use value
         }
+    }
+
+    override fun setOnKeyDeletedHook(hook: KVKeyDeletedHook) {
+        this.keyDeletedHook = hook
+    }
+
+    override fun setOnKeyChangedHook(hook: KVKeyChangedHook) {
+        this.keyChangedHook = hook
     }
 }

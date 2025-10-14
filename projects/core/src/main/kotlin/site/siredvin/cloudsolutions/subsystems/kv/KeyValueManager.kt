@@ -17,4 +17,7 @@ interface KeyValueManager {
     fun putExpire(ownerUUID: String, key: String, expire: Instant? = null)
     fun list(ownerUUID: String, glob: Optional<String>): List<String>
     fun incr(ownerUUID: String, key: String, value: Double): Double
+
+    fun setOnKeyDeletedHook(hook: KVKeyDeletedHook)
+    fun setOnKeyChangedHook(hook: KVKeyChangedHook)
 }

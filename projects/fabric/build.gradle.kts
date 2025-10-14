@@ -28,7 +28,7 @@ fabricShaking {
             "tweakium" to "tweakium",
         ),
     )
-//    stablePlayer.set(true)
+    stablePlayer.set(true)
     shake()
 }
 
