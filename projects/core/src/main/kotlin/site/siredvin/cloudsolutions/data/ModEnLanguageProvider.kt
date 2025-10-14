@@ -23,6 +23,7 @@ class ModEnLanguageProvider(
         add(ModBlocks.KV_STORAGE.get(), "KV storage", "Have no uses right now")
         add(ModBlocks.TSDB_STORAGE.get(), "Timeseries database", "Have no uses right now")
         add(ModBlocks.STATSD_BRIDGE.get(), "StatsD bridge", "Allows you to send metrics to preconfigured statsd server")
+        add(ModBlocks.CRAFKA_BROKER.get(), "Crafka broker", "It is like that Kafka broker, but with so much craft inside!")
         add(ModText.UNFINISHED_AND_DISABLED, "  §4This item is not ready and disabled for now. Just ignore it")
 
         addUpgrades(KVStoragePeripheral.ID, "KV Storing")

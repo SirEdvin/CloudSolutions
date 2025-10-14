@@ -1,4 +1,6 @@
 {
+  "block.cloudsolutions.crafka_broker": "Crafka broker",
+  "block.cloudsolutions.crafka_broker.tooltip": "It is like that Kafka broker, but with so much craft inside!",
   "block.cloudsolutions.kv_storage": "KV storage",
   "block.cloudsolutions.kv_storage.tooltip": "Have no uses right now",
   "block.cloudsolutions.statsd_bridge": "StatsD bridge",

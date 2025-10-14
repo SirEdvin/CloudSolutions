@@ -24,6 +24,7 @@ object ModLootTableProvider {
         lootTable.dropSelf(consumer, ModBlocks.KV_STORAGE)
         lootTable.dropSelf(consumer, ModBlocks.TSDB_STORAGE)
         lootTable.dropSelf(consumer, ModBlocks.STATSD_BRIDGE)
+        lootTable.dropSelf(consumer, ModBlocks.CRAFKA_BROKER)
         lootTable.validate()
     }
 }

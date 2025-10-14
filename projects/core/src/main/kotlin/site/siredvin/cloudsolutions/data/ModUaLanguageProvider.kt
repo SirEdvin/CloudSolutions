@@ -23,6 +23,7 @@ class ModUaLanguageProvider(
         add(ModBlocks.KV_STORAGE.get(), "База даних «ключ—значення»", "Наразі не використовується")
         add(ModBlocks.TSDB_STORAGE.get(), "База даних часових рядів", "Наразі не використовується")
         add(ModBlocks.STATSD_BRIDGE.get(), "StatsD міст", "Дозволяє відправляти statsd метрики на якийсь statsd сервер вказаний в налаштуваннях")
+        add(ModBlocks.CRAFKA_BROKER.get(), "Crafka брокер", "Це як той відомий брокер Kafka, але з величезною кількістю крафта всередині")
         add(ModText.UNFINISHED_AND_DISABLED, "  §4Цей предмет не готовий та був відключений. Просто ігноруйте його")
 
         addTurtle(KVStoragePeripheral.ID, "Ключ-значення зберігаюча")

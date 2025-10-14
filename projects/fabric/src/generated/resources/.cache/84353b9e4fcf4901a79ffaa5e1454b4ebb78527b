@@ -1,4 +1,5 @@
-// 1.20.1	2025-09-22T20:04:08.9669753	Cloud Solutions/minecraft:block Loot Table
+// 1.20.1	2025-10-14T19:37:48.0296224	Cloud Solutions/minecraft:block Loot Table
 be7ca84746f07db351641b42d6b0476cebde3991 data\cloudsolutions\loot_tables\blocks\statsd_bridge.json
+f1b9b84af01555751be72b340707f8cf0e364da1 data\cloudsolutions\loot_tables\blocks\crafka_broker.json
 ec8f8a822ca17b414b717654190fefd801fb7340 data\cloudsolutions\loot_tables\blocks\kv_storage.json
 68c211ce419a68ebce88796e03643e36fae11038 data\cloudsolutions\loot_tables\blocks\tsdb_storage.json

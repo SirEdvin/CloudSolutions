@@ -57,7 +57,7 @@ class KVStoragePeripheral(owner: IPeripheralOwner) : OwnedPeripheral<IPeripheral
     @LuaFunction
     fun mput(values: Map<*, *>) {
         val player = peripheralOwner.ownerUUID ?: throw LuaException("Cannot find attached player to this peripheral")
-        val transformedMap = values.mapValues { it.value.toString() }.mapKeys { it.key.toString() }
+        val transformedMap = values.mapNotNull { entry -> Pair(entry.key.toString(), entry.value.toString()) }.toMap()
         SubsystemManager.kvManager?.mput(player.toString(), transformedMap)
     }
 

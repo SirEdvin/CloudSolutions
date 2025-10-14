@@ -1,4 +1,6 @@
 {
+  "block.cloudsolutions.crafka_broker": "Crafka брокер",
+  "block.cloudsolutions.crafka_broker.tooltip": "Це як той відомий брокер Kafka, але з величезною кількістю крафта всередині",
   "block.cloudsolutions.kv_storage": "База даних «ключ—значення»",
   "block.cloudsolutions.kv_storage.tooltip": "Наразі не використовується",
   "block.cloudsolutions.statsd_bridge": "StatsD міст",

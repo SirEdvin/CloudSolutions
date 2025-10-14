@@ -3,37 +3,25 @@ package site.siredvin.cloudsolutions.subsystems.kv.sqlite
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import dan200.computercraft.api.lua.LuaException
-import kotlinx.atomicfu.locks.withLock
 import net.minecraft.server.MinecraftServer
 import net.minecraft.world.level.storage.LevelResource
+import org.sqlite.SQLiteException
 import site.siredvin.cloudsolutions.CloudSolutionsCore
 import site.siredvin.cloudsolutions.common.configuration.ModConfig
 import site.siredvin.cloudsolutions.subsystems.kv.KeyValueManager
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.sql.Connection
-import java.sql.PreparedStatement
 import java.sql.SQLException
 import java.time.Instant
 import java.util.*
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.ScheduledFuture
 import java.util.concurrent.TimeUnit
-import java.util.concurrent.locks.ReentrantLock
 
 object KVSQLiteManager : KeyValueManager {
-    private val queryPrepareLock: ReentrantLock = ReentrantLock()
-    private var db: Connection? = null
+    private var connection: Connection? = null
     private var cleanupFuture: ScheduledFuture<*>? = null
-    private var cleanupQuery: PreparedStatement? = null
-    private var countQuery: PreparedStatement? = null
-    private var insertQuery: PreparedStatement? = null
-    private var deleteQuery: PreparedStatement? = null
-    private var getQuery: PreparedStatement? = null
-    private var getExQuery: PreparedStatement? = null
-    private var putExQuery: PreparedStatement? = null
-    private var listQuery: PreparedStatement? = null
-    private var globListQuery: PreparedStatement? = null
     private val gson = Gson()
     private val mapType = TypeToken.getParameterized(Map::class.java, String::class.java, String::class.java)
 
@@ -41,32 +29,33 @@ object KVSQLiteManager : KeyValueManager {
         insert into kv_records_1 (ownerUUID, key, value, expire)
         values (?, ?, ?, ?) on conflict(ownerUUID, key) DO UPDATE SET value = ?, expire = ?
     """.trimIndent()
+    private val rawCountQuery = """
+        select count(*) from kv_records_1 where ownerUUID = ? and (expire is null or expire <= ?)
+    """.trimIndent()
+    private val rawIncrQuery = """
+        INSERT INTO kv_records_1 (key, value, ownerUUID, expire)
+        VALUES (?, ?, ?, ?)
+        ON CONFLICT(ownerUUID, key) DO UPDATE SET value = CAST(value AS REAL) + ?
+        RETURNING value as REAL;
+    """.trimIndent()
 
     override fun init(server: MinecraftServer, executor: ScheduledExecutorService) {
         val dirPath = Paths.get(server.getWorldPath(LevelResource.ROOT).toString(), CloudSolutionsCore.MOD_ID)
         if (!Files.isDirectory(dirPath)) Files.createDirectory(dirPath)
         val dbPath = Paths.get(server.getWorldPath(LevelResource.ROOT).toString(), CloudSolutionsCore.MOD_ID, "kv.db").toString()
-        db = org.sqlite.JDBC.createConnection("jdbc:sqlite:$dbPath", Properties())
-        db?.autoCommit = true
-        val statement = db?.createStatement()
-        statement?.execute(
-            """
+        connection = org.sqlite.JDBC.createConnection("jdbc:sqlite:$dbPath", Properties())
+        connection!!.autoCommit = false
+        val statement = connection!!.createStatement()
+        statement.use {
+            it.execute(
+                """
             create table if not exists kv_records_1(ownerUUID varchar(255) not null , key varchar(255) not null , value text not null , expire integer)
             """.trimIndent(),
-        )
-        statement?.execute("create index if not exists kv_owner on kv_records_1 (ownerUUID)")
-        statement?.execute("create unique index if not exists kv_owner_key on kv_records_1 (ownerUUID, key)")
-        cleanupQuery = db?.prepareStatement("delete from kv_records_1 where expire < ?")
-        countQuery = db?.prepareStatement("select count(*) from kv_records_1 where ownerUUID = ? and (expire is null or expire <= ?)")
-        insertQuery = db?.prepareStatement(rawInsertQuery)
-        deleteQuery = db?.prepareStatement("delete from kv_records_1 where ownerUUID = ? and key = ?")
-        getQuery = db?.prepareStatement("select value from kv_records_1 where ownerUUID = ? and key = ? and (expire is null or expire <= ?)")
-        getExQuery = db?.prepareStatement("select expire from kv_records_1 where ownerUUID = ? and key = ? and (expire is null or expire <= ?)")
-        putExQuery = db?.prepareStatement("update kv_records_1 set expire = ? where ownerUUID = ? and key = ? and (expire is null or expire <= ?)")
-        listQuery = db?.prepareStatement("select key from kv_records_1 where ownerUUID = ? and(expire is null or expire <= ?)")
-        globListQuery = db?.prepareStatement("select key from kv_records_1 where ownerUUID = ? and(expire is null or expire <= ?) and key GLOB ?")
-        cleanupFuture = executor.scheduleWithFixedDelay({ cleanup() }, 0, 1, TimeUnit.MINUTES)
-        CloudSolutionsCore.logger.info("Result of cleanup future: {}, {}", cleanupFuture?.isDone, cleanupFuture?.isCancelled)
+            )
+            it.execute("create index if not exists kv_owner on kv_records_1 (ownerUUID)")
+            it.execute("create unique index if not exists kv_owner_key on kv_records_1 (ownerUUID, key)")
+        }
+        cleanupFuture = executor.scheduleWithFixedDelay({ cleanup() }, 0, 5, TimeUnit.MINUTES)
     }
 
     override fun stop(server: MinecraftServer, executor: ScheduledExecutorService) {
@@ -75,36 +64,42 @@ object KVSQLiteManager : KeyValueManager {
 
     private fun cleanup() {
         try {
-            queryPrepareLock.withLock {
-                CloudSolutionsCore.logger.info("Run KV cleanup")
-                val now = Instant.now().epochSecond
-                cleanupQuery?.setInt(1, now.toInt())
-                cleanupQuery?.execute()
+            CloudSolutionsCore.logger.info("Run KV cleanup")
+            val now = Instant.now().epochSecond
+            connection!!.prepareStatement("delete from kv_records_1 where expire < ?").use {
+                it.setInt(1, now.toInt())
+                it.execute()
             }
         } catch (ex: Exception) {
             CloudSolutionsCore.logger.catching(ex)
         }
     }
 
-    override fun put(ownerUUID: String, key: String, value: String, expire: Instant?) {
-        queryPrepareLock.withLock {
-            countQuery?.setString(1, ownerUUID)
-            countQuery?.setLong(2, Instant.now().epochSecond)
-            val result = countQuery?.executeQuery()
+    fun validateKeyCount(ownerUUID: String, keyToInsert: Int) {
+        connection!!.prepareStatement(rawCountQuery).use {
+            it.setString(1, ownerUUID)
+            it.setLong(2, Instant.now().epochSecond)
+            val result = it?.executeQuery()
             val count = result?.getInt(1) ?: 0
-            if (count >= ModConfig.kvStorageKeyLimit) throw LuaException("You have exceeded key limit per player")
-            insertQuery?.setString(1, ownerUUID)
-            insertQuery?.setString(2, key)
-            insertQuery?.setString(3, value)
-            insertQuery?.setString(5, value)
+            if (count + keyToInsert >= ModConfig.kvStorageKeyLimit) throw LuaException("You have exceeded key limit per player")
+        }
+    }
+
+    override fun put(ownerUUID: String, key: String, value: String, expire: Instant?) {
+        validateKeyCount(ownerUUID, 1)
+        connection!!.prepareStatement(rawInsertQuery).use {
+            it.setString(1, ownerUUID)
+            it.setString(2, key)
+            it.setString(3, value)
+            it.setString(5, value)
             if (expire != null) {
-                insertQuery?.setInt(4, expire.epochSecond.toInt())
-                insertQuery?.setInt(6, expire.epochSecond.toInt())
+                it.setInt(4, expire.epochSecond.toInt())
+                it.setInt(6, expire.epochSecond.toInt())
             } else {
-                insertQuery?.setNull(4, 0)
-                insertQuery?.setNull(6, 0)
+                it.setNull(4, 0)
+                it.setNull(6, 0)
             }
-            insertQuery?.execute()
+            it.execute()
         }
     }
 
@@ -115,43 +110,36 @@ object KVSQLiteManager : KeyValueManager {
         if (values.isEmpty()) {
             return
         }
-        queryPrepareLock.withLock {
-            val query = db?.prepareStatement(rawInsertQuery) ?: return
-            db?.autoCommit = false
-            try {
-                values.entries.forEach {
-                    query.setString(1, ownerUUID)
-                    query.setString(2, it.key)
-                    query.setString(3, it.value)
-                    query.setNull(4, 0)
-                    query.addBatch()
-                }
-                query.executeBatch()
-                db?.commit()
-            } catch (e: SQLException) {
-                db?.rollback()
-                throw e
-            } finally {
-                db?.autoCommit = true
+        validateKeyCount(ownerUUID, values.count())
+        connection!!.prepareStatement(rawInsertQuery).use { query ->
+            values.entries.forEach {
+                query.setString(1, ownerUUID)
+                query.setString(2, it.key)
+                query.setString(3, it.value)
+                query.setNull(4, 0)
+                query.setString(5, it.value)
+                query.setNull(6, 0)
+                query.addBatch()
             }
+            query.executeBatch()
         }
     }
 
     override fun delete(ownerUUID: String, key: String) {
-        queryPrepareLock.withLock {
-            deleteQuery?.setString(1, ownerUUID)
-            deleteQuery?.setString(2, key)
-            deleteQuery?.execute()
+        connection!!.prepareStatement("delete from kv_records_1 where ownerUUID = ? and key = ?").use {
+            it.setString(1, ownerUUID)
+            it.setString(2, key)
+            it.execute()
         }
     }
 
     override fun get(ownerUUID: String, key: String): String? {
-        return queryPrepareLock.withLock {
-            getQuery?.setString(1, ownerUUID)
-            getQuery?.setString(2, key)
-            getQuery?.setLong(3, Instant.now().epochSecond)
-            val result = getQuery?.executeQuery()
-            return@withLock result?.getString(1)
+        return connection!!.prepareStatement("select value from kv_records_1 where ownerUUID = ? and key = ? and (expire is null or expire > ?)").use {
+            it.setString(1, ownerUUID)
+            it.setString(2, key)
+            it.setLong(3, Instant.now().epochSecond)
+            val result = it.executeQuery()
+            return@use result.getString(1)
         }
     }
 
@@ -162,92 +150,84 @@ object KVSQLiteManager : KeyValueManager {
         if (keys.isEmpty()) {
             return emptyMap()
         }
-        return queryPrepareLock.withLock {
-            val placeholders = java.lang.String.join(",", Collections.nCopies(keys.size, "?"))
-            val rawQuery = """SELECT json_group_object(key, value) as result from kv_records_1
-        where ownerUUID = ? and(expire is null or expire <= ?) and key in ($placeholders)
-            """.trimIndent()
-            val query = db?.prepareStatement(rawQuery) ?: return emptyMap()
-            query.setString(1, ownerUUID)
-            query.setLong(2, Instant.now().epochSecond)
+        val placeholders = java.lang.String.join(",", Collections.nCopies(keys.size, "?"))
+        val rawQuery = """SELECT json_group_object(key, value) as result from kv_records_1
+    where ownerUUID = ? and(expire is null or expire > ?) and key in ($placeholders)
+        """.trimIndent()
+        return connection!!.prepareStatement(rawQuery).use {
+            it.setString(1, ownerUUID)
+            it.setLong(2, Instant.now().epochSecond)
             for (i in 0..<keys.size) {
-                query.setString(i + 3, keys.get(i))
+                it.setString(i + 3, keys.get(i))
             }
-            val result = query.executeQuery()
+            val result = it.executeQuery()
             @Suppress("UNCHECKED_CAST")
-            return@withLock gson.fromJson(result.getString("result"), mapType) as Map<String, String>
+            return@use gson.fromJson(result.getString("result"), mapType) as Map<String, String>
         }
     }
 
     override fun getExpire(ownerUUID: String, key: String): Instant? {
-        return queryPrepareLock.withLock {
-            getExQuery?.setString(1, ownerUUID)
-            getExQuery?.setString(2, key)
-            getExQuery?.setLong(3, Instant.now().epochSecond)
-            val result = getExQuery?.executeQuery()
-            val epoch = result?.getInt(1)?.toLong() ?: return null
-            return@withLock Instant.ofEpochSecond(epoch)
+        return connection!!.prepareStatement("select expire from kv_records_1 where ownerUUID = ? and key = ? and (expire is null or expire > ?)").use {
+            it.setString(1, ownerUUID)
+            it.setString(2, key)
+            it.setLong(3, Instant.now().epochSecond)
+            val result = it.executeQuery()
+            val epoch = result.getInt(1).toLong()
+            return@use Instant.ofEpochSecond(epoch)
         }
     }
 
     override fun putExpire(ownerUUID: String, key: String, expire: Instant?) {
-        queryPrepareLock.withLock {
+        connection!!.prepareStatement("update kv_records_1 set expire = ? where ownerUUID = ? and key = ? and (expire is null or expire > ?)").use {
             if (expire != null) {
-                putExQuery?.setInt(1, expire.epochSecond.toInt())
+                it.setInt(1, expire.epochSecond.toInt())
             } else {
-                putExQuery?.setNull(1, 0)
+                it.setNull(1, 0)
             }
-            putExQuery?.setString(2, ownerUUID)
-            putExQuery?.setString(3, key)
-            putExQuery?.setLong(4, Instant.now().epochSecond)
-            putExQuery?.execute()
+            it.setString(2, ownerUUID)
+            it.setString(3, key)
+            it.setLong(4, Instant.now().epochSecond)
+            it.execute()
         }
     }
 
     override fun list(ownerUUID: String, glob: Optional<String>): List<String> {
         val query = if (glob.isPresent) {
-            globListQuery!!
+            "select key from kv_records_1 where ownerUUID = ? and(expire is null or expire > ?) and key GLOB ?"
         } else {
-            listQuery!!
+            "select key from kv_records_1 where ownerUUID = ? and(expire is null or expire > ?)"
         }
-        return queryPrepareLock.withLock {
-            query.setString(1, ownerUUID)
-            query.setLong(2, Instant.now().epochSecond)
+        return connection!!.prepareStatement(query).use {
+            it.setString(1, ownerUUID)
+            it.setLong(2, Instant.now().epochSecond)
             if (glob.isPresent) {
-                query.setString(3, glob.get())
+                it.setString(3, glob.get())
             }
-            val result = query.executeQuery()
+            val result = it.executeQuery()
             val values = mutableListOf<String>()
             if (result != null) {
                 while (result.next()) {
                     values.add(result.getString(1))
                 }
             }
-            return@withLock values
+            return@use values
         }
     }
 
     override fun incr(ownerUUID: String, key: String, value: Double): Double {
-        val preparedQuery = db?.prepareStatement(
-            """
-            INSERT INTO kv_records_1 (key, value, ownerUUID, expire)
-            VALUES (?, ?, ?, ?)
-            ON CONFLICT(ownerUUID, key) DO UPDATE SET value = CAST(value AS REAL) + ?
-            RETURNING value as REAL;
-            """.trimIndent(),
-        ) ?: return 0.0
-        preparedQuery.setString(1, key)
-        preparedQuery.setString(2, value.toString())
-        preparedQuery.setString(3, ownerUUID)
-        preparedQuery.setNull(4, 0)
-        preparedQuery.setDouble(5, value)
-        return queryPrepareLock.withLock {
-            val result = preparedQuery.executeQuery()
+        return connection!!.prepareStatement(rawIncrQuery).use {
+            it.setString(1, key)
+            it.setString(2, value.toString())
+            it.setString(3, ownerUUID)
+            it.setNull(4, 0)
+            it.setDouble(5, value)
+            val result = it.executeQuery()
             if (result != null) {
                 result.next()
-                return@withLock result.getDouble(1)
+                return result.getDouble(1)
             }
-            return 0.0
+            connection!!.commit()
+            return@use 0.0
         }
     }
 }

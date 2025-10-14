@@ -1,0 +1,20 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "cloudsolutions:block/crafka_broker",
+      "y": 180
+    },
+    "facing=north": {
+      "model": "cloudsolutions:block/crafka_broker",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "cloudsolutions:block/crafka_broker",
+      "y": 270
+    },
+    "facing=west": {
+      "model": "cloudsolutions:block/crafka_broker",
+      "y": 0
+    }
+  }
+}

@@ -15,6 +15,9 @@ object ModConfig {
     val enableKVStorage: Boolean
         get() = ConfigHolder.commonConfig.enableKVBridge.get()
 
+    val enableCrafkaBroker: Boolean
+        get() = ConfigHolder.commonConfig.enableCrafkaBroker.get()
+
     val enableStatsDBridge: Boolean
         get() = ConfigHolder.commonConfig.enableStatsDBridge.get()
 
@@ -55,6 +58,7 @@ object ModConfig {
         // Generic plugins
         val enableStatsDBridge: ForgeConfigSpec.BooleanValue
         val enableKVBridge: ForgeConfigSpec.BooleanValue
+        val enableCrafkaBroker: ForgeConfigSpec.BooleanValue
 
         init {
             builder.push("statsd")
@@ -62,6 +66,8 @@ object ModConfig {
                 .define("enableStatsDBridge", true)
             enableKVBridge = builder.comment("Enables KV storage")
                 .define("enableKVStorage", true)
+            enableCrafkaBroker = builder.comment("Enable crafka broker")
+                .define("enableCrafkaBroker", true)
             builder.pop()
         }
     }
