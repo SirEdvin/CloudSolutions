@@ -48,6 +48,12 @@ object ModConfig {
             }
         }
 
+    val kvStorageKeyLimit: Int
+        get() = ConfigHolder.serverConfig.kvStorageKeyLimit.get()
+
+    val kvStorageValueLimit: Int
+        get() = ConfigHolder.serverConfig.kvStorageValueLimit.get()
+
     val crafkaStorageMode: CrafkaStorageMode
         get() {
             return try {
@@ -57,11 +63,15 @@ object ModConfig {
             }
         }
 
-    val kvStorageKeyLimit: Int
-        get() = ConfigHolder.serverConfig.kvStorageKeyLimit.get()
+    val crafkaCursorRevalidationDelay: Long
+        get() = ConfigHolder.serverConfig.crafkaCursorRevalidationDelay.get()
 
-    val kvStorageValueLimit: Int
-        get() = ConfigHolder.serverConfig.kvStorageValueLimit.get()
+    val crafkaTopicSizeLimit: Int
+        get() = ConfigHolder.serverConfig.crafkaTopicSizeLimit.get()
+    val crafkaMessageSizeLimit: Int
+        get() = ConfigHolder.serverConfig.crafkaMessageSizeLimit.get()
+    val crafkaMaxResendSteps: Int
+        get() = ConfigHolder.serverConfig.crafkaMaxResendSteps.get()
 
     class CommonConfig internal constructor(builder: ForgeConfigSpec.Builder) {
 
@@ -99,6 +109,10 @@ object ModConfig {
 
         // Crafka broker
         val crafkaStorageMode: ForgeConfigSpec.ConfigValue<String>
+        val crafkaCursorRevalidationDelay: ForgeConfigSpec.LongValue
+        val crafkaTopicSizeLimit: ForgeConfigSpec.IntValue
+        val crafkaMessageSizeLimit: ForgeConfigSpec.IntValue
+        val crafkaMaxResendSteps: ForgeConfigSpec.IntValue
 
         init {
             builder.push("statsd")
@@ -127,7 +141,7 @@ object ModConfig {
                     }
                 }
             kvStorageKeyLimit = builder.comment("Limit for active keys in storage per player")
-                .defineInRange("kvStorageKeyLimit", 1_000, 1, Int.MAX_VALUE)
+                .defineInRange("kvStorageKeyLimit", 10240, 1, Int.MAX_VALUE)
             kvStorageValueLimit = builder.comment("Limit for max size of value")
                 .defineInRange("kvStorageValueLimit", 500_000, 1, Int.MAX_VALUE)
             builder.pop()
@@ -142,6 +156,15 @@ object ModConfig {
                         false
                     }
                 }
+            crafkaCursorRevalidationDelay = builder.comment("Time in millisecond how fast crafka schedule check for message delivery")
+                .defineInRange("crafkaCursorRevalidationDelay", 100L, 0L, Long.MAX_VALUE)
+            crafkaTopicSizeLimit = builder.comment("Limit for amount of topics per player")
+                .defineInRange("crafkaTopicSizeLimit", 512, 0, Int.MAX_VALUE)
+            crafkaMessageSizeLimit = builder.comment("Limit for amount of topics per player")
+                .defineInRange("crafkaMessageSizeLimit", 500_000, 0, Int.MAX_VALUE)
+            crafkaMaxResendSteps = builder.comment("Max amount of tries to resend message before subscription will drop")
+                .defineInRange("crafkaMaxResendSteps", 21, 5, 128)
+            builder.pop()
         }
     }
 }

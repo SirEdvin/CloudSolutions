@@ -5,7 +5,6 @@ import net.minecraft.core.Direction
 import net.minecraft.world.level.block.state.BlockState
 import site.siredvin.cloudsolutions.common.setup.ModBlockEntityTypes
 import site.siredvin.cloudsolutions.computercraft.peripheral.CrafkaBrokerPeripheral
-import site.siredvin.cloudsolutions.computercraft.peripheral.KVStoragePeripheral
 import site.siredvin.tweakium.modules.peripheral.blockentity.PeripheralBlockEntity
 import site.siredvin.tweakium.modules.peripheral.owner.BlockEntityPeripheralOwner
 

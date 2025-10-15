@@ -1,6 +1,7 @@
 package site.siredvin.cloudsolutions.common.setup
 
 import dan200.computercraft.api.pocket.PocketUpgradeSerialiser
+import site.siredvin.cloudsolutions.computercraft.peripheral.CrafkaBrokerPeripheral
 import site.siredvin.cloudsolutions.computercraft.peripheral.KVStoragePeripheral
 import site.siredvin.cloudsolutions.computercraft.peripheral.StatsDBridgePeripheral
 import site.siredvin.cloudsolutions.xplat.ModPlatform
@@ -27,6 +28,17 @@ object PocketUpgradeSerializers {
                 id,
                 stack,
                 { KVStoragePeripheral(PocketPeripheralOwner(it)) },
+            )
+        },
+    )
+
+    val CRAFKA_BROKER = ModPlatform.registerPocketUpgrade(
+        CrafkaBrokerPeripheral.ID,
+        PocketUpgradeSerialiser.simpleWithCustomItem { id, stack ->
+            PeripheralPocketUpgrade(
+                id,
+                stack,
+                { CrafkaBrokerPeripheral(PocketPeripheralOwner(it)) },
             )
         },
     )

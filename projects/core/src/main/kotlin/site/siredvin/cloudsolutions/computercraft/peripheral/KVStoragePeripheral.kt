@@ -9,7 +9,6 @@ import dan200.computercraft.api.peripheral.IComputerAccess
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.IntTag
 import net.minecraft.resources.ResourceLocation
-import org.jetbrains.exposed.v1.core.Table
 import site.siredvin.cloudsolutions.CloudSolutionsCore
 import site.siredvin.cloudsolutions.common.configuration.ModConfig
 import site.siredvin.cloudsolutions.subsystems.SubscriptionManager
@@ -28,7 +27,8 @@ class KVStoragePeripheral(owner: IPeripheralOwner) : OwnedPeripheral<IPeripheral
         const val TYPE = "kv_storage"
         val ID = ResourceLocation(CloudSolutionsCore.MOD_ID, TYPE)
         val REGEX_CACHE = CacheBuilder.newBuilder().maximumSize(1_000).expireAfterAccess(30, TimeUnit.MINUTES).build(
-            CacheLoader.from{ it: String -> Regex(it) })
+            CacheLoader.from { it: String -> Regex(it) },
+        )
         const val KV_STORAGE_CHANGED_SUBS = "kv_storage_changed_subs"
         const val KV_STORAGE_DELETED_SUBS = "kv_storage_changed_subs"
         const val KV_STORAGE_KEY_CHANGED = "kv_storage_key_changed"
@@ -41,8 +41,9 @@ class KVStoragePeripheral(owner: IPeripheralOwner) : OwnedPeripheral<IPeripheral
     init {
         this.loadSettings()
         val ownerUUID = this.peripheralOwner.ownerUUID?.toString()
-        if (ownerUUID != null)
+        if (ownerUUID != null) {
             SubscriptionManager.addKVStorage(ownerUUID, this)
+        }
     }
 
     override val isEnabled: Boolean
@@ -119,17 +120,15 @@ class KVStoragePeripheral(owner: IPeripheralOwner) : OwnedPeripheral<IPeripheral
     }
 
     @LuaFunction(mainThread = true)
-    fun getSubscriptions(access: IComputerAccess, type: String): List<String> {
-        return when(type) {
-            "changed" -> listSubscriptions(changedSubscriptions, access.id)
-            "deleted" -> listSubscriptions(deletedSubscriptions, access.id)
-            else -> throw LuaException("You can only list subscriptions to changed or deleted events")
-        }
+    fun getSubscriptions(access: IComputerAccess, type: String): List<String> = when (type) {
+        "changed" -> listSubscriptions(changedSubscriptions, access.id)
+        "deleted" -> listSubscriptions(deletedSubscriptions, access.id)
+        else -> throw LuaException("You can only list subscriptions to changed or deleted events")
     }
 
     @LuaFunction(mainThread = true)
     fun subscribe(access: IComputerAccess, type: String, pattern: String) {
-        when(type) {
+        when (type) {
             "changed" -> addSubscription(changedSubscriptions, pattern, access.id)
             "deleted" -> addSubscription(deletedSubscriptions, pattern, access.id)
             else -> throw LuaException("You can subscribe only to changed or deleted events")
@@ -138,23 +137,22 @@ class KVStoragePeripheral(owner: IPeripheralOwner) : OwnedPeripheral<IPeripheral
 
     @LuaFunction(mainThread = true)
     fun unsubscribe(access: IComputerAccess, type: String, pattern: String) {
-        when(type) {
+        when (type) {
             "changed" -> removeSubscription(changedSubscriptions, pattern, access.id)
             "deleted" -> removeSubscription(deletedSubscriptions, pattern, access.id)
             else -> throw LuaException("You can unsubscribe only from changed or deleted events")
         }
     }
 
-    private fun listSubscriptions(subMap: MutableMap<String, MutableSet<Int>>, computerID: Int): List<String> {
-        return subMap.filter { it.value.contains(computerID) }.map { it.key }
-    }
+    private fun listSubscriptions(subMap: MutableMap<String, MutableSet<Int>>, computerID: Int): List<String> = subMap.filter { it.value.contains(computerID) }.map { it.key }
 
     private fun addSubscription(subMap: MutableMap<String, MutableSet<Int>>, pattern: String, computerID: Int) {
         if (!subMap.contains(pattern)) {
             subMap[pattern] = mutableSetOf()
         }
-        if (subMap[pattern]!!.add(computerID))
+        if (subMap[pattern]!!.add(computerID)) {
             saveSettings()
+        }
     }
 
     private fun removeSubscription(subMap: MutableMap<String, MutableSet<Int>>, pattern: String, computerID: Int) {
@@ -169,8 +167,9 @@ class KVStoragePeripheral(owner: IPeripheralOwner) : OwnedPeripheral<IPeripheral
         changedSubscriptions.forEach {
             if (REGEX_CACHE.get(it.key).matches(key)) {
                 this.forEachComputer { computerAccess ->
-                    if (it.value.contains(computerAccess.id))
+                    if (it.value.contains(computerAccess.id)) {
                         computerAccess.queueEvent(KV_STORAGE_KEY_CHANGED, key, value)
+                    }
                 }
             }
         }
@@ -180,8 +179,9 @@ class KVStoragePeripheral(owner: IPeripheralOwner) : OwnedPeripheral<IPeripheral
         deletedSubscriptions.forEach {
             if (REGEX_CACHE.get(it.key).matches(key)) {
                 this.forEachComputer { computerAccess ->
-                    if (it.value.contains(computerAccess.id))
+                    if (it.value.contains(computerAccess.id)) {
                         computerAccess.queueEvent(KV_STORAGE_KEY_DELETED, key)
+                    }
                 }
             }
         }

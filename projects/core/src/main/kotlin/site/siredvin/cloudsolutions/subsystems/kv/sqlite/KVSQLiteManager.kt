@@ -21,22 +21,22 @@ import java.util.concurrent.TimeUnit
 
 // create table if not exists kv_records_1(ownerUUID varchar(255) not null , key varchar(255) not null , value text not null , expire integer)
 
-object KVRecord: Table("kv_records_1") {
-   val ownerUUID = varchar("ownerUUID", 255)
-   val key = varchar("key", 255)
-   val value = text("value")
-   val expire = integer("expire").nullable()
+object KVRecord : Table("kv_records_1") {
+    val ownerUUID = varchar("ownerUUID", 255)
+    val key = varchar("key", 255)
+    val value = text("value")
+    val expire = integer("expire").nullable()
 
-   init {
-       uniqueIndex("kv_owner_key`", ownerUUID, key)
-   }
+    init {
+        uniqueIndex("kv_owner_key`", ownerUUID, key)
+    }
 }
 
 object KVSQLiteManager : KeyValueManager {
     private var connection: Database? = null
     private var cleanupFuture: ScheduledFuture<*>? = null
     private var keyDeletedHook: KVKeyDeletedHook = KVKeyDeletedHook { it1, it2 -> }
-    private var keyChangedHook: KVKeyChangedHook = KVKeyChangedHook {it1, it2, it3 -> }
+    private var keyChangedHook: KVKeyChangedHook = KVKeyChangedHook { it1, it2, it3 -> }
 
     private val notExpireCondition: Op<Boolean>
         get() = KVRecord.expire.greater(Instant.now().epochSecond.toInt()).or(KVRecord.expire.isNull())
@@ -80,8 +80,9 @@ object KVSQLiteManager : KeyValueManager {
     }
 
     override fun put(ownerUUID: String, key: String, value: String, expire: Instant?): MethodResult {
-        if (tooManyKeys(ownerUUID, 1))
+        if (tooManyKeys(ownerUUID, 1)) {
             return MethodResult.of(false, "Too many keys in KV storage")
+        }
         val self = this
         return transaction(connection) {
             KVRecord.upsert {
@@ -102,7 +103,7 @@ object KVSQLiteManager : KeyValueManager {
         if (values.isEmpty()) {
             return MethodResult.of(false, "Where is values?")
         }
-        if (tooManyKeys(ownerUUID, values.count())){
+        if (tooManyKeys(ownerUUID, values.count())) {
             return MethodResult.of(false, "Too many keys already exists")
         }
         val insertedCount = transaction(connection) {
@@ -131,7 +132,8 @@ object KVSQLiteManager : KeyValueManager {
     override fun get(ownerUUID: String, key: String): String? {
         return transaction(connection) {
             return@transaction KVRecord.select(KVRecord.value).where(KVRecord.ownerUUID.eq(ownerUUID).and(KVRecord.key.eq(key)).and(notExpireCondition)).singleOrNull()?.get(
-                KVRecord.value)
+                KVRecord.value,
+            )
         }
     }
 
@@ -145,7 +147,7 @@ object KVSQLiteManager : KeyValueManager {
         return transaction(connection) {
             val map = mutableMapOf<String, String>()
             KVRecord.select(KVRecord.key, KVRecord.value).where(
-                KVRecord.ownerUUID.eq(ownerUUID).and(KVRecord.key.inList(keys)).and(notExpireCondition)
+                KVRecord.ownerUUID.eq(ownerUUID).and(KVRecord.key.inList(keys)).and(notExpireCondition),
             ).forEach {
                 map[it[KVRecord.key]] = it[KVRecord.value]
             }
@@ -156,7 +158,8 @@ object KVSQLiteManager : KeyValueManager {
     override fun getExpire(ownerUUID: String, key: String): Instant? {
         return transaction(connection) {
             return@transaction KVRecord.select(KVRecord.expire).where(KVRecord.ownerUUID.eq(ownerUUID).and(KVRecord.key.eq(key)).and(notExpireCondition)).singleOrNull()?.get(
-                KVRecord.expire)?.let {
+                KVRecord.expire,
+            )?.let {
                 Instant.ofEpochSecond(it.toLong())
             }
         }
@@ -164,7 +167,7 @@ object KVSQLiteManager : KeyValueManager {
 
     override fun putExpire(ownerUUID: String, key: String, expire: Instant?): MethodResult {
         return transaction(connection) {
-            KVRecord.update({KVRecord.ownerUUID.eq(ownerUUID).and(KVRecord.key.eq(key))}) {
+            KVRecord.update({ KVRecord.ownerUUID.eq(ownerUUID).and(KVRecord.key.eq(key)) }) {
                 it[KVRecord.expire] = expire?.epochSecond?.toInt()
             }
             return@transaction MethodResult.of(true)
@@ -189,7 +192,8 @@ object KVSQLiteManager : KeyValueManager {
         return transaction(connection) {
             return@transaction KVRecord.upsertReturning(KVRecord.ownerUUID, KVRecord.key, returning = listOf(KVRecord.value), onUpdate = {
                 it[KVRecord.value] = KVRecord.value.castTo(DoubleColumnType()).plus(value).castTo(
-                    VarCharColumnType())
+                    VarCharColumnType(),
+                )
             }, onUpdateExclude = listOf(KVRecord.key, KVRecord.ownerUUID)) {
                 it[KVRecord.key] = key
                 it[KVRecord.ownerUUID] = ownerUUID

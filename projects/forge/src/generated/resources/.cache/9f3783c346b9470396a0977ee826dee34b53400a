@@ -1,4 +1,4 @@
-// 1.20.1	2025-09-22T17:08:59.4709013	vanilla/Block State Definitions
+// 1.20.1	2025-10-16T02:25:35.9074304	vanilla/Block State Definitions
 30a8f2c5d26a3b4135f39b9412feb54a1ac18327 assets/cloudsolutions/blockstates/kv_storage.json
 10361e9cc9a320bd43d11b8f599e8b12fd1e2a02 assets/cloudsolutions/blockstates/statsd_bridge.json
 7db60354b80a87ac30a6023f6fff41e231d28f2d assets/cloudsolutions/blockstates/tsdb_storage.json
@@ -7,6 +7,8 @@ dc594837afa0d110eb22b50ff9aa2a8b9787104f assets/cloudsolutions/models/block/tsdb
 309c22f140468d126ad601975215e2f621d85db2 assets/cloudsolutions/models/item/kv_storage.json
 07ced8dd2f806da703592b4495cc1cf6006fed3b assets/cloudsolutions/models/item/statsd_bridge.json
 69105d9fbd3eb9da9c425e48c36241895b4b0f54 assets/cloudsolutions/models/item/tsdb_storage.json
+ea9cf5f8017c9daf1b94fe70af6bbce288d33522 assets/cloudsolutions/models/turtle/crafka_broker_left.json
+9a9169cee0d9d56467b81a4220249de4d01770b8 assets/cloudsolutions/models/turtle/crafka_broker_right.json
 72b090d6f335aa34750390834bd68732765bd770 assets/cloudsolutions/models/turtle/kv_storage_left.json
 cbd1083b0681adc7c0ae1fb1e920a3e0037af241 assets/cloudsolutions/models/turtle/kv_storage_right.json
 e9e3ffaa17b2d0f09209367579daa4cb2aa61838 assets/cloudsolutions/models/turtle/statsd_bridge_left.json

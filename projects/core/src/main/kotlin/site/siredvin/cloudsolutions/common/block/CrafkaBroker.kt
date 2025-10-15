@@ -12,18 +12,15 @@ import site.siredvin.cloudsolutions.common.blockentity.CrafkaBrokerBlockEntity
 import site.siredvin.cloudsolutions.common.setup.ModBlockEntityTypes
 import java.util.stream.Stream
 
-class CrafkaBroker: FacingBlockEntityBlock<CrafkaBrokerBlockEntity>({ ModBlockEntityTypes.CRAFKA_BROKER.get() }, true) {
+class CrafkaBroker : FacingBlockEntityBlock<CrafkaBrokerBlockEntity>({ ModBlockEntityTypes.CRAFKA_BROKER.get() }, true) {
     companion object {
         val SHAPE = Stream.of(
             Shapes.box(0.125, 0.125, 0.125, 0.875, 0.875, 0.875),
             Shapes.box(0.0, 0.0, 0.0, 1.0, 0.125, 1.0),
-            Shapes.box(0.0, 0.875, 0.0, 1.0, 1.0, 1.0)
+            Shapes.box(0.0, 0.875, 0.0, 1.0, 1.0, 1.0),
         ).reduce { v1: VoxelShape, v2: VoxelShape -> Shapes.join(v1, v2, BooleanOp.OR) }.get()
-
     }
 
     @Deprecated("Deprecated in Java")
-    override fun getShape(state: BlockState, blockGetter: BlockGetter, blockPos: BlockPos, collisionContext: CollisionContext,): VoxelShape {
-        return SHAPE
-    }
+    override fun getShape(state: BlockState, blockGetter: BlockGetter, blockPos: BlockPos, collisionContext: CollisionContext): VoxelShape = SHAPE
 }

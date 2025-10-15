@@ -1,14 +1,18 @@
 {
+  "block.cloudsolutions.crafka_broker": "Crafka брокер",
+  "block.cloudsolutions.crafka_broker.tooltip": "Це як той відомий брокер Kafka, але з величезною кількістю крафта всередині",
   "block.cloudsolutions.kv_storage": "База даних «ключ—значення»",
   "block.cloudsolutions.kv_storage.tooltip": "Наразі не використовується",
   "block.cloudsolutions.statsd_bridge": "StatsD міст",
   "block.cloudsolutions.statsd_bridge.tooltip": "Дозволяє відправляти statsd метрики на якийсь statsd сервер вказаний в налаштуваннях",
   "block.cloudsolutions.tsdb_storage": "База даних часових рядів",
   "block.cloudsolutions.tsdb_storage.tooltip": "Наразі не використовується",
+  "pocket.cloudsolutions.crafka_broker": "Крафкрадотичний",
   "pocket.cloudsolutions.kv_storage": "Ключ-значення зберігаючий",
   "pocket.cloudsolutions.statsd_bridge": "StatsD прокидуючий",
   "text.cloudsolutions.creative_tab": "Цитадель даних",
   "text.cloudsolutions.unfinished_and_disabled": "  §4Цей предмет не готовий та був відключений. Просто ігноруйте його",
+  "turtle.cloudsolutions.crafka_broker": "Крафкадотична",
   "turtle.cloudsolutions.kv_storage": "Ключ-значення зберігаюча",
   "turtle.cloudsolutions.statsd_bridge": "StatsD прокидуюча"
 }

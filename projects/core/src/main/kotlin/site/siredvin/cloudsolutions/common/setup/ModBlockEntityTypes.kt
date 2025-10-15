@@ -8,7 +8,6 @@ import site.siredvin.cloudsolutions.common.blockentity.CrafkaBrokerBlockEntity
 import site.siredvin.cloudsolutions.common.blockentity.KVStorageBlockEntity
 import site.siredvin.cloudsolutions.common.blockentity.StatsDBridgeBlockEntity
 import site.siredvin.cloudsolutions.common.blockentity.TSDBStorageBlockEntity
-import site.siredvin.cloudsolutions.computercraft.peripheral.CrafkaBrokerPeripheral
 import site.siredvin.cloudsolutions.xplat.ModPlatform
 import java.util.function.Supplier
 

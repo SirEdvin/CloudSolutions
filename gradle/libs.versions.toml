@@ -60,7 +60,8 @@ kotlin-plugin = {module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.r
 spotless-plugin = {module = "com.diffplug.spotless:spotless-plugin-gradle", version.ref="spotless"}
 
 # Core mod dependencies
-cc-tweaked-common = {module = "cc.tweaked:cc-tweaked-1.20.1-common-api", version.ref = "cc-tweaked"}
+cc-tweaked-common-api = {module = "cc.tweaked:cc-tweaked-1.20.1-common-api", version.ref = "cc-tweaked"}
+cc-tweaked-common = {module = "cc.tweaked:cc-tweaked-1.20.1-common", version.ref = "cc-tweaked"}
 cc-tweaked-core = {module = "cc.tweaked:cc-tweaked-1.20.1-core", version.ref = "cc-tweaked"}
 common-config = {module = "fuzs.forgeconfigapiport:forgeconfigapiport-common", version.ref = "forgeconfigapirt"}
 mixin = { module = "org.spongepowered:mixin", version.ref = "mixin" }
@@ -105,7 +106,7 @@ spotless = {id = "com.diffplug.spotless", version.ref="spotless"}
 
 [bundles]
 kotlin = ["kotlin-stdlib", "kotlin-coroutines", "kotlin-atomicfu"]
-cccommon = ["cc-tweaked-common", "cc-tweaked-core", "broccolium-core", "tweakium-core"]
+cccommon = ["cc-tweaked-common-api", "cc-tweaked-common", "cc-tweaked-core", "broccolium-core", "tweakium-core"]
 apicommon = ["common-config"]
 db = ["sqlite", "exposed-core", "exposed-dao", "exposed-jdbc", "exposed-json"]
 math = [

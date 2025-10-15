@@ -3,6 +3,7 @@ package site.siredvin.cloudsolutions.common.setup
 import dan200.computercraft.api.turtle.ITurtleAccess
 import dan200.computercraft.api.turtle.TurtleSide
 import dan200.computercraft.api.turtle.TurtleUpgradeSerialiser
+import site.siredvin.cloudsolutions.computercraft.peripheral.CrafkaBrokerPeripheral
 import site.siredvin.cloudsolutions.computercraft.peripheral.KVStoragePeripheral
 import site.siredvin.cloudsolutions.computercraft.peripheral.StatsDBridgePeripheral
 import site.siredvin.cloudsolutions.xplat.ModPlatform
@@ -29,6 +30,17 @@ object TurtleUpgradeSerializers {
                 stack.item,
                 { turtle: ITurtleAccess, side: TurtleSide -> KVStoragePeripheral(TurtlePeripheralOwner(turtle, side)) },
                 { KVStoragePeripheral.ID },
+            )
+        },
+    )
+
+    val CRAFKA_BROKER = ModPlatform.registerTurtleUpgrade(
+        CrafkaBrokerPeripheral.ID,
+        TurtleUpgradeSerialiser.simpleWithCustomItem { id, stack ->
+            PeripheralTurtleUpgrade.dynamic(
+                stack.item,
+                { turtle: ITurtleAccess, side: TurtleSide -> CrafkaBrokerPeripheral(TurtlePeripheralOwner(turtle, side)) },
+                { CrafkaBrokerPeripheral.ID },
             )
         },
     )

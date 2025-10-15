@@ -25,5 +25,6 @@ class ModPocketUpgradeDataProvider(output: PackOutput) : LibPocketUpgradeDataPro
         }
         addUpgrade.accept(simpleWithCustomItem(PocketUpgradeSerializers.STATSD_BRIDGE, ModBlocks.STATSD_BRIDGE))
         addUpgrade.accept(simpleWithCustomItem(PocketUpgradeSerializers.KV_STORAGE, ModBlocks.KV_STORAGE))
+        addUpgrade.accept(simpleWithCustomItem(PocketUpgradeSerializers.CRAFKA_BROKER, ModBlocks.CRAFKA_BROKER))
     }
 }

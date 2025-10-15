@@ -9,5 +9,6 @@ object ModItemModelProvider {
     fun addModels(@Suppress("UNUSED_PARAMETER") generators: ItemModelGenerators) {
         turtleUpgrades(generators, ModBlocks.KV_STORAGE.get())
         turtleUpgrades(generators, ModBlocks.STATSD_BRIDGE.get())
+        turtleUpgrades(generators, ModBlocks.CRAFKA_BROKER.get(), textureSuffix="_anim_2")
     }
 }

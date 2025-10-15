@@ -2,6 +2,7 @@ package site.siredvin.cloudsolutions.data
 
 import net.minecraft.data.PackOutput
 import site.siredvin.cloudsolutions.common.setup.ModBlocks
+import site.siredvin.cloudsolutions.computercraft.peripheral.CrafkaBrokerPeripheral
 import site.siredvin.cloudsolutions.computercraft.peripheral.KVStoragePeripheral
 import site.siredvin.cloudsolutions.computercraft.peripheral.StatsDBridgePeripheral
 import java.util.function.Consumer
@@ -28,6 +29,7 @@ class ModEnLanguageProvider(
 
         addUpgrades(KVStoragePeripheral.ID, "KV Storing")
         addUpgrades(StatsDBridgePeripheral.ID, "StatsD bridging")
+        addUpgrades(CrafkaBrokerPeripheral.ID, "Crafka broking")
         hooks.forEach { it.accept(this) }
     }
 }

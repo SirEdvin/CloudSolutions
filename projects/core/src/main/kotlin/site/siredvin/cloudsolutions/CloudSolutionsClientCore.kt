@@ -5,6 +5,7 @@ import dan200.computercraft.api.turtle.ITurtleUpgrade
 import dan200.computercraft.api.turtle.TurtleUpgradeSerialiser
 import net.minecraft.resources.ResourceLocation
 import site.siredvin.cloudsolutions.common.setup.TurtleUpgradeSerializers
+import site.siredvin.cloudsolutions.computercraft.peripheral.CrafkaBrokerPeripheral
 import site.siredvin.cloudsolutions.computercraft.peripheral.KVStoragePeripheral
 import site.siredvin.cloudsolutions.computercraft.peripheral.StatsDBridgePeripheral
 import java.util.function.BiConsumer
@@ -30,6 +31,13 @@ object CloudSolutionsClientCore {
             TurtleUpgradeModeller.sided(
                 ResourceLocation(CloudSolutionsCore.MOD_ID, "turtle/${KVStoragePeripheral.ID.path}_left"),
                 ResourceLocation(CloudSolutionsCore.MOD_ID, "turtle/${KVStoragePeripheral.ID.path}_right"),
+            ),
+        )
+        consumer.accept(
+            TurtleUpgradeSerializers.CRAFKA_BROKER.get(),
+            TurtleUpgradeModeller.sided(
+                ResourceLocation(CloudSolutionsCore.MOD_ID, "turtle/${CrafkaBrokerPeripheral.ID.path}_left"),
+                ResourceLocation(CloudSolutionsCore.MOD_ID, "turtle/${CrafkaBrokerPeripheral.ID.path}_right"),
             ),
         )
     }

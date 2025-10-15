@@ -2,6 +2,7 @@ package site.siredvin.cloudsolutions.data
 
 import net.minecraft.data.PackOutput
 import site.siredvin.cloudsolutions.common.setup.ModBlocks
+import site.siredvin.cloudsolutions.computercraft.peripheral.CrafkaBrokerPeripheral
 import site.siredvin.cloudsolutions.computercraft.peripheral.KVStoragePeripheral
 import site.siredvin.cloudsolutions.computercraft.peripheral.StatsDBridgePeripheral
 import java.util.function.Consumer
@@ -28,8 +29,10 @@ class ModUaLanguageProvider(
 
         addTurtle(KVStoragePeripheral.ID, "Ключ-значення зберігаюча")
         addTurtle(StatsDBridgePeripheral.ID, "StatsD прокидуюча")
+        addTurtle(CrafkaBrokerPeripheral.ID, "Крафкадотична")
         addPocket(KVStoragePeripheral.ID, "Ключ-значення зберігаючий")
         addPocket(StatsDBridgePeripheral.ID, "StatsD прокидуючий")
+        addPocket(CrafkaBrokerPeripheral.ID, "Крафкрадотичний")
         hooks.forEach { it.accept(this) }
     }
 }
