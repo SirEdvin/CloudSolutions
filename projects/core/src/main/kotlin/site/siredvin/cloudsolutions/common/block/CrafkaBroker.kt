@@ -15,9 +15,9 @@ import java.util.stream.Stream
 class CrafkaBroker: FacingBlockEntityBlock<CrafkaBrokerBlockEntity>({ ModBlockEntityTypes.CRAFKA_BROKER.get() }, true) {
     companion object {
         val SHAPE = Stream.of(
-            Shapes.box(2.0, 2.0, 2.0, 14.0, 14.0, 14.0),
-            Shapes.box(0.0, 0.0, 0.0, 16.0, 2.0, 16.0),
-            Shapes.box(0.0, 14.0, 0.0, 16.0, 16.0, 16.0)
+            Shapes.box(0.125, 0.125, 0.125, 0.875, 0.875, 0.875),
+            Shapes.box(0.0, 0.0, 0.0, 1.0, 0.125, 1.0),
+            Shapes.box(0.0, 0.875, 0.0, 1.0, 1.0, 1.0)
         ).reduce { v1: VoxelShape, v2: VoxelShape -> Shapes.join(v1, v2, BooleanOp.OR) }.get()
 
     }

@@ -51,9 +51,6 @@ repositories {
 dependencies {
     implementation(libs.bundles.kotlin)
     implementation(libs.bundles.forge.raw)
-    // So, this is here because it isn't suppose to be used right now
-    // but this should be changed in future!
-    implementation(libs.bundles.webframework)
 
     minecraftEmbed(libs.bundles.db) {
         jarJar(this)

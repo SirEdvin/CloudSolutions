@@ -2,7 +2,11 @@ package site.siredvin.cloudsolutions.subsystems
 
 import net.minecraft.server.MinecraftServer
 import site.siredvin.cloudsolutions.common.configuration.ModConfig
+import site.siredvin.cloudsolutions.computercraft.peripheral.CrafkaBrokerPeripheral
 import site.siredvin.cloudsolutions.computercraft.peripheral.KVStoragePeripheral
+import site.siredvin.cloudsolutions.subsystems.crafka.CrafkaBrokerManager
+import site.siredvin.cloudsolutions.subsystems.crafka.CrafkaSQLiteManager
+import site.siredvin.cloudsolutions.subsystems.crafka.DisabledCrafkaManager
 import site.siredvin.cloudsolutions.subsystems.kv.DisabledKVManager
 import site.siredvin.cloudsolutions.subsystems.kv.KeyValueManager
 import site.siredvin.cloudsolutions.subsystems.kv.sqlite.KVSQLiteManager
@@ -17,8 +21,14 @@ enum class KVStorageMode {
     SQLITE,
 }
 
+enum class CrafkaStorageMode {
+    DISABLED,
+    SQLITE
+}
+
 object SubscriptionManager {
     private val kvStorages: MutableMap<String, MutableSet<KVStoragePeripheral>> = mutableMapOf()
+    private val crafkaBrokers: MutableMap<String, MutableSet<CrafkaBrokerPeripheral>> = mutableMapOf()
 
     fun addKVStorage(ownerUUID: String, kvStorage: KVStoragePeripheral) {
         if (!kvStorages.contains(ownerUUID)) {
@@ -27,8 +37,11 @@ object SubscriptionManager {
         kvStorages[ownerUUID]!!.add(kvStorage)
     }
 
-    fun removeKVStorage(ownerUUID: String, kvStorage: KVStoragePeripheral) {
-        kvStorages[ownerUUID]?.remove(kvStorage)
+    fun addCrafkaBroker(ownerUUID: String, crafkaBroker: CrafkaBrokerPeripheral) {
+        if (!crafkaBrokers.contains(ownerUUID)) {
+            crafkaBrokers[ownerUUID] = Collections.newSetFromMap(WeakHashMap())
+        }
+        crafkaBrokers[ownerUUID]!!.add(crafkaBroker)
     }
 
     fun onKeyChanged(ownerUUID: String, key: String, value: String) {
@@ -51,6 +64,7 @@ object SubscriptionManager {
 object SubsystemManager {
     val executorService: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor()
     var kvManager: KeyValueManager? = null
+    var crafkaBrokerManager: CrafkaBrokerManager? = null
 
     fun onServerStart(server: MinecraftServer) {
         kvManager = when (ModConfig.kvStorageMode) {
@@ -60,6 +74,13 @@ object SubsystemManager {
         kvManager?.init(server, executorService)
         kvManager?.setOnKeyDeletedHook(SubscriptionManager::onKeyDeleted)
         kvManager?.setOnKeyChangedHook(SubscriptionManager::onKeyChanged)
+
+        crafkaBrokerManager = when (ModConfig.crafkaStorageMode) {
+            CrafkaStorageMode.DISABLED -> DisabledCrafkaManager
+            CrafkaStorageMode.SQLITE -> CrafkaSQLiteManager
+        }
+        crafkaBrokerManager?.init(server, executorService)
+
         if (ModConfig.enableStatsDConnection) {
             StatsDClient.init()
         }
@@ -67,6 +88,7 @@ object SubsystemManager {
 
     fun onServerStop(server: MinecraftServer) {
         kvManager?.stop(server, executorService)
+        crafkaBrokerManager?.stop(server, executorService)
         StatsDClient.stop()
     }
 }

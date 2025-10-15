@@ -4,10 +4,12 @@ import com.google.common.cache.CacheBuilder
 import com.google.common.cache.CacheLoader
 import dan200.computercraft.api.lua.LuaException
 import dan200.computercraft.api.lua.LuaFunction
+import dan200.computercraft.api.lua.MethodResult
 import dan200.computercraft.api.peripheral.IComputerAccess
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.IntTag
 import net.minecraft.resources.ResourceLocation
+import org.jetbrains.exposed.v1.core.Table
 import site.siredvin.cloudsolutions.CloudSolutionsCore
 import site.siredvin.cloudsolutions.common.configuration.ModConfig
 import site.siredvin.cloudsolutions.subsystems.SubscriptionManager
@@ -55,16 +57,16 @@ class KVStoragePeripheral(owner: IPeripheralOwner) : OwnedPeripheral<IPeripheral
         }
 
     @LuaFunction
-    fun put(key: String, value: String, expire: Optional<Long>) {
+    fun put(key: String, value: String, expire: Optional<Long>): MethodResult {
         if (value.length > ModConfig.kvStorageValueLimit) throw LuaException("Value is too long")
         val player = peripheralOwner.ownerUUID ?: throw LuaException("Cannot find attached player to this peripheral")
-        SubsystemManager.kvManager?.put(player.toString(), key, value, expire.map { Instant.ofEpochSecond(it) }.getOrNull())
+        return SubsystemManager.kvManager!!.put(player.toString(), key, value, expire.map { Instant.ofEpochSecond(it) }.getOrNull())
     }
 
     @LuaFunction
-    fun delete(key: String) {
+    fun delete(key: String): MethodResult {
         val player = peripheralOwner.ownerUUID ?: throw LuaException("Cannot find attached player to this peripheral")
-        SubsystemManager.kvManager?.delete(player.toString(), key)
+        return SubsystemManager.kvManager!!.delete(player.toString(), key)
     }
 
     @LuaFunction
@@ -80,10 +82,10 @@ class KVStoragePeripheral(owner: IPeripheralOwner) : OwnedPeripheral<IPeripheral
     }
 
     @LuaFunction
-    fun mput(values: Map<*, *>) {
+    fun mput(values: Map<*, *>): MethodResult {
         val player = peripheralOwner.ownerUUID ?: throw LuaException("Cannot find attached player to this peripheral")
         val transformedMap = values.mapNotNull { entry -> Pair(entry.key.toString(), entry.value.toString()) }.toMap()
-        SubsystemManager.kvManager?.mput(player.toString(), transformedMap)
+        return SubsystemManager.kvManager!!.mput(player.toString(), transformedMap)
     }
 
     @LuaFunction("get_ex")
@@ -93,9 +95,9 @@ class KVStoragePeripheral(owner: IPeripheralOwner) : OwnedPeripheral<IPeripheral
     }
 
     @LuaFunction("put_ex")
-    fun putEx(key: String, expire: Optional<Long>) {
+    fun putEx(key: String, expire: Optional<Long>): MethodResult {
         val player = peripheralOwner.ownerUUID ?: throw LuaException("Cannot find attached player to this peripheral")
-        SubsystemManager.kvManager?.putExpire(player.toString(), key, expire.map { Instant.ofEpochSecond(it) }.getOrNull())
+        return SubsystemManager.kvManager!!.putExpire(player.toString(), key, expire.map { Instant.ofEpochSecond(it) }.getOrNull())
     }
 
     @LuaFunction

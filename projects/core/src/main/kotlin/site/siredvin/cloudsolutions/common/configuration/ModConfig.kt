@@ -1,6 +1,7 @@
 package site.siredvin.cloudsolutions.common.configuration
 
 import net.minecraftforge.common.ForgeConfigSpec
+import site.siredvin.cloudsolutions.subsystems.CrafkaStorageMode
 import site.siredvin.cloudsolutions.subsystems.KVStorageMode
 
 object ModConfig {
@@ -47,6 +48,15 @@ object ModConfig {
             }
         }
 
+    val crafkaStorageMode: CrafkaStorageMode
+        get() {
+            return try {
+                CrafkaStorageMode.valueOf(ConfigHolder.serverConfig.crafkaStorageMode.get().uppercase())
+            } catch (e: IllegalArgumentException) {
+                CrafkaStorageMode.DISABLED
+            }
+        }
+
     val kvStorageKeyLimit: Int
         get() = ConfigHolder.serverConfig.kvStorageKeyLimit.get()
 
@@ -87,6 +97,9 @@ object ModConfig {
         val kvStorageKeyLimit: ForgeConfigSpec.IntValue
         val kvStorageValueLimit: ForgeConfigSpec.IntValue
 
+        // Crafka broker
+        val crafkaStorageMode: ForgeConfigSpec.ConfigValue<String>
+
         init {
             builder.push("statsd")
             enableStatsDConnection = builder.comment("StatsD connection")
@@ -118,6 +131,17 @@ object ModConfig {
             kvStorageValueLimit = builder.comment("Limit for max size of value")
                 .defineInRange("kvStorageValueLimit", 500_000, 1, Int.MAX_VALUE)
             builder.pop()
+            builder.push("crafka")
+            crafkaStorageMode = builder.comment("Mode of Crafka broker storage")
+                .define("crafkaStorageMod", CrafkaStorageMode.SQLITE.name) {
+                    if (it == null) return@define false
+                    return@define try {
+                        CrafkaStorageMode.valueOf(it.toString().uppercase())
+                        true
+                    } catch (e: IllegalArgumentException) {
+                        false
+                    }
+                }
         }
     }
 }

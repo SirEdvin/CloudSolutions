@@ -1,6 +1,6 @@
 [versions]
 # Base libraries
-kotlin = "1.9.0"
+kotlin = "2.2.20"
 kotlin-coroutines = "1.6.4"
 kotlin-atomicfu = "0.20.2"
 
@@ -18,15 +18,15 @@ tweakium = "1.1.19"
 broccolium-jjar = "[1.1.19, 1.2.0)"
 tweakium-jjar = "[1.1.19, 1.2.0)"
 sqlite = "[3.43.0.0, 3.44.0.0)"
-javalin = "[5.6.2, 5.7.0)"
-pebble = "[2.4.0, 2.5.0)"
 common-math = "[3.6.1, 3.7.0)"
 statsd-client = "[3.0.1, 3.1.0)"
+
+exposed = "1.0.0-rc-2"
 
 # Fabric dependencies
 fabric-api = "0.92.0+1.20.1"
 fabric-loader = "0.15.11"
-fabric-kotlin = "1.11.0+kotlin.2.0.0"
+fabric-kotlin = "1.13.6+kotlin.2.2.20"
 forgeconfigapirt = "8.0.0"
 modmenu = "7.2.1"
 
@@ -67,12 +67,13 @@ mixin = { module = "org.spongepowered:mixin", version.ref = "mixin" }
 broccolium-core = {module = "site.siredvin:broccolium-common-1.20.1", version.ref = "broccolium"}
 tweakium-core = {module = "site.siredvin:tweakium-common-1.20.1", version.ref = "tweakium"}
 sqlite = {module="org.xerial:sqlite-jdbc", version.ref="sqlite"}
-javalin = {module = "io.javalin:javalin", version.ref="javalin"}
-javalin-rendering = {module = "io.javalin:javalin-rendering", version.ref="javalin"}
-pebble = {module ="com.mitchellbosecke:pebble", version.ref="pebble"}
 common-math = {module = "org.apache.commons:commons-math3", version.ref="common-math"}
 statsd-client = {module = "com.timgroup:java-statsd-client", version.ref="statsd-client"}
 
+exposed-core = {module = "org.jetbrains.exposed:exposed-core", version.ref="exposed"}
+exposed-jdbc = {module = "org.jetbrains.exposed:exposed-jdbc", version.ref="exposed"}
+exposed-dao = {module = "org.jetbrains.exposed:exposed-dao", version.ref="exposed"}
+exposed-json = {module = "org.jetbrains.exposed:exposed-json", version.ref="exposed"}
 
 # Fabric mod dependencies
 fabric-loader = {module = "net.fabricmc:fabric-loader", version.ref = "fabric-loader"}
@@ -106,10 +107,7 @@ spotless = {id = "com.diffplug.spotless", version.ref="spotless"}
 kotlin = ["kotlin-stdlib", "kotlin-coroutines", "kotlin-atomicfu"]
 cccommon = ["cc-tweaked-common", "cc-tweaked-core", "broccolium-core", "tweakium-core"]
 apicommon = ["common-config"]
-db = ["sqlite"]
-webframework = [
-    "javalin", "javalin-rendering", "pebble"
-]
+db = ["sqlite", "exposed-core", "exposed-dao", "exposed-jdbc", "exposed-json"]
 math = [
     "common-math"
 ]

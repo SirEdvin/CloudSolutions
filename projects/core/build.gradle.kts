@@ -32,7 +32,6 @@ dependencies {
     implementation(libs.bundles.kotlin)
     implementation(libs.bundles.cccommon)
     implementation(libs.bundles.db)
-    implementation(libs.bundles.webframework)
     implementation(libs.bundles.math)
     implementation(libs.bundles.metrics)
     api(libs.bundles.apicommon)

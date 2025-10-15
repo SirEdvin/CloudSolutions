@@ -60,8 +60,6 @@ dependencies {
     implementation(libs.bundles.kotlin)
     implementation(libs.bundles.db)
     include(libs.bundles.db)
-    implementation(libs.bundles.webframework)
-    include(libs.bundles.webframework)
     implementation(libs.bundles.math)
     include(libs.bundles.math)
     implementation(libs.bundles.metrics)
