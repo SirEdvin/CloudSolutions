@@ -58,14 +58,8 @@ repositories {
 
 dependencies {
     implementation(libs.bundles.kotlin)
-    implementation(libs.bundles.db) {
-        exclude("org.jetbrains.kotlin")
-    }
-    include(libs.bundles.db) {
-        exclude("org.jetbrains.kotlin")
-    }
-    implementation(libs.bundles.math)
-    include(libs.bundles.math)
+    implementation(libs.bundles.db)
+    include(libs.bundles.db)
     implementation(libs.bundles.metrics)
     include(libs.bundles.metrics)
 

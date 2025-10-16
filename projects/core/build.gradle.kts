@@ -31,10 +31,7 @@ repositories {
 dependencies {
     implementation(libs.bundles.kotlin)
     implementation(libs.bundles.cccommon)
-    implementation(libs.bundles.db) {
-        exclude("org.jetbrains.kotlin")
-    }
-    implementation(libs.bundles.math)
+    implementation(libs.bundles.db)
     implementation(libs.bundles.metrics)
     api(libs.bundles.apicommon)
 }

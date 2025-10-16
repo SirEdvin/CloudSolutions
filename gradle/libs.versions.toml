@@ -68,7 +68,6 @@ mixin = { module = "org.spongepowered:mixin", version.ref = "mixin" }
 broccolium-core = {module = "site.siredvin:broccolium-common-1.20.1", version.ref = "broccolium"}
 tweakium-core = {module = "site.siredvin:tweakium-common-1.20.1", version.ref = "tweakium"}
 sqlite = {module="org.xerial:sqlite-jdbc", version.ref="sqlite"}
-common-math = {module = "org.apache.commons:commons-math3", version.ref="common-math"}
 statsd-client = {module = "com.timgroup:java-statsd-client", version.ref="statsd-client"}
 
 exposed-core = {module = "org.jetbrains.exposed:exposed-core", version.ref="exposed"}
@@ -109,9 +108,6 @@ kotlin = ["kotlin-stdlib", "kotlin-coroutines", "kotlin-atomicfu"]
 cccommon = ["cc-tweaked-common-api", "cc-tweaked-common", "cc-tweaked-core", "broccolium-core", "tweakium-core"]
 apicommon = ["common-config"]
 db = ["sqlite", "exposed-core", "exposed-dao", "exposed-jdbc", "exposed-json"]
-math = [
-    "common-math"
-]
 metrics = [
     "statsd-client"
 ]
