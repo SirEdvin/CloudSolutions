@@ -66,6 +66,8 @@ object ModConfig {
     val crafkaCursorRevalidationDelay: Long
         get() = ConfigHolder.serverConfig.crafkaCursorRevalidationDelay.get()
 
+    val crafkaTopicLimit: Int
+        get() = ConfigHolder.serverConfig.crafkaTopicLimit.get()
     val crafkaTopicSizeLimit: Int
         get() = ConfigHolder.serverConfig.crafkaTopicSizeLimit.get()
     val crafkaMessageSizeLimit: Int
@@ -110,6 +112,7 @@ object ModConfig {
         // Crafka broker
         val crafkaStorageMode: ForgeConfigSpec.ConfigValue<String>
         val crafkaCursorRevalidationDelay: ForgeConfigSpec.LongValue
+        val crafkaTopicLimit: ForgeConfigSpec.IntValue
         val crafkaTopicSizeLimit: ForgeConfigSpec.IntValue
         val crafkaMessageSizeLimit: ForgeConfigSpec.IntValue
         val crafkaMaxResendSteps: ForgeConfigSpec.IntValue
@@ -158,6 +161,8 @@ object ModConfig {
                 }
             crafkaCursorRevalidationDelay = builder.comment("Time in millisecond how fast crafka schedule check for message delivery")
                 .defineInRange("crafkaCursorRevalidationDelay", 100L, 0L, Long.MAX_VALUE)
+            crafkaTopicLimit = builder.comment("Limit for amount of topics per player")
+                .defineInRange("crafkaTopicLimit", 512, 0, Int.MAX_VALUE)
             crafkaTopicSizeLimit = builder.comment("Limit for amount of topics per player")
                 .defineInRange("crafkaTopicSizeLimit", 512, 0, Int.MAX_VALUE)
             crafkaMessageSizeLimit = builder.comment("Limit for amount of topics per player")

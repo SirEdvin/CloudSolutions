@@ -18,22 +18,22 @@ class CrafkaBrokerPeripheral(owner: IPeripheralOwner) : OwnedPeripheral<IPeriphe
         val ID = ResourceLocation(CloudSolutionsCore.MOD_ID, TYPE)
     }
 
-    data class Subscription(val isEphemeral: Boolean, val autoCursor: Boolean, var cursor: Int)
-
-    private val subscriptions: MutableMap<String, MutableMap<Int, Subscription>> = mutableMapOf()
-
     override val isEnabled: Boolean
         get() = ModConfig.enableCrafkaBroker
 
     override val peripheralConfiguration: MutableMap<String, Any>
         get() {
             val data = super.peripheralConfiguration
+            data["topicLimit"] = ModConfig.crafkaTopicLimit
+            data["maxMessageLimit"] = ModConfig.crafkaMessageSizeLimit
+            data["maxMessageSize"] = ModConfig.crafkaMessageSizeLimit
+            data["maxResendSteps"] = ModConfig.crafkaMaxResendSteps
+            data["resendDelay"] = ModConfig.crafkaCursorRevalidationDelay
             return data
         }
 
     override fun detach(computer: IComputerAccess) {
         super.detach(computer)
-        // Here we should do ephemeral handling
         val player = peripheralOwner.ownerUUID
         if (player != null) {
             SubsystemManager.crafkaBrokerManager?.onComputerDetach(player.toString(), computer.id)
@@ -53,6 +53,9 @@ class CrafkaBrokerPeripheral(owner: IPeripheralOwner) : OwnedPeripheral<IPeriphe
         val player = peripheralOwner.ownerUUID ?: throw LuaException("Cannot find attached player to this peripheral")
         val topic = arguments.getString(0)
         val messageLimit = arguments.optInt(1, ModConfig.crafkaTopicSizeLimit)
+        val currentTopicCount = SubsystemManager.crafkaBrokerManager!!.topicCount(player.toString())
+        if (currentTopicCount >= ModConfig.crafkaTopicLimit)
+            return MethodResult.of(false, "Too many topics")
         return SubsystemManager.crafkaBrokerManager!!.createTopic(player.toString(), topic, messageLimit.coerceAtMost(ModConfig.crafkaTopicSizeLimit))
     }
 
@@ -71,6 +74,8 @@ class CrafkaBrokerPeripheral(owner: IPeripheralOwner) : OwnedPeripheral<IPeriphe
     @LuaFunction
     fun publish(topic: String, message: String): MethodResult {
         val player = peripheralOwner.ownerUUID ?: throw LuaException("Cannot find attached player to this peripheral")
+        if (message.length > ModConfig.crafkaMessageSizeLimit)
+            return MethodResult.of(false, "Message is too big")
         return SubsystemManager.crafkaBrokerManager!!.publish(player.toString(), topic, message)
     }
 

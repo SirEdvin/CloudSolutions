@@ -4,9 +4,32 @@ import dan200.computercraft.api.lua.MethodResult
 import dan200.computercraft.shared.computer.core.ServerContext
 import net.minecraft.server.MinecraftServer
 import net.minecraft.world.level.storage.LevelResource
-import org.jetbrains.exposed.v1.core.*
-import org.jetbrains.exposed.v1.jdbc.*
-import org.jetbrains.exposed.v1.jdbc.transactions.transaction
+import org.jetbrains.exposed.sql.CustomFunction
+import org.jetbrains.exposed.sql.Database
+import org.jetbrains.exposed.sql.IntegerColumnType
+import org.jetbrains.exposed.sql.JoinType
+import org.jetbrains.exposed.sql.LongColumnType
+import org.jetbrains.exposed.sql.ResultRow
+import org.jetbrains.exposed.sql.SchemaUtils
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.greater
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.inSubQuery
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.less
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.plus
+import org.jetbrains.exposed.sql.alias
+import org.jetbrains.exposed.sql.and
+import org.jetbrains.exposed.sql.castTo
+import org.jetbrains.exposed.sql.count
+import org.jetbrains.exposed.sql.deleteWhere
+import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.insertReturning
+import org.jetbrains.exposed.sql.intLiteral
+import org.jetbrains.exposed.sql.max
+import org.jetbrains.exposed.sql.min
+import org.jetbrains.exposed.sql.selectAll
+import org.jetbrains.exposed.sql.transactions.transaction
+import org.jetbrains.exposed.sql.update
+import org.jetbrains.exposed.sql.wrapAsExpression
 import site.siredvin.broccolium.modules.platform.PlatformToolkit
 import site.siredvin.cloudsolutions.CloudSolutionsCore
 import site.siredvin.cloudsolutions.common.configuration.ModConfig
@@ -16,6 +39,7 @@ import java.nio.file.Paths
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.ScheduledFuture
 import java.util.concurrent.TimeUnit
+import kotlin.math.sign
 
 object CrafkaSQLiteManager {
     private var connection: Database? = null
@@ -224,19 +248,30 @@ object CrafkaSQLiteManager {
     }
 
     private fun cleanup() {
-//        try {
-//            CloudSolutionsCore.logger.info("Run KV cleanup")
-//            val now = Instant.now().epochSecond
-//            KVSQLiteManager.connection!!.prepareStatement("delete from kv_records_1 where expire < ? returning ownerUUID, key").use {
-//                it.setInt(1, now.toInt())
-//                val result = it.executeQuery()
-//                while (result.next()) {
-//                    this.keyDeletedHook.handle(result.getString("ownerUUID"), result.getString("key"))
-//                }
-//            }
-//        } catch (ex: Exception) {
-//            CloudSolutionsCore.logger.catching(ex)
-//        }
+        try {
+            CloudSolutionsCore.logger.info("Run Crafka broker cleanup")
+            transaction(connection) {
+                val countColumn = CrafkaMessage.messageID.count().alias("message_count")
+                CrafkaMessage.innerJoin(CrafkaTopic)
+                    .select(CrafkaTopic.id, countColumn, CrafkaTopic.messageLimit)
+                    .groupBy(CrafkaTopic.id, CrafkaTopic.messageLimit)
+                    .having {
+                        CrafkaMessage.messageID.count().greater(CrafkaTopic.messageLimit.castTo(LongColumnType()))
+                    }
+                    .forEach { res ->
+                        val subquery = CrafkaMessage.select(CrafkaMessage.messageID)
+                            .where(CrafkaMessage.topicID.eq(res[CrafkaTopic.id]))
+                            .orderBy(CrafkaMessage.messageID).limit((res[countColumn] - res[CrafkaTopic.messageLimit]).toInt())
+                        CrafkaMessage.deleteWhere {
+                            CrafkaMessage.messageID.inSubQuery(subquery).and(
+                                CrafkaMessage.topicID.eq(res[CrafkaTopic.id])
+                            )
+                        }
+                    }
+            }
+        } catch (ex: Exception) {
+            CloudSolutionsCore.logger.catching(ex)
+        }
     }
 
     fun stop(server: MinecraftServer, executor: ScheduledExecutorService) {
@@ -252,6 +287,14 @@ object CrafkaSQLiteManager {
                 row[CrafkaTopic.name],
                 row[CrafkaTopic.messageLimit],
             )
+        }
+    }
+
+    fun topicCount(ownerUUID: String): Int {
+        return transaction(connection) {
+            return@transaction CrafkaTopic.selectAll().where(
+                CrafkaTopic.ownerUUID.eq(ownerUUID)
+            ).count().toInt()
         }
     }
 
@@ -307,7 +350,9 @@ object CrafkaSQLiteManager {
                 it[this.messageID] = CustomFunction(
                     "COALESCE",
                     IntegerColumnType(),
-                    wrapAsExpression<Int>(CrafkaMessage.select(CrafkaMessage.messageID.max()).where { CrafkaMessage.topicID eq topic.primaryId }),
+                    wrapAsExpression<Int>(
+                        CrafkaMessage.select(CrafkaMessage.messageID.max())
+                            .where { CrafkaMessage.topicID eq topic.primaryId }),
                     intLiteral(0),
                 ).plus(intLiteral(1))
             }.single()[CrafkaMessage.messageID]
