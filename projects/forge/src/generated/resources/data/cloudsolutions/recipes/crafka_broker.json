@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "C": {
+      "item": "minecraft:lightning_rod"
+    },
+    "D": {
+      "tag": "minecraft:wool"
+    },
+    "I": {
+      "tag": "forge:storage_blocks/iron"
+    },
+    "R": {
+      "item": "minecraft:iron_bars"
+    }
+  },
+  "pattern": [
+    "DCD",
+    "RIR",
+    "RDR"
+  ],
+  "result": {
+    "item": "cloudsolutions:crafka_broker"
+  }
+}

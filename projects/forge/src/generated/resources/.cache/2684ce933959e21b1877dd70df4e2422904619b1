@@ -1,3 +1,4 @@
-// 1.20.1	2025-09-22T20:04:28.0619101	vanilla/Recipes
+// 1.20.1	2025-10-17T00:49:38.8160747	vanilla/Recipes
+c6d3fc01cce044afa4ec1b4bb14018b8db70f260 data/cloudsolutions/recipes/crafka_broker.json
 121530b504eb78db734163ff2c946391be698b94 data/cloudsolutions/recipes/kv_storage.json
 64a2eee3c904ee2abdf9a34f255904d704500340 data/cloudsolutions/recipes/statsd_bridge.json
