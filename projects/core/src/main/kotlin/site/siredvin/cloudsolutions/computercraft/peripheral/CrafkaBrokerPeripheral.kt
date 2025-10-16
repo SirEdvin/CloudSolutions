@@ -54,8 +54,9 @@ class CrafkaBrokerPeripheral(owner: IPeripheralOwner) : OwnedPeripheral<IPeriphe
         val topic = arguments.getString(0)
         val messageLimit = arguments.optInt(1, ModConfig.crafkaTopicSizeLimit)
         val currentTopicCount = SubsystemManager.crafkaBrokerManager!!.topicCount(player.toString())
-        if (currentTopicCount >= ModConfig.crafkaTopicLimit)
+        if (currentTopicCount >= ModConfig.crafkaTopicLimit) {
             return MethodResult.of(false, "Too many topics")
+        }
         return SubsystemManager.crafkaBrokerManager!!.createTopic(player.toString(), topic, messageLimit.coerceAtMost(ModConfig.crafkaTopicSizeLimit))
     }
 
@@ -74,8 +75,9 @@ class CrafkaBrokerPeripheral(owner: IPeripheralOwner) : OwnedPeripheral<IPeriphe
     @LuaFunction
     fun publish(topic: String, message: String): MethodResult {
         val player = peripheralOwner.ownerUUID ?: throw LuaException("Cannot find attached player to this peripheral")
-        if (message.length > ModConfig.crafkaMessageSizeLimit)
+        if (message.length > ModConfig.crafkaMessageSizeLimit) {
             return MethodResult.of(false, "Message is too big")
+        }
         return SubsystemManager.crafkaBrokerManager!!.publish(player.toString(), topic, message)
     }
 

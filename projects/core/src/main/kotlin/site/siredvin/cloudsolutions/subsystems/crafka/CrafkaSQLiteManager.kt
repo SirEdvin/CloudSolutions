@@ -39,7 +39,6 @@ import java.nio.file.Paths
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.ScheduledFuture
 import java.util.concurrent.TimeUnit
-import kotlin.math.sign
 
 object CrafkaSQLiteManager {
     private var connection: Database? = null
@@ -80,18 +79,21 @@ object CrafkaSQLiteManager {
                     val message = CrafkaMessage.selectAll().where(
                         CrafkaMessage.topicID.eq(sub[CrafkaSubscription.topicID]).and(
                             CrafkaMessage.messageID.greater(sub[CrafkaSubscription.cursor]),
-                        )
+                        ),
                     ).orderBy(CrafkaMessage.messageID).limit(1).singleOrNull() ?: return@transaction
                     val manualCursorUpdateRequired = publishMessageToSubscription(
                         sub[CrafkaTopic.name],
                         message[CrafkaMessage.messageID],
                         message[CrafkaMessage.value],
-                        sub
+                        sub,
                     )
-                    val isNeededRescheduling = if (manualCursorUpdateRequired) true else {
+                    val isNeededRescheduling = if (manualCursorUpdateRequired) {
+                        true
+                    } else {
                         CrafkaMessage.selectAll().where(
                             CrafkaMessage.topicID.eq(sub[CrafkaSubscription.topicID]).and(
-                                CrafkaMessage.messageID.greater(message[CrafkaMessage.messageID]))
+                                CrafkaMessage.messageID.greater(message[CrafkaMessage.messageID]),
+                            ),
                         ).count() > 0
                     }
                     if (isNeededRescheduling) {
@@ -211,7 +213,7 @@ object CrafkaSQLiteManager {
                         (CrafkaSubscription.cursor.less(maxMessageIDByTopic[maxMessageID])),
                 ).forEach {
                     SubsystemManager.executorService.schedule({
-                        revalidateSubscription(it[CrafkaSubscription.id],it[CrafkaSubscription.cursor], 1)
+                        revalidateSubscription(it[CrafkaSubscription.id], it[CrafkaSubscription.cursor], 1)
                     }, ModConfig.crafkaCursorRevalidationDelay, TimeUnit.MILLISECONDS)
                 }
         }
@@ -264,7 +266,7 @@ object CrafkaSQLiteManager {
                             .orderBy(CrafkaMessage.messageID).limit((res[countColumn] - res[CrafkaTopic.messageLimit]).toInt())
                         CrafkaMessage.deleteWhere {
                             CrafkaMessage.messageID.inSubQuery(subquery).and(
-                                CrafkaMessage.topicID.eq(res[CrafkaTopic.id])
+                                CrafkaMessage.topicID.eq(res[CrafkaTopic.id]),
                             )
                         }
                     }
@@ -293,7 +295,7 @@ object CrafkaSQLiteManager {
     fun topicCount(ownerUUID: String): Int {
         return transaction(connection) {
             return@transaction CrafkaTopic.selectAll().where(
-                CrafkaTopic.ownerUUID.eq(ownerUUID)
+                CrafkaTopic.ownerUUID.eq(ownerUUID),
             ).count().toInt()
         }
     }
@@ -352,7 +354,8 @@ object CrafkaSQLiteManager {
                     IntegerColumnType(),
                     wrapAsExpression<Int>(
                         CrafkaMessage.select(CrafkaMessage.messageID.max())
-                            .where { CrafkaMessage.topicID eq topic.primaryId }),
+                            .where { CrafkaMessage.topicID eq topic.primaryId },
+                    ),
                     intLiteral(0),
                 ).plus(intLiteral(1))
             }.single()[CrafkaMessage.messageID]
