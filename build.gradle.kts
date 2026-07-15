@@ -14,12 +14,20 @@ subprojectShaking {
 val setupSubproject = subprojectShaking::setupSubproject
 
 subprojects {
-    setupSubproject(this)
+    if (name != "typescript-tests") {
+        setupSubproject(this)
+    }
     tasks {
         withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
             compilerOptions.allWarningsAsErrors.set(false)
         }
     }
+}
+
+tasks.register("gameTest") {
+    group = "verification"
+    description = "Runs CloudSolutions GameTests on Forge and Fabric."
+    dependsOn(":forge:runGameTestServer", ":fabric:runCloudSolutionsGameTest")
 }
 
 githubShaking {

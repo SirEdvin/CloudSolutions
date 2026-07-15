@@ -42,6 +42,7 @@ jei = "19.27.0.340"
 rei = "16.0.799"
 
 # Testing
+testiarium = "0.1.1"
 autoService = "1.0.1"
 byteBuddy = "1.14.2"
 hamcrest = "2.2"
@@ -69,6 +70,7 @@ broccolium-core = {module = "site.siredvin:broccolium-common-1.21.1", version.re
 tweakium-core = {module = "site.siredvin:tweakium-common-1.21.1", version.ref = "tweakium"}
 sqlite = {module="org.xerial:sqlite-jdbc", version.ref="sqlite"}
 statsd-client = {module = "com.timgroup:java-statsd-client", version.ref="statsd-client"}
+testiarium-core = {module = "site.siredvin:testiarium-core-1.21.1", version.ref="testiarium"}
 
 exposed-core = {module = "org.jetbrains.exposed:exposed-core", version.ref="exposed"}
 exposed-jdbc = {module = "org.jetbrains.exposed:exposed-jdbc", version.ref="exposed"}

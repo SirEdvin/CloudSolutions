@@ -32,6 +32,10 @@ val embeddedGameLibraries by configurations.creating {
     isCanBeConsumed = false
     isCanBeResolved = true
 }
+val developmentRuntime = configurations.create("developmentRuntime")
+configurations.runtimeClasspath {
+    extendsFrom(developmentRuntime)
+}
 
 val embeddedGameLibrariesDirectory = layout.buildDirectory.dir("generated/embeddedGameLibraries")
 val unpackEmbeddedGameLibraries = tasks.register<Sync>("unpackEmbeddedGameLibraries") {
@@ -44,6 +48,15 @@ val unpackEmbeddedGameLibraries = tasks.register<Sync>("unpackEmbeddedGameLibrar
 
 sourceSets.main {
     output.dir(mapOf("builtBy" to unpackEmbeddedGameLibraries), embeddedGameLibrariesDirectory)
+}
+
+val testMod = sourceSets.create("testMod") {
+    compileClasspath += sourceSets.main.get().compileClasspath
+    compileClasspath += sourceSets.main.get().output
+    compileClasspath += project(":core").sourceSets["testMod"].output
+    runtimeClasspath += sourceSets.main.get().runtimeClasspath
+    runtimeClasspath += sourceSets.main.get().output
+    runtimeClasspath += project(":core").sourceSets["testMod"].output
 }
 
 repositories {
@@ -86,7 +99,6 @@ dependencies {
         runtimeDependency.isTransitive = false
         add(embeddedGameLibraries.name, runtimeDependency)
     }
-
     implementation(libs.bundles.forge.cc)
     implementation(libs.bundles.forge.include) {
         isTransitive = false
@@ -97,6 +109,43 @@ dependencies {
     }
 
     runtimeOnly(libs.bundles.externalMods.forge.runtime)
+
+    listOf(
+        "site.siredvin:testiarium-forge-1.21.1:0.1.1",
+        "site.siredvin:testiarium-forge-1.21.1:0.1.1:test-mod@jar",
+        "site.siredvin:testiarium-forge-1.21.1:0.1.1:cct-test-mod@jar",
+    ).forEach { notation ->
+        add(testMod.implementationConfigurationName, notation) {
+            isTransitive = false
+        }
+        add(developmentRuntime.name, notation) {
+            isTransitive = false
+        }
+    }
+}
+
+neoForge {
+    val cloudsolutions = mods.named("cloudsolutions")
+    val cloudsolutionsTestMod by mods.registering {
+        sourceSet(testMod)
+        sourceSet(project(":core").sourceSets["testMod"])
+    }
+    runs {
+        register("gameTestServer") {
+            type = "gameTestServer"
+            gameDirectory = file("run/cloudsolutions-gametest")
+            systemProperty("neoforge.enabledGameTestNamespaces", "cloudsolutions_testmod")
+            systemProperty("testiarium.tags", "cloudsolutions")
+            systemProperty("testiarium.structures", project.project(":core").layout.buildDirectory.dir("resources/testMod/gameteststructures").get().asFile.absolutePath)
+            systemProperty("testiarium.fixture-source", project.project(":core").file("src/testMod/resources/gameteststructures").absolutePath)
+            systemProperty("testiarium.cct-fixtures", project.project(":core").layout.buildDirectory.dir("resources/testMod/computer").get().asFile.absolutePath)
+            systemProperty("testiarium.gametest-report", layout.buildDirectory.file("test-results/cloudsolutions-gametest.xml").get().asFile.absolutePath)
+            jvmArgument("-ea")
+            programArgument("--nogui")
+            loadedMods.add(cloudsolutions.get())
+            loadedMods.add(cloudsolutionsTestMod.get())
+        }
+    }
 }
 
 modPublishing {

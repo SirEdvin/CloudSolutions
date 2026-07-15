@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "id": "cloudsolutions_testmod",
+  "version": "1.0",
+  "name": "CloudSolutions Testmod",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      {
+        "adapter": "kotlin",
+        "value": "site.siredvin.cloudsolutions.testmod.FabricCloudSolutionsTestMod"
+      }
+    ]
+  },
+  "depends": {
+    "fabricloader": "*",
+    "cloudsolutions": "*",
+    "testiarium": "*",
+    "computercraft": "*"
+  }
+}
