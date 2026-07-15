@@ -1,6 +1,7 @@
 # gradle
 
 .gradle/
+node_modules/
 build/
 out/
 classes/

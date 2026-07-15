@@ -160,20 +160,20 @@ object CrafkaSQLiteManager {
 
     fun subscribe(ownerUUID: String, topic: String, computerID: Int, cursor: Int, fragile: Boolean, autoCursor: Boolean): MethodResult {
         val topic = retrieveTopic(ownerUUID, topic) ?: return MethodResult.of(false, "There is no such topic")
-        return transaction(connection) {
+        val subID = transaction(connection) {
             val sub = CrafkaSubscription.insertReturning(listOf(CrafkaSubscription.id)) {
                 it[CrafkaSubscription.cursor] = cursor
                 it[CrafkaSubscription.fragile] = fragile
                 it[CrafkaSubscription.autoCursor] = autoCursor
                 it[CrafkaSubscription.topicID] = topic.primaryId
                 it[CrafkaSubscription.computerID] = computerID
-            }.singleOrNull() ?: return@transaction MethodResult.of(false, "Cannot create subscription")
-            val subID = sub[CrafkaSubscription.id]
-            SubsystemManager.executorService.submit {
-                revalidateSubscription(subID, cursor, 1)
-            }
-            return@transaction MethodResult.of(true, subID)
+            }.singleOrNull() ?: return@transaction null
+            return@transaction sub[CrafkaSubscription.id]
+        } ?: return MethodResult.of(false, "Cannot create subscription")
+        SubsystemManager.executorService.submit {
+            revalidateSubscription(subID, cursor, 1)
         }
+        return MethodResult.of(true, subID)
     }
 
     fun unsubscribe(ownerUUID: String, topic: String, computerID: Int): MethodResult {
@@ -345,8 +345,8 @@ object CrafkaSQLiteManager {
         message: String,
     ): MethodResult {
         val topic = this.retrieveTopic(ownerUUID, topic) ?: return MethodResult.of(false, "There is no such topic")
-        return transaction(connection) {
-            val messageID = CrafkaMessage.insertReturning(listOf(CrafkaMessage.messageID)) {
+        val messageID = transaction(connection) {
+            return@transaction CrafkaMessage.insertReturning(listOf(CrafkaMessage.messageID)) {
                 it[this.topicID] = topic.primaryId
                 it[this.value] = message
                 it[this.messageID] = CustomFunction(
@@ -359,11 +359,9 @@ object CrafkaSQLiteManager {
                     intLiteral(0),
                 ).plus(intLiteral(1))
             }.single()[CrafkaMessage.messageID]
-            SubsystemManager.executorService.submit {
-                redistributeMessage(topic, messageID, message)
-            }
-            return@transaction MethodResult.of(true)
         }
+        redistributeMessage(topic, messageID, message)
+        return MethodResult.of(true)
     }
 
     fun fetchMessages(
