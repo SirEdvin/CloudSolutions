@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
     "B": {
       "tag": "c:bookshelves"
@@ -8,7 +9,7 @@
       "tag": "minecraft:coals"
     },
     "I": {
-      "item": "minecraft:iron_block"
+      "tag": "c:storage_blocks/iron"
     },
     "M": {
       "item": "computercraft:wireless_modem_normal"
@@ -20,6 +21,8 @@
     "CBC"
   ],
   "result": {
-    "item": "cloudsolutions:statsd_bridge"
-  }
+    "count": 1,
+    "id": "cloudsolutions:statsd_bridge"
+  },
+  "show_notification": false
 }

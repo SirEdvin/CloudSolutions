@@ -15,7 +15,7 @@ import site.siredvin.tweakium.modules.peripheral.api.IPeripheralOwner
 class CrafkaBrokerPeripheral(owner: IPeripheralOwner) : OwnedPeripheral<IPeripheralOwner>(TYPE, owner) {
     companion object {
         const val TYPE = "crafka_broker"
-        val ID = ResourceLocation(CloudSolutionsCore.MOD_ID, TYPE)
+        val ID = ResourceLocation.fromNamespaceAndPath(CloudSolutionsCore.MOD_ID, TYPE)
     }
 
     override val isEnabled: Boolean

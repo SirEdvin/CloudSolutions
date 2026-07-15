@@ -1,10 +1,13 @@
+import org.gradle.api.artifacts.ExternalModuleDependency
+import org.gradle.api.file.DuplicatesStrategy
+import org.gradle.api.tasks.Sync
 import site.siredvin.peripheralium.gradle.mavenDependencies
 
 @Suppress("DSL_SCOPE_VIOLATION")
 plugins {
     id("site.siredvin.publishing")
     id("site.siredvin.mod-publishing")
-    id("site.siredvin.forge")
+    id("site.siredvin.neoforge")
 }
 
 baseShaking {
@@ -12,11 +15,9 @@ baseShaking {
     shake()
 }
 
-forgeShaking {
+neoforgeShaking {
     commonProjectName.set("core")
     useAT.set(true)
-    useMixins.set(true)
-    useJarJar.set(true)
     extraVersionMappings.set(
         mapOf(
             "computercraft" to "cc-tweaked",
@@ -27,11 +28,32 @@ forgeShaking {
     shake()
 }
 
-configurations {
-    minecraftLibrary { extendsFrom(minecraftEmbed.get()) }
+val embeddedGameLibraries by configurations.creating {
+    isCanBeConsumed = false
+    isCanBeResolved = true
+}
+
+val embeddedGameLibrariesDirectory = layout.buildDirectory.dir("generated/embeddedGameLibraries")
+val unpackEmbeddedGameLibraries = tasks.register<Sync>("unpackEmbeddedGameLibraries") {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from(provider { embeddedGameLibraries.map(::zipTree) })
+    into(embeddedGameLibrariesDirectory)
+    exclude("META-INF/MANIFEST.MF")
+    exclude("META-INF/*.RSA", "META-INF/*.SF", "META-INF/*.DSA")
+}
+
+sourceSets.main {
+    output.dir(mapOf("builtBy" to unpackEmbeddedGameLibraries), embeddedGameLibrariesDirectory)
 }
 
 repositories {
+    maven {
+        name = "Kotlin for Forge"
+        url = uri("https://thedarkcolour.github.io/KotlinForForge/")
+        content {
+            includeGroup("thedarkcolour")
+        }
+    }
     // location of the maven that hosts JEI files since January 2023
     maven {
         name = "Jared's maven"
@@ -52,39 +74,33 @@ dependencies {
     implementation(libs.bundles.kotlin)
     implementation(libs.bundles.forge.raw)
 
-    minecraftEmbed(libs.bundles.db) {
-        jarJar(this) {
-            isTransitive = false
-        }
-        exclude("org.jetbrains", "annotations")
-        exclude("org.slf4j", "slf4j-api")
-        exclude("org.jetbrains.kotlin")
-        exclude("org.jetbrains.kotlinx")
-//        isTransitive = false
+    compileOnly(libs.bundles.db)
+    libs.bundles.db.get().forEach {
+        val runtimeDependency = project.dependencies.create(it) as ExternalModuleDependency
+        runtimeDependency.isTransitive = false
+        add(embeddedGameLibraries.name, runtimeDependency)
     }
-    minecraftEmbed(libs.bundles.metrics) {
-        jarJar(this) {
-            isTransitive = false
-        }
-        exclude("org.jetbrains", "annotations")
-        exclude("org.slf4j", "slf4j-api")
-        exclude("org.jetbrains.kotlin")
-        exclude("org.jetbrains.kotlinx")
-//        isTransitive = false
+    compileOnly(libs.bundles.metrics)
+    libs.bundles.metrics.get().forEach {
+        val runtimeDependency = project.dependencies.create(it) as ExternalModuleDependency
+        runtimeDependency.isTransitive = false
+        add(embeddedGameLibraries.name, runtimeDependency)
     }
 
-    libs.bundles.forge.cc.get().map { implementation(fg.deobf(it)) }
-    libs.bundles.forge.include.get().map { implementation(fg.deobf(it)) }
+    implementation(libs.bundles.forge.cc)
+    implementation(libs.bundles.forge.include) {
+        isTransitive = false
+    }
 
     jarJar(libs.bundles.forge.jjar) {
         isTransitive = false
     }
 
-    libs.bundles.externalMods.forge.runtime.get().map { runtimeOnly(fg.deobf(it)) }
+    runtimeOnly(libs.bundles.externalMods.forge.runtime)
 }
 
 modPublishing {
-    output.set(tasks.jarJar)
+    output.set(tasks.jar)
     requiredDependencies.set(
         listOf(
             "cc-tweaked",
@@ -99,7 +115,6 @@ publishingShaking {
     project.publishing {
         publications {
             named<MavenPublication>("maven") {
-                fg.component(this)
                 mavenDependencies {
                     exclude(dependencies.create("site.siredvin:"))
                     exclude(libs.jei.forge.get())

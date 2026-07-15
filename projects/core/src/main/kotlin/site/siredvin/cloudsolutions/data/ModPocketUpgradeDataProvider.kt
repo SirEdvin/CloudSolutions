@@ -1,30 +1,26 @@
 package site.siredvin.cloudsolutions.data
 
-import dan200.computercraft.api.pocket.PocketUpgradeDataProvider
-import dan200.computercraft.api.pocket.PocketUpgradeSerialiser
-import net.minecraft.data.PackOutput
+import dan200.computercraft.api.pocket.IPocketUpgrade
+import net.minecraft.core.RegistrySetBuilder
+import net.minecraft.data.worldgen.BootstrapContext
+import net.minecraft.resources.ResourceKey
+import net.minecraft.world.item.ItemStack
 import site.siredvin.cloudsolutions.common.setup.ModBlocks
 import site.siredvin.cloudsolutions.common.setup.PocketUpgradeSerializers
-import site.siredvin.cloudsolutions.xplat.ModPlatform
-import site.siredvin.tweakium.modules.data.LibPocketUpgradeDataProvider
-import java.util.function.Consumer
-import java.util.function.Function
 
-class ModPocketUpgradeDataProvider(output: PackOutput) : LibPocketUpgradeDataProvider(output, ModPlatform.holder.pocketSerializers) {
-    companion object {
-        private val REGISTERED_BUILDERS: MutableList<Function<PocketUpgradeDataProvider, Upgrade<PocketUpgradeSerialiser<*>>>> = mutableListOf()
-
-        fun hookUpgrade(builder: Function<PocketUpgradeDataProvider, Upgrade<PocketUpgradeSerialiser<*>>>) {
-            REGISTERED_BUILDERS.add(builder)
-        }
-    }
-
-    override fun registerUpgrades(addUpgrade: Consumer<Upgrade<PocketUpgradeSerialiser<*>>>) {
-        REGISTERED_BUILDERS.forEach {
-            it.apply(this).add(addUpgrade)
-        }
-        addUpgrade.accept(simpleWithCustomItem(PocketUpgradeSerializers.STATSD_BRIDGE, ModBlocks.STATSD_BRIDGE))
-        addUpgrade.accept(simpleWithCustomItem(PocketUpgradeSerializers.KV_STORAGE, ModBlocks.KV_STORAGE))
-        addUpgrade.accept(simpleWithCustomItem(PocketUpgradeSerializers.CRAFKA_BROKER, ModBlocks.CRAFKA_BROKER))
+object ModPocketUpgradeDataProvider : RegistrySetBuilder.RegistryBootstrap<IPocketUpgrade> {
+    override fun run(context: BootstrapContext<IPocketUpgrade>) {
+        context.register(
+            ResourceKey.create(IPocketUpgrade.REGISTRY, PocketUpgradeSerializers.STATSD_BRIDGE.id),
+            PocketUpgradeSerializers.STATSD_BRIDGE.createUpgrade(ItemStack(ModBlocks.STATSD_BRIDGE.get())),
+        )
+        context.register(
+            ResourceKey.create(IPocketUpgrade.REGISTRY, PocketUpgradeSerializers.KV_STORAGE.id),
+            PocketUpgradeSerializers.KV_STORAGE.createUpgrade(ItemStack(ModBlocks.KV_STORAGE.get())),
+        )
+        context.register(
+            ResourceKey.create(IPocketUpgrade.REGISTRY, PocketUpgradeSerializers.CRAFKA_BROKER.id),
+            PocketUpgradeSerializers.CRAFKA_BROKER.createUpgrade(ItemStack(ModBlocks.CRAFKA_BROKER.get())),
+        )
     }
 }

@@ -1,6 +1,5 @@
 package site.siredvin.cloudsolutions.common.setup
 
-import dan200.computercraft.api.pocket.PocketUpgradeSerialiser
 import site.siredvin.cloudsolutions.computercraft.peripheral.CrafkaBrokerPeripheral
 import site.siredvin.cloudsolutions.computercraft.peripheral.KVStoragePeripheral
 import site.siredvin.cloudsolutions.computercraft.peripheral.StatsDBridgePeripheral
@@ -10,38 +9,38 @@ import site.siredvin.tweakium.modules.pocket.PeripheralPocketUpgrade
 
 object PocketUpgradeSerializers {
 
-    val STATSD_BRIDGE = ModPlatform.registerPocketUpgrade(
+    val STATSD_BRIDGE = ModPlatform.registerPocketUpgradeWithSelfCustomItem(
         StatsDBridgePeripheral.ID,
-        PocketUpgradeSerialiser.simpleWithCustomItem { id, stack ->
-            PeripheralPocketUpgrade(
-                id,
-                stack,
-                { StatsDBridgePeripheral(PocketPeripheralOwner(it)) },
-            )
-        },
-    )
+    ) { id, type, stack ->
+        PeripheralPocketUpgrade(
+            id,
+            stack,
+            { StatsDBridgePeripheral(PocketPeripheralOwner(it)) },
+            { type },
+        )
+    }
 
-    val KV_STORAGE = ModPlatform.registerPocketUpgrade(
+    val KV_STORAGE = ModPlatform.registerPocketUpgradeWithSelfCustomItem(
         KVStoragePeripheral.ID,
-        PocketUpgradeSerialiser.simpleWithCustomItem { id, stack ->
-            PeripheralPocketUpgrade(
-                id,
-                stack,
-                { KVStoragePeripheral(PocketPeripheralOwner(it)) },
-            )
-        },
-    )
+    ) { id, type, stack ->
+        PeripheralPocketUpgrade(
+            id,
+            stack,
+            { KVStoragePeripheral(PocketPeripheralOwner(it)) },
+            { type },
+        )
+    }
 
-    val CRAFKA_BROKER = ModPlatform.registerPocketUpgrade(
+    val CRAFKA_BROKER = ModPlatform.registerPocketUpgradeWithSelfCustomItem(
         CrafkaBrokerPeripheral.ID,
-        PocketUpgradeSerialiser.simpleWithCustomItem { id, stack ->
-            PeripheralPocketUpgrade(
-                id,
-                stack,
-                { CrafkaBrokerPeripheral(PocketPeripheralOwner(it)) },
-            )
-        },
-    )
+    ) { id, type, stack ->
+        PeripheralPocketUpgrade(
+            id,
+            stack,
+            { CrafkaBrokerPeripheral(PocketPeripheralOwner(it)) },
+            { type },
+        )
+    }
 
     fun doSomething() {}
 }

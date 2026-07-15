@@ -1,5 +1,0 @@
-// 1.20.1	2025-10-16T02:16:39.0782705	vanilla/Loot Tables
-a17ec21dd4e0d167b3ec94f7eeb8e6bdf676bd7a data/cloudsolutions/loot_tables/blocks/crafka_broker.json
-d418bb92ff0bba556f0ed01b5834269dff4f2688 data/cloudsolutions/loot_tables/blocks/kv_storage.json
-7272d01bb07663dbbd6f43bf4ad7d4a011f6c099 data/cloudsolutions/loot_tables/blocks/statsd_bridge.json
-cd85155bb2e2ac6d5f43f41a23904a9e4e5c3cf4 data/cloudsolutions/loot_tables/blocks/tsdb_storage.json

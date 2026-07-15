@@ -1,7 +1,10 @@
 package site.siredvin.cloudsolutions.common.block
 
+import com.mojang.serialization.MapCodec
 import net.minecraft.core.BlockPos
 import net.minecraft.world.level.BlockGetter
+import net.minecraft.world.level.block.BaseEntityBlock
+import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.phys.shapes.BooleanOp
 import net.minecraft.world.phys.shapes.CollisionContext
@@ -12,7 +15,7 @@ import site.siredvin.cloudsolutions.common.blockentity.CrafkaBrokerBlockEntity
 import site.siredvin.cloudsolutions.common.setup.ModBlockEntityTypes
 import java.util.stream.Stream
 
-class CrafkaBroker : FacingBlockEntityBlock<CrafkaBrokerBlockEntity>({ ModBlockEntityTypes.CRAFKA_BROKER.get() }, true) {
+class CrafkaBroker : FacingBlockEntityBlock<CrafkaBrokerBlockEntity>(true) {
     companion object {
         val SHAPE = Stream.of(
             Shapes.box(0.125, 0.125, 0.125, 0.875, 0.875, 0.875),
@@ -20,6 +23,10 @@ class CrafkaBroker : FacingBlockEntityBlock<CrafkaBrokerBlockEntity>({ ModBlockE
             Shapes.box(0.0, 0.875, 0.0, 1.0, 1.0, 1.0),
         ).reduce { v1: VoxelShape, v2: VoxelShape -> Shapes.join(v1, v2, BooleanOp.OR) }.get()
     }
+
+    override fun codec(): MapCodec<out BaseEntityBlock> = simpleCodec { CrafkaBroker() }
+
+    override fun newBlockEntity(pos: BlockPos, state: BlockState): BlockEntity? = ModBlockEntityTypes.CRAFKA_BROKER.get().create(pos, state)
 
     @Deprecated("Deprecated in Java")
     override fun getShape(state: BlockState, blockGetter: BlockGetter, blockPos: BlockPos, collisionContext: CollisionContext): VoxelShape = SHAPE

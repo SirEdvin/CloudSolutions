@@ -1,6 +1,8 @@
 package site.siredvin.cloudsolutions.data
 
 import site.siredvin.broccolium.modules.data.api.GeneratorSink
+import site.siredvin.cloudsolutions.CloudSolutionsCore
+import site.siredvin.tweakium.modules.data.upgrades
 
 object ModDataProviders {
     fun add(generator: GeneratorSink) {
@@ -9,7 +11,6 @@ object ModDataProviders {
         generator.models(ModBlockModelProvider::addModels, ModItemModelProvider::addModels)
         generator.add(::ModEnLanguageProvider)
         generator.add(::ModUaLanguageProvider)
-        generator.add(::ModPocketUpgradeDataProvider)
-        generator.add(::ModTurtleUpgradeDataProvider)
+        generator.upgrades(CloudSolutionsCore.MOD_ID, ModPocketUpgradeDataProvider, ModTurtleUpgradeDataProvider)
     }
 }

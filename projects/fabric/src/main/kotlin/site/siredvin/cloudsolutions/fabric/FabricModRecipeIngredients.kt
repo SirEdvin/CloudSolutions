@@ -1,7 +1,7 @@
 package site.siredvin.cloudsolutions.fabric
 
 import dan200.computercraft.shared.ModRegistry.Items
-import net.fabricmc.fabric.api.tag.convention.v1.ConventionalItemTags
+import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags
 import net.minecraft.world.item.crafting.Ingredient
 import net.minecraft.world.level.block.Blocks
 import site.siredvin.cloudsolutions.xplat.ModRecipeIngredients

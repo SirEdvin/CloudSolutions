@@ -12,7 +12,7 @@ import site.siredvin.tweakium.modules.peripheral.api.IPeripheralOwner
 class StatsDBridgePeripheral(peripheralOwner: IPeripheralOwner) : OwnedPeripheral<IPeripheralOwner>(TYPE, peripheralOwner) {
     companion object {
         const val TYPE = "statsd_bridge"
-        val ID = ResourceLocation(CloudSolutionsCore.MOD_ID, TYPE)
+        val ID = ResourceLocation.fromNamespaceAndPath(CloudSolutionsCore.MOD_ID, TYPE)
     }
     override val isEnabled: Boolean
         get() = ModConfig.enableStatsDBridge

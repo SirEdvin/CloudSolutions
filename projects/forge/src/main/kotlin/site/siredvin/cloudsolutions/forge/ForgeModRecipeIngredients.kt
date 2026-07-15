@@ -2,7 +2,7 @@ package site.siredvin.cloudsolutions.forge
 
 import dan200.computercraft.shared.ModRegistry.Items
 import net.minecraft.world.item.crafting.Ingredient
-import net.minecraftforge.common.Tags
+import net.neoforged.neoforge.common.Tags
 import site.siredvin.cloudsolutions.xplat.ModRecipeIngredients
 
 object ForgeModRecipeIngredients : ModRecipeIngredients {

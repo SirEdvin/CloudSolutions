@@ -2,7 +2,6 @@ package site.siredvin.cloudsolutions.common.setup
 
 import dan200.computercraft.api.turtle.ITurtleAccess
 import dan200.computercraft.api.turtle.TurtleSide
-import dan200.computercraft.api.turtle.TurtleUpgradeSerialiser
 import site.siredvin.cloudsolutions.computercraft.peripheral.CrafkaBrokerPeripheral
 import site.siredvin.cloudsolutions.computercraft.peripheral.KVStoragePeripheral
 import site.siredvin.cloudsolutions.computercraft.peripheral.StatsDBridgePeripheral
@@ -12,38 +11,38 @@ import site.siredvin.tweakium.modules.turtle.PeripheralTurtleUpgrade
 
 object TurtleUpgradeSerializers {
 
-    val STATSD_BRIDGE = ModPlatform.registerTurtleUpgrade(
+    val STATSD_BRIDGE = ModPlatform.registerTurtleUpgradeWithSelfCustomItem(
         StatsDBridgePeripheral.ID,
-        TurtleUpgradeSerialiser.simpleWithCustomItem { id, stack ->
-            PeripheralTurtleUpgrade.dynamic(
-                stack.item,
-                { turtle: ITurtleAccess, side: TurtleSide -> StatsDBridgePeripheral(TurtlePeripheralOwner(turtle, side)) },
-                { StatsDBridgePeripheral.ID },
-            )
-        },
-    )
+    ) { id, type, stack ->
+        PeripheralTurtleUpgrade.dynamic(
+            stack.item,
+            { turtle: ITurtleAccess, side: TurtleSide -> StatsDBridgePeripheral(TurtlePeripheralOwner(turtle, side)) },
+            { type },
+            { id },
+        )
+    }
 
-    val KV_STORAGE = ModPlatform.registerTurtleUpgrade(
+    val KV_STORAGE = ModPlatform.registerTurtleUpgradeWithSelfCustomItem(
         KVStoragePeripheral.ID,
-        TurtleUpgradeSerialiser.simpleWithCustomItem { id, stack ->
-            PeripheralTurtleUpgrade.dynamic(
-                stack.item,
-                { turtle: ITurtleAccess, side: TurtleSide -> KVStoragePeripheral(TurtlePeripheralOwner(turtle, side)) },
-                { KVStoragePeripheral.ID },
-            )
-        },
-    )
+    ) { id, type, stack ->
+        PeripheralTurtleUpgrade.dynamic(
+            stack.item,
+            { turtle: ITurtleAccess, side: TurtleSide -> KVStoragePeripheral(TurtlePeripheralOwner(turtle, side)) },
+            { type },
+            { id },
+        )
+    }
 
-    val CRAFKA_BROKER = ModPlatform.registerTurtleUpgrade(
+    val CRAFKA_BROKER = ModPlatform.registerTurtleUpgradeWithSelfCustomItem(
         CrafkaBrokerPeripheral.ID,
-        TurtleUpgradeSerialiser.simpleWithCustomItem { id, stack ->
-            PeripheralTurtleUpgrade.dynamic(
-                stack.item,
-                { turtle: ITurtleAccess, side: TurtleSide -> CrafkaBrokerPeripheral(TurtlePeripheralOwner(turtle, side)) },
-                { CrafkaBrokerPeripheral.ID },
-            )
-        },
-    )
+    ) { id, type, stack ->
+        PeripheralTurtleUpgrade.dynamic(
+            stack.item,
+            { turtle: ITurtleAccess, side: TurtleSide -> CrafkaBrokerPeripheral(TurtlePeripheralOwner(turtle, side)) },
+            { type },
+            { id },
+        )
+    }
 
     fun doSomething() {}
 }

@@ -69,8 +69,7 @@ dependencies {
         exclude("net.fabricmc", "fabric-loader")
     }
     modImplementation(libs.bundles.fabric.include) {
-        exclude("net.fabricmc.fabric-api")
-        exclude("net.fabricmc", "fabric-loader")
+        isTransitive = false
     }
     include(libs.bundles.fabric.include)
 

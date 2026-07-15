@@ -1,4 +1,4 @@
-// 1.20.1	2025-10-17T00:49:21.2330846	Cloud Solutions/Recipes
-b41b75a15a0186f8b3ad5bbadcf774956231a140 data\cloudsolutions\recipes\crafka_broker.json
-3d47f62fe7f736027e98222fa1041173ba478e27 data\cloudsolutions\recipes\kv_storage.json
-e83b629346d5667d75d6eab6e6f244482e01afdf data\cloudsolutions\recipes\statsd_bridge.json
+// 1.21.1	2026-07-15T17:13:37.637454417	Cloud Solutions/Recipes
+9f18700c6f45df3f626b86aed7bee7f6019d9da8 data/cloudsolutions/recipe/kv_storage.json
+001a692e7a54616628b030342dcd775fb954c9f6 data/cloudsolutions/recipe/crafka_broker.json
+6c586c691add2ee2bc48294935a8905e05ab1b08 data/cloudsolutions/recipe/statsd_bridge.json

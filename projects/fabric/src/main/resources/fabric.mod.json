@@ -39,10 +39,10 @@
   "mixins": [
   ],
   "depends": {
-    "fabricloader": ">=0.13.3",
+    "fabricloader": ">=0.16.14",
     "fabric": "*",
-    "minecraft": ">=1.20.1 <1.21",
-    "java": ">=17",
+    "minecraft": ">=1.21.1 <1.21.2",
+    "java": ">=21",
     "computercraft": ">=${computercraftVersion}",
     "tweakium": ">=${tweakiumVersion}",
     "broccolium": ">=${broccoliumVersion}"
