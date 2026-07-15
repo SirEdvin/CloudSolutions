@@ -13,7 +13,7 @@ import java.util.*
 class TSDBStoragePeripheral(owner: IPeripheralOwner) : OwnedPeripheral<IPeripheralOwner>(TYPE, owner) {
     companion object {
         const val TYPE = "tsdb_storage"
-        val ID = ResourceLocation(CloudSolutionsCore.MOD_ID, TYPE)
+        val ID = ResourceLocation.fromNamespaceAndPath(CloudSolutionsCore.MOD_ID, TYPE)
     }
 
     override val isEnabled: Boolean

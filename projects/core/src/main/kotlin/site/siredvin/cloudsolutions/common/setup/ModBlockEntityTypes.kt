@@ -1,19 +1,17 @@
 package site.siredvin.cloudsolutions.common.setup
 
-import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.level.block.entity.BlockEntityType
 import site.siredvin.broccolium.modules.platform.PlatformToolkit
-import site.siredvin.cloudsolutions.CloudSolutionsCore
+import site.siredvin.broccolium.modules.platform.api.RegistryEntry
 import site.siredvin.cloudsolutions.common.blockentity.CrafkaBrokerBlockEntity
 import site.siredvin.cloudsolutions.common.blockentity.KVStorageBlockEntity
 import site.siredvin.cloudsolutions.common.blockentity.StatsDBridgeBlockEntity
 import site.siredvin.cloudsolutions.common.blockentity.TSDBStorageBlockEntity
 import site.siredvin.cloudsolutions.xplat.ModPlatform
-import java.util.function.Supplier
 
 object ModBlockEntityTypes {
-    val KV_STORAGE: Supplier<BlockEntityType<KVStorageBlockEntity>> = ModPlatform.registerBlockEntity(
-        ResourceLocation(CloudSolutionsCore.MOD_ID, "kv_storage"),
+    val KV_STORAGE: RegistryEntry<BlockEntityType<KVStorageBlockEntity>> = ModPlatform.registerBlockEntity(
+        "kv_storage",
     ) {
         PlatformToolkit.get().createBlockEntityType(
             ::KVStorageBlockEntity,
@@ -21,8 +19,8 @@ object ModBlockEntityTypes {
         )
     }
 
-    val CRAFKA_BROKER: Supplier<BlockEntityType<CrafkaBrokerBlockEntity>> = ModPlatform.registerBlockEntity(
-        ResourceLocation(CloudSolutionsCore.MOD_ID, "crafka_broker"),
+    val CRAFKA_BROKER: RegistryEntry<BlockEntityType<CrafkaBrokerBlockEntity>> = ModPlatform.registerBlockEntity(
+        "crafka_broker",
     ) {
         PlatformToolkit.get().createBlockEntityType(
             ::CrafkaBrokerBlockEntity,
@@ -30,8 +28,8 @@ object ModBlockEntityTypes {
         )
     }
 
-    val TSDB_STORAGE: Supplier<BlockEntityType<TSDBStorageBlockEntity>> = ModPlatform.registerBlockEntity(
-        ResourceLocation(CloudSolutionsCore.MOD_ID, "tsdb_storage"),
+    val TSDB_STORAGE: RegistryEntry<BlockEntityType<TSDBStorageBlockEntity>> = ModPlatform.registerBlockEntity(
+        "tsdb_storage",
     ) {
         PlatformToolkit.get().createBlockEntityType(
             ::TSDBStorageBlockEntity,
@@ -39,8 +37,8 @@ object ModBlockEntityTypes {
         )
     }
 
-    val STATSD_BRIDGE: Supplier<BlockEntityType<StatsDBridgeBlockEntity>> = ModPlatform.registerBlockEntity(
-        ResourceLocation(CloudSolutionsCore.MOD_ID, "statsd_bridge"),
+    val STATSD_BRIDGE: RegistryEntry<BlockEntityType<StatsDBridgeBlockEntity>> = ModPlatform.registerBlockEntity(
+        "statsd_bridge",
     ) {
         PlatformToolkit.get().createBlockEntityType(
             ::StatsDBridgeBlockEntity,

@@ -1,28 +1,30 @@
 package site.siredvin.cloudsolutions
 
 import dan200.computercraft.api.client.turtle.RegisterTurtleModellersEvent
+import dan200.computercraft.api.client.turtle.TurtleUpgradeModeller
 import dan200.computercraft.api.turtle.ITurtleUpgrade
-import dan200.computercraft.api.turtle.TurtleUpgradeSerialiser
+import dan200.computercraft.api.upgrades.UpgradeType
+import net.minecraft.client.resources.model.ModelResourceLocation
 import net.minecraft.resources.ResourceLocation
-import net.minecraftforge.api.distmarker.Dist
-import net.minecraftforge.client.event.ModelEvent.RegisterAdditional
-import net.minecraftforge.eventbus.api.SubscribeEvent
-import net.minecraftforge.fml.common.Mod
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent
+import net.neoforged.api.distmarker.Dist
+import net.neoforged.bus.api.SubscribeEvent
+import net.neoforged.fml.common.EventBusSubscriber
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent
+import net.neoforged.neoforge.client.event.ModelEvent.RegisterAdditional
 
-@Mod.EventBusSubscriber(modid = CloudSolutionsCore.MOD_ID, value = [Dist.CLIENT], bus = Mod.EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = CloudSolutionsCore.MOD_ID, value = [Dist.CLIENT], bus = EventBusSubscriber.Bus.MOD)
 object ForgeCloudSolutionsClient {
 
     @SubscribeEvent
     @Suppress("UNUSED_PARAMETER")
     fun onClientSetup(event: FMLClientSetupEvent) {
-        CloudSolutionsClientCore.onInit()
+        event.enqueueWork(CloudSolutionsClientCore::onInit)
     }
 
     @SubscribeEvent
     fun registerModels(event: RegisterAdditional) {
         CloudSolutionsClientCore.registerExtraModels { model: ResourceLocation ->
-            event.register(model)
+            event.register(ModelResourceLocation.standalone(model))
         }
     }
 
@@ -30,7 +32,10 @@ object ForgeCloudSolutionsClient {
     fun registerTurtleModels(event: RegisterTurtleModellersEvent) {
         CloudSolutionsClientCore.onModelRegister { serializer, model ->
             @Suppress("UNCHECKED_CAST")
-            event.register(serializer as TurtleUpgradeSerialiser<ITurtleUpgrade>, model)
+            event.register(
+                serializer as UpgradeType<ITurtleUpgrade>,
+                model as TurtleUpgradeModeller<ITurtleUpgrade>,
+            )
         }
     }
 }

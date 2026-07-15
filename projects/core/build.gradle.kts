@@ -34,6 +34,9 @@ dependencies {
     implementation(libs.bundles.db)
     implementation(libs.bundles.metrics)
     api(libs.bundles.apicommon)
+    compileOnly(libs.fabric.config) {
+        isTransitive = false
+    }
 }
 
 publishingShaking {

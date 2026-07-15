@@ -1,48 +1,50 @@
 modLoader="kotlinforforge"
-loaderVersion="[4,)"
-
-issueTrackerURL="https://github.com/SirEdvin/CloudSolutions/issues"
-logoFile="pack.png"
-
+loaderVersion="[5,)"
 license="MIT"
+issueTrackerURL="https://github.com/SirEdvin/CloudSolutions/issues"
 
 [[mods]]
 modId="cloudsolutions"
 version="${file.jarVersion}"
 displayName="Cloud Solutions"
 displayURL="https://github.com/SirEdvin/CloudSolutions"
-
-credits=""
+logoFile="pack.png"
 authors="SirEdvin"
 description='''
 A little crazy CC:T addon that stores different data and, well, share it via internal http server!
 '''
 
 [[dependencies.cloudsolutions]]
-modId="forge"
-mandatory=true
-versionRange="[${forgeVersion},48)"
+modId="neoforge"
+type="required"
+versionRange="[${neoforgeVersion},21.2)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.cloudsolutions]]
+modId="minecraft"
+type="required"
+versionRange="[1.21.1,1.21.2)"
 ordering="NONE"
 side="BOTH"
 
 [[dependencies.cloudsolutions]]
 modId="computercraft"
-mandatory=true
+type="required"
 versionRange="[${computercraftVersion},)"
 ordering="NONE"
 side="BOTH"
 
 [[dependencies.cloudsolutions]]
 modId="tweakium"
-mandatory=true
+type="required"
 versionRange="[${tweakiumVersion},)"
 ordering="NONE"
 side="BOTH"
 
-
 [[dependencies.cloudsolutions]]
 modId="broccolium"
-mandatory=true
+type="required"
 versionRange="[${broccoliumVersion},)"
 ordering="NONE"
 side="BOTH"

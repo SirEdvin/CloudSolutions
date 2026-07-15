@@ -25,7 +25,7 @@ import kotlin.toString
 class KVStoragePeripheral(owner: IPeripheralOwner) : OwnedPeripheral<IPeripheralOwner>(TYPE, owner) {
     companion object {
         const val TYPE = "kv_storage"
-        val ID = ResourceLocation(CloudSolutionsCore.MOD_ID, TYPE)
+        val ID = ResourceLocation.fromNamespaceAndPath(CloudSolutionsCore.MOD_ID, TYPE)
         val REGEX_CACHE = CacheBuilder.newBuilder().maximumSize(1_000).expireAfterAccess(30, TimeUnit.MINUTES).build(
             CacheLoader.from { it: String -> Regex(it) },
         )

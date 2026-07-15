@@ -9,7 +9,7 @@ import site.siredvin.cloudsolutions.common.setup.ModBlocks
 
 object ModBlockModelProvider {
     fun addModels(generators: BlockModelGenerators) {
-        val peripheralCasingTexture = ResourceLocation(CloudSolutionsCore.MOD_ID, "block/peripheral_casing")
+        val peripheralCasingTexture = ResourceLocation.fromNamespaceAndPath(CloudSolutionsCore.MOD_ID, "block/peripheral_casing")
         horizontalOrientatedBlock(
             generators,
             ModBlocks.KV_STORAGE.get(),
@@ -33,7 +33,7 @@ object ModBlockModelProvider {
             horizontalOrientedModel(
                 generators,
                 ModBlocks.STATSD_BRIDGE.get(),
-                overwriteFront = ResourceLocation(CloudSolutionsCore.MOD_ID, "block/statsd_bridge"),
+                overwriteFront = ResourceLocation.fromNamespaceAndPath(CloudSolutionsCore.MOD_ID, "block/statsd_bridge"),
                 overwriteSide = peripheralCasingTexture,
                 overwriteBottom = peripheralCasingTexture,
                 overwriteTop = peripheralCasingTexture,

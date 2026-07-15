@@ -51,7 +51,9 @@ object SubscriptionManager {
 }
 
 object SubsystemManager {
-    val executorService: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor()
+    val executorService: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor { runnable ->
+        Thread(runnable, "CloudSolutions subsystem").apply { isDaemon = true }
+    }
     var kvManager: KeyValueManager? = null
     var crafkaBrokerManager: CrafkaSQLiteManager? = null
 

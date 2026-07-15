@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
     "C": {
       "item": "minecraft:lightning_rod"
@@ -8,7 +9,7 @@
       "tag": "minecraft:wool"
     },
     "I": {
-      "tag": "forge:storage_blocks/iron"
+      "item": "minecraft:iron_block"
     },
     "R": {
       "item": "minecraft:iron_bars"
@@ -20,6 +21,8 @@
     "RDR"
   ],
   "result": {
-    "item": "cloudsolutions:crafka_broker"
-  }
+    "count": 1,
+    "id": "cloudsolutions:crafka_broker"
+  },
+  "show_notification": false
 }

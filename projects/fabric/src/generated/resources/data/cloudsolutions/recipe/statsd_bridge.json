@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
     "B": {
       "tag": "c:bookshelves"
@@ -9,14 +10,19 @@
     },
     "I": {
       "item": "minecraft:iron_block"
+    },
+    "M": {
+      "item": "computercraft:wireless_modem_normal"
     }
   },
   "pattern": [
-    "CBC",
+    "CMC",
     "BIB",
     "CBC"
   ],
   "result": {
-    "item": "cloudsolutions:kv_storage"
-  }
+    "count": 1,
+    "id": "cloudsolutions:statsd_bridge"
+  },
+  "show_notification": false
 }

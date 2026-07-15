@@ -1,6 +1,6 @@
 package site.siredvin.cloudsolutions.common.configuration
 
-import net.minecraftforge.common.ForgeConfigSpec
+import net.neoforged.neoforge.common.ModConfigSpec
 import site.siredvin.cloudsolutions.subsystems.CrafkaStorageMode
 import site.siredvin.cloudsolutions.subsystems.KVStorageMode
 
@@ -75,12 +75,12 @@ object ModConfig {
     val crafkaMaxResendSteps: Int
         get() = ConfigHolder.serverConfig.crafkaMaxResendSteps.get()
 
-    class CommonConfig internal constructor(builder: ForgeConfigSpec.Builder) {
+    class CommonConfig internal constructor(builder: ModConfigSpec.Builder) {
 
         // Generic plugins
-        val enableStatsDBridge: ForgeConfigSpec.BooleanValue
-        val enableKVBridge: ForgeConfigSpec.BooleanValue
-        val enableCrafkaBroker: ForgeConfigSpec.BooleanValue
+        val enableStatsDBridge: ModConfigSpec.BooleanValue
+        val enableKVBridge: ModConfigSpec.BooleanValue
+        val enableCrafkaBroker: ModConfigSpec.BooleanValue
 
         init {
             builder.push("statsd")
@@ -94,28 +94,28 @@ object ModConfig {
         }
     }
 
-    class ServerConfig internal constructor(builder: ForgeConfigSpec.Builder) {
+    class ServerConfig internal constructor(builder: ModConfigSpec.Builder) {
 
         // StatsD
-        val enableStatsDConnection: ForgeConfigSpec.BooleanValue
-        val statsDPort: ForgeConfigSpec.IntValue
-        val statsDHostName: ForgeConfigSpec.ConfigValue<String>
-        val statsDPrefix: ForgeConfigSpec.ConfigValue<String>
-        val statsDPlayerRateLimit: ForgeConfigSpec.IntValue
-        val statsDGlobalRateLimit: ForgeConfigSpec.IntValue
+        val enableStatsDConnection: ModConfigSpec.BooleanValue
+        val statsDPort: ModConfigSpec.IntValue
+        val statsDHostName: ModConfigSpec.ConfigValue<String>
+        val statsDPrefix: ModConfigSpec.ConfigValue<String>
+        val statsDPlayerRateLimit: ModConfigSpec.IntValue
+        val statsDGlobalRateLimit: ModConfigSpec.IntValue
 
         // Data storage
-        val kvStorageMode: ForgeConfigSpec.ConfigValue<String>
-        val kvStorageKeyLimit: ForgeConfigSpec.IntValue
-        val kvStorageValueLimit: ForgeConfigSpec.IntValue
+        val kvStorageMode: ModConfigSpec.ConfigValue<String>
+        val kvStorageKeyLimit: ModConfigSpec.IntValue
+        val kvStorageValueLimit: ModConfigSpec.IntValue
 
         // Crafka broker
-        val crafkaStorageMode: ForgeConfigSpec.ConfigValue<String>
-        val crafkaCursorRevalidationDelay: ForgeConfigSpec.LongValue
-        val crafkaTopicLimit: ForgeConfigSpec.IntValue
-        val crafkaTopicSizeLimit: ForgeConfigSpec.IntValue
-        val crafkaMessageSizeLimit: ForgeConfigSpec.IntValue
-        val crafkaMaxResendSteps: ForgeConfigSpec.IntValue
+        val crafkaStorageMode: ModConfigSpec.ConfigValue<String>
+        val crafkaCursorRevalidationDelay: ModConfigSpec.LongValue
+        val crafkaTopicLimit: ModConfigSpec.IntValue
+        val crafkaTopicSizeLimit: ModConfigSpec.IntValue
+        val crafkaMessageSizeLimit: ModConfigSpec.IntValue
+        val crafkaMaxResendSteps: ModConfigSpec.IntValue
 
         init {
             builder.push("statsd")
