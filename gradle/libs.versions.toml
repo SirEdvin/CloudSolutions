@@ -125,5 +125,5 @@ forge-jjar = ["broccolium-jjar-forge", "tweakium-jjar-forge"]
 externalMods-forge-runtime = ["jei-forge"]
 #externalMods-fabric = ["nightConfig-core", "nightConfig-toml"]
 #externalMods-fabric-compile = ["iris", "jei-api", "rei-api", "rei-builtin"]
-externalMods-fabric-runtime = ["rei-fabric", "modmenu"]
+externalMods-fabric-runtime = ["rei-fabric"]
 #
