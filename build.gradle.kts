@@ -16,7 +16,7 @@ subprojectShaking {
 val setupSubproject = subprojectShaking::setupSubproject
 
 subprojects {
-    if (name != "typescript-tests") {
+    if (name !in setOf("typed-peripheral-cloudsolutions", "typescript-tests")) {
         setupSubproject(this)
     }
     tasks {
