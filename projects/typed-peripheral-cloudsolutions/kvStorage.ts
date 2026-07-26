@@ -3,18 +3,18 @@ import { IPeripheralProvider } from "@siredvin/typed-peripheral-base";
 
 /** @noSelf **/
 export interface KVStorage extends ConfigurationAPI<object> {
-    delete(key: string): void;
-    put(key: string, value: string, expire?: number | null): void;
+    delete(key: string): Result;
+    put(key: string, value: string, expire?: number | null): Result;
     get(key: string): string | null;
-    mput(values: { [key: string]: string });
+    mput(values: { [key: string]: string }): LuaMultiReturn<[number | false, string | null]>;
     mget(values: string[]): LuaTable<string, string>;
     list(glob?: string): string[];
     get_ex(key: string): number | null;
-    put_ex(key: string, expire?: number | null): void;
+    put_ex(key: string, expire?: number | null): Result;
     incr(key: string, value?: number): number;
     decr(key: string, value?: number): number;
-    subscribe(type: "changed" | "deleted", pattern: string);
-    unsubscribe(type: "changed" | "deleted", pattern: string);
+    subscribe(type: "changed" | "deleted", pattern: string): void;
+    unsubscribe(type: "changed" | "deleted", pattern: string): void;
     getSubscriptions(type: "changed" | "deleted"): string[];
 }
 
