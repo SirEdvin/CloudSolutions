@@ -35,6 +35,8 @@ val compileTypeScript by tasks.registering(NpmTask::class) {
         file("lualib_bundle.lua"),
         file("statsdBridge.d.ts"),
         file("statsdBridge.lua"),
+        file("tsdbStorage.d.ts"),
+        file("tsdbStorage.lua"),
     )
 }
 
