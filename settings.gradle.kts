@@ -40,6 +40,7 @@ rootProject.name = "CloudSolutions $minecraftVersion"
 include(":core")
 include(":forge")
 include(":fabric")
+include(":typed-peripheral-cloudsolutions")
 include(":typescript-tests")
 
 
