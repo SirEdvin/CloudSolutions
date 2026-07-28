@@ -1,3 +1,4 @@
+import net.darkhax.curseforgegradle.TaskPublishCurseForge
 import site.siredvin.peripheralium.gradle.mavenDependencies
 
 @Suppress("DSL_SCOPE_VIOLATION")
@@ -159,4 +160,8 @@ publishingShaking {
             }
         }
     }
+}
+
+tasks.named<TaskPublishCurseForge>("publishCurseForge") {
+    uploadArtifacts.forEach { it.addEnvironment("Client", "Server") }
 }

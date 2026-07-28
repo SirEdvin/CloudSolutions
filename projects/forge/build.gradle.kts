@@ -1,3 +1,4 @@
+import net.darkhax.curseforgegradle.TaskPublishCurseForge
 import org.gradle.api.artifacts.ExternalModuleDependency
 import site.siredvin.peripheralium.gradle.mavenDependencies
 
@@ -161,4 +162,8 @@ publishingShaking {
             }
         }
     }
+}
+
+tasks.named<TaskPublishCurseForge>("publishCurseForge") {
+    uploadArtifacts.forEach { it.addEnvironment("Client", "Server") }
 }
