@@ -1,3 +1,4 @@
+import net.darkhax.curseforgegradle.TaskPublishCurseForge
 import site.siredvin.peripheralium.gradle.mavenDependencies
 
 @Suppress("DSL_SCOPE_VIOLATION")
@@ -43,25 +44,15 @@ val testMod = sourceSets.create("testMod") {
 
 net.fabricmc.loom.configuration.RemapConfigurations.setupForSourceSet(project, testMod)
 
-val testiariumCctArtifacts = configurations.detachedConfiguration(
-    project.dependencies.create("site.siredvin:testiarium-core-1.21.1:0.1.1:cct-test-mod@jar"),
-    project.dependencies.create("site.siredvin:testiarium-fabric-1.21.1:0.1.1:cct-test-mod@jar"),
-).apply {
-    isTransitive = false
-}
-
-val testiariumMainArtifacts = configurations.detachedConfiguration(
-    project.dependencies.create("site.siredvin:testiarium-core-1.21.1:0.1.1"),
-    project.dependencies.create("site.siredvin:testiarium-fabric-1.21.1:0.1.1"),
-).apply {
-    isTransitive = false
-}
-
-val testiariumTestArtifacts = configurations.detachedConfiguration(
-    project.dependencies.create("site.siredvin:testiarium-core-1.21.1:0.1.1:test-mod@jar"),
-    project.dependencies.create("site.siredvin:testiarium-fabric-1.21.1:0.1.1:test-mod@jar"),
-).apply {
-    isTransitive = false
+// Loom remaps multiple feature variants of one component into overlapping outputs.
+val testiariumArtifacts = listOf("", "test-mod", "cct-test-mod").map { feature ->
+    configurations.detachedConfiguration(
+        *listOf("core", "fabric").map { part ->
+            dependencies.create("site.siredvin:testiarium-$part-$minecraftVersion:${libs.versions.testiarium.get()}") {
+                if (feature.isNotEmpty()) capabilities { requireCapability("site.siredvin:testiarium-$part-$feature") }
+            }
+        }.toTypedArray(),
+    ).apply { isTransitive = false }
 }
 
 loom {
@@ -76,7 +67,9 @@ loom {
             server()
             source(testMod)
             property("fabric-api.gametest", "true")
-            property("fabric.debug.loadLate", "testiarium_cct_testmod")
+            // testiarium_testmod (needed for 1.21 structure loading) calls the one-shot FabricTestiarium.registerTests()
+            // itself, so it must initialise after cloudsolutions_testmod has registered its tests.
+            property("fabric.debug.loadLate", "testiarium_cct_testmod,testiarium_testmod")
             property("testiarium.tags", "cloudsolutions")
             property("testiarium.structures", project(":core").layout.buildDirectory.dir("resources/testMod/gameteststructures").get().asFile.absolutePath)
             property("testiarium.fixture-source", project(":core").file("src/testMod/resources/gameteststructures").absolutePath)
@@ -137,9 +130,7 @@ dependencies {
     add("modTestModImplementation", libs.bundles.kotlin)
     add("modTestModImplementation", libs.bundles.fabric.core)
     add("modTestModImplementation", libs.bundles.fabric.cc)
-    add("modTestModImplementation", files(testiariumMainArtifacts))
-    add("modTestModImplementation", files(testiariumTestArtifacts))
-    add("modTestModImplementation", files(testiariumCctArtifacts))
+    testiariumArtifacts.forEach { add("modTestModImplementation", files(it)) }
 }
 
 modPublishing {
@@ -166,4 +157,8 @@ publishingShaking {
             }
         }
     }
+}
+
+tasks.named<TaskPublishCurseForge>("publishCurseForge") {
+    uploadArtifacts.forEach { it.addEnvironment("Client", "Server") }
 }

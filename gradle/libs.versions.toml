@@ -6,17 +6,17 @@ kotlin-atomicfu = "0.20.2"
 
 # Gradle plugins
 sponge = "0.2.1-SNAPSHOT"
-loom = "1.12.+"
+loom = "1.18.4"
 forgegradle = "6.+"
 spotless = "6.19.0"
 
 # Core mod dependencies
-cc-tweaked = "1.113.0"
+cc-tweaked = "1.121.0"
 mixin = "0.8.5"
-broccolium = "1.4.6"
-tweakium = "1.4.6"
-broccolium-jjar = "[1.4.6, 1.5.0)"
-tweakium-jjar = "[1.4.6, 1.5.0)"
+broccolium = "2.1.0"
+tweakium = "2.1.0"
+broccolium-jjar = "[2.1.0, 2.2.0)"
+tweakium-jjar = "[2.1.0, 2.2.0)"
 sqlite = "[3.43.0.0, 3.44.0.0)"
 common-math = "[3.6.1, 3.7.0)"
 statsd-client = "[3.0.1, 3.1.0)"
@@ -24,15 +24,15 @@ statsd-client = "[3.0.1, 3.1.0)"
 exposed = "[0.61.0, 1.0.0)"
 
 # Fabric dependencies
-fabric-api = "0.116.3+1.21.1"
-fabric-loader = "0.16.14"
+fabric-api = "0.116.14+1.21.1"
+fabric-loader = "0.18.4"
 fabric-kotlin = "1.11.0+kotlin.2.0.0"
 forgeconfigapirt = "21.1.6"
 modmenu = "11.0.1"
 
 # Forge dependencies
-neoforge = "21.1.9"
-forge-kotlin = "5.7.0"
+neoforge = "21.1.265"
+forge-kotlin = "5.9.0"
 parchment = "2024.11.17"
 parchmentMc = "1.21.1"
 # Extra mod dependencies
@@ -42,7 +42,7 @@ jei = "19.27.0.340"
 rei = "16.0.799"
 
 # Testing
-testiarium = "0.1.1"
+testiarium = "2.1.0"
 autoService = "1.0.1"
 byteBuddy = "1.14.2"
 hamcrest = "2.2"
@@ -71,6 +71,8 @@ tweakium-core = {module = "site.siredvin:tweakium-common-1.21.1", version.ref = 
 sqlite = {module="org.xerial:sqlite-jdbc", version.ref="sqlite"}
 statsd-client = {module = "com.timgroup:java-statsd-client", version.ref="statsd-client"}
 testiarium-core = {module = "site.siredvin:testiarium-core-1.21.1", version.ref="testiarium"}
+testiarium-fabric = {module = "site.siredvin:testiarium-fabric-1.21.1", version.ref="testiarium"}
+testiarium-forge = {module = "site.siredvin:testiarium-forge-1.21.1", version.ref="testiarium"}
 
 exposed-core = {module = "org.jetbrains.exposed:exposed-core", version.ref="exposed"}
 exposed-jdbc = {module = "org.jetbrains.exposed:exposed-jdbc", version.ref="exposed"}

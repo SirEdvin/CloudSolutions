@@ -2,6 +2,8 @@
 plugins {
     id("site.siredvin.vanilla")
     id("site.siredvin.publishing")
+    // Loom 1.18 consumes non-Loom project dependencies through the companion's exported classpath.
+    id("net.fabricmc.fabric-loom-companion")
 }
 
 val modVersion: String by extra
@@ -45,8 +47,11 @@ dependencies {
         isTransitive = false
     }
     add(testMod.implementationConfigurationName, libs.testiarium.core)
-    add(testMod.implementationConfigurationName, "site.siredvin:testiarium-core-1.21.1:0.1.1:test-mod@jar")
-    add(testMod.implementationConfigurationName, "site.siredvin:testiarium-core-1.21.1:0.1.1:cct-test-mod@jar")
+    for (feature in listOf("test-mod", "cct-test-mod")) {
+        add(testMod.implementationConfigurationName, libs.testiarium.core.get().toString()) {
+            capabilities { requireCapability("site.siredvin:testiarium-core-$feature") }
+        }
+    }
     add(testMod.compileOnlyConfigurationName, libs.bundles.cccommon)
 }
 

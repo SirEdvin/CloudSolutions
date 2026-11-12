@@ -110,16 +110,12 @@ dependencies {
 
     runtimeOnly(libs.bundles.externalMods.forge.runtime)
 
-    listOf(
-        "site.siredvin:testiarium-forge-1.21.1:0.1.1",
-        "site.siredvin:testiarium-forge-1.21.1:0.1.1:test-mod@jar",
-        "site.siredvin:testiarium-forge-1.21.1:0.1.1:cct-test-mod@jar",
-    ).forEach { notation ->
-        add(testMod.implementationConfigurationName, notation) {
-            isTransitive = false
-        }
-        add(developmentRuntime.name, notation) {
-            isTransitive = false
+    for (feature in listOf("", "test-mod", "cct-test-mod")) {
+        for (configuration in listOf(testMod.implementationConfigurationName, developmentRuntime.name)) {
+            add(configuration, libs.testiarium.forge.get().toString()) {
+                isTransitive = false
+                if (feature.isNotEmpty()) capabilities { requireCapability("site.siredvin:testiarium-forge-$feature") }
+            }
         }
     }
 }
