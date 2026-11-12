@@ -2,27 +2,24 @@ pluginManagement {
     repositories {
         mavenCentral()
         gradlePluginPortal()
-        maven("https://mvn.siredvin.site/minecraft") {
-            name = "SirEdvin's Minecraft repository"
-            content {
-                includeGroup("net.minecraftforge")
-                includeGroup("net.minecraftforge.gradle")
-                includeGroup("org.parchmentmc")
-                includeGroup("org.parchmentmc.feather")
-                includeGroup("org.parchmentmc.data")
-                includeGroup("org.spongepowered")
-                includeGroup("org.spongepowered.gradle.vanilla")
-                includeGroup("net.fabricmc")
-                includeGroup("fabric-loom")
-                includeGroupByRegex("site.siredvin.*")
-            }
+        maven("https://maven.fabricmc.net/")
+        maven("https://repo.repsy.io/siredvin/default") {
+            name = "Repsy"
+            content { includeGroupByRegex("site.siredvin.*") }
         }
+        maven("https://maven.minecraftforge.net/")
+        maven("https://maven.neoforged.net/releases/")
+        maven("https://maven.parchmentmc.org/")
+        maven("https://repo.spongepowered.org/repository/maven-public/")
     }
 
     resolutionStrategy {
         eachPlugin {
             if (requested.id.id == "org.spongepowered.mixin") {
                 useModule("org.spongepowered:mixingradle:${requested.version}")
+            }
+            if (requested.id.id.startsWith("site.siredvin.")) {
+                useModule("site.siredvin:modding-buildenv:${requested.version}")
             }
         }
     }

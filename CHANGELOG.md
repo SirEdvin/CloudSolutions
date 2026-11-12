@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.0] - 2026-11-12
+
+### Changed
+
+- Requires CC:Tweaked 1.121.0 or newer
+- Updated Broccolium and Tweakium to 2.1.0; SirEdvin libraries now come from Repsy (`https://repo.repsy.io/siredvin/default`)
+- Forge builds use ModDevGradle instead of ForgeGradle
+
 ## [0.3.4] - 2025-11-19
 
 ### Fixed

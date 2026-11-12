@@ -3,9 +3,11 @@ import java.util.function.BiConsumer
 
 plugins {
     java
-    id("site.siredvin.root") version "0.8.18"
-    id("site.siredvin.release") version "0.8.18"
-    id("com.dorongold.task-tree") version "2.1.1"
+    // CC:Tweaked 1.121.0 Fabric jars are built with Loom 1.18; buildenv alone would resolve an older Loom.
+    id("fabric-loom") version "1.18.4" apply false
+    id("site.siredvin.root") version "0.9.4"
+    id("site.siredvin.release") version "0.9.4"
+    id("com.dorongold.task-tree") version "4.0.0"
 }
 
 subprojectShaking {
