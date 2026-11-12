@@ -44,18 +44,15 @@ val testMod = sourceSets.create("testMod") {
 
 net.fabricmc.loom.configuration.RemapConfigurations.setupForSourceSet(project, testMod)
 
-val testiariumCctArtifacts = configurations.detachedConfiguration(
-    project.dependencies.create("site.siredvin:testiarium-core-1.20.1:0.1.1:cct-test-mod@jar"),
-    project.dependencies.create("site.siredvin:testiarium-fabric-1.20.1:0.1.1:cct-test-mod@jar"),
-).apply {
-    isTransitive = false
-}
-
-val testiariumMainArtifacts = configurations.detachedConfiguration(
-    project.dependencies.create("site.siredvin:testiarium-core-1.20.1:0.1.1"),
-    project.dependencies.create("site.siredvin:testiarium-fabric-1.20.1:0.1.1"),
-).apply {
-    isTransitive = false
+// Loom remaps multiple feature variants of one component into overlapping outputs.
+val testiariumArtifacts = listOf("", "test-mod", "cct-test-mod").map { feature ->
+    configurations.detachedConfiguration(
+        *listOf("core", "fabric").map { part ->
+            dependencies.create("site.siredvin:testiarium-$part-$minecraftVersion:${libs.versions.testiarium.get()}") {
+                if (feature.isNotEmpty()) capabilities { requireCapability("site.siredvin:testiarium-$part-$feature") }
+            }
+        }.toTypedArray(),
+    ).apply { isTransitive = false }
 }
 
 loom {
@@ -132,8 +129,7 @@ dependencies {
     add("modTestModImplementation", libs.bundles.kotlin)
     add("modTestModImplementation", libs.bundles.fabric.core)
     add("modTestModImplementation", libs.bundles.fabric.cc)
-    add("modTestModImplementation", files(testiariumMainArtifacts))
-    add("modTestModImplementation", files(testiariumCctArtifacts))
+    testiariumArtifacts.forEach { add("modTestModImplementation", files(it)) }
 }
 
 modPublishing {
