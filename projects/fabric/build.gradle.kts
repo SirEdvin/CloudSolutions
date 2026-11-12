@@ -45,7 +45,8 @@ val testMod = sourceSets.create("testMod") {
 net.fabricmc.loom.configuration.RemapConfigurations.setupForSourceSet(project, testMod)
 
 // Loom remaps multiple feature variants of one component into overlapping outputs.
-val testiariumArtifacts = listOf("", "test-mod", "cct-test-mod").map { feature ->
+// No "test-mod" feature: its entrypoint calls FabricTestiarium.registerTests() and can latch it before this testmod registers.
+val testiariumArtifacts = listOf("", "cct-test-mod").map { feature ->
     configurations.detachedConfiguration(
         *listOf("core", "fabric").map { part ->
             dependencies.create("site.siredvin:testiarium-$part-$minecraftVersion:${libs.versions.testiarium.get()}") {
