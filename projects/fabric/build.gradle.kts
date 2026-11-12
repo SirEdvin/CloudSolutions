@@ -45,8 +45,7 @@ val testMod = sourceSets.create("testMod") {
 net.fabricmc.loom.configuration.RemapConfigurations.setupForSourceSet(project, testMod)
 
 // Loom remaps multiple feature variants of one component into overlapping outputs.
-// No "test-mod" feature: its entrypoint calls FabricTestiarium.registerTests() and can latch it before this testmod registers.
-val testiariumArtifacts = listOf("", "cct-test-mod").map { feature ->
+val testiariumArtifacts = listOf("", "test-mod", "cct-test-mod").map { feature ->
     configurations.detachedConfiguration(
         *listOf("core", "fabric").map { part ->
             dependencies.create("site.siredvin:testiarium-$part-$minecraftVersion:${libs.versions.testiarium.get()}") {
@@ -68,7 +67,9 @@ loom {
             server()
             source(testMod)
             property("fabric-api.gametest", "true")
-            property("fabric.debug.loadLate", "testiarium_cct_testmod")
+            // testiarium_testmod (needed for 1.21 structure loading) calls the one-shot FabricTestiarium.registerTests()
+            // itself, so it must initialise after cloudsolutions_testmod has registered its tests.
+            property("fabric.debug.loadLate", "testiarium_cct_testmod,testiarium_testmod")
             property("testiarium.tags", "cloudsolutions")
             property("testiarium.structures", project(":core").layout.buildDirectory.dir("resources/testMod/gameteststructures").get().asFile.absolutePath)
             property("testiarium.fixture-source", project(":core").file("src/testMod/resources/gameteststructures").absolutePath)
