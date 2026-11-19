@@ -1,6 +1,10 @@
 package site.siredvin.cloudsolutions.xplat
 
+import dan200.computercraft.api.pocket.IPocketUpgrade
+import dan200.computercraft.api.turtle.ITurtleUpgrade
 import dan200.computercraft.api.upgrades.UpgradeData
+import net.minecraft.core.HolderLookup
+import net.minecraft.resources.ResourceKey
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.MinecraftServer
 import net.minecraft.world.item.CreativeModeTab
@@ -36,14 +40,14 @@ object ModCommonHooks {
         SubsystemManager.onServerStop(server)
     }
 
-    fun registerUpgradesInCreativeTab(output: CreativeModeTab.Output) {
+    fun registerUpgradesInCreativeTab(holders: HolderLookup.Provider, output: CreativeModeTab.Output) {
         ModPlatform.holder.turtleUpgrades.forEach {
-            ComputerPlatformToolkit.get().getTurtleUpgrade(it.id.toString()).ifPresent { upgrade ->
+            holders.lookupOrThrow(ITurtleUpgrade.REGISTRY).get(ResourceKey.create(ITurtleUpgrade.REGISTRY, it.id)).ifPresent { upgrade ->
                 ComputerPlatformToolkit.get().createTurtlesWithUpgrade(UpgradeData.ofDefault(upgrade)).forEach(output::accept)
             }
         }
         ModPlatform.holder.pocketUpgrades.forEach {
-            ComputerPlatformToolkit.get().getPocketUpgrade(it.id.toString()).ifPresent { upgrade ->
+            holders.lookupOrThrow(IPocketUpgrade.REGISTRY).get(ResourceKey.create(IPocketUpgrade.REGISTRY, it.id)).ifPresent { upgrade ->
                 ComputerPlatformToolkit.get().createPocketsWithUpgrade(UpgradeData.ofDefault(upgrade)).forEach(output::accept)
             }
         }
