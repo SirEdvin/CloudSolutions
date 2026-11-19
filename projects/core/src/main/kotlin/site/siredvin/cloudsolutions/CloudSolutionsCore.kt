@@ -24,10 +24,10 @@ object CloudSolutionsCore {
     }
     fun configureCreativeTab(builder: CreativeModeTab.Builder): CreativeModeTab.Builder = builder.icon { ItemStack(ModBlocks.STATSD_BRIDGE.get()) }
         .title(ModText.CREATIVE_TAB.text)
-        .displayItems { _, output ->
+        .displayItems { params, output ->
             ModPlatform.holder.blocks.forEach { output.accept(it.get()) }
             ModPlatform.holder.items.forEach { output.accept(it.get()) }
-            ModCommonHooks.registerUpgradesInCreativeTab(output)
+            ModCommonHooks.registerUpgradesInCreativeTab(params.holders(), output)
         }
 
     fun configure(platform: InnerComputerBasePlatform, ingredients: ModRecipeIngredients) {
